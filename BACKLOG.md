@@ -1,133 +1,127 @@
 # BACKLOG.md — Felix Produktionsstraße
-
 _Was läuft, was kommt, was wartet. Priorisiert nach Impact._
 
 ## 🟢 LIVE (funktioniert)
 
 ### Morning Briefing (07:30 CET)
-- Email-Scan (actionable vs noise)
-- Kalender (Konflikte, Geburtstage)
-- Gewicht (manuell — Lothar gibt Wert durch)
-- **Next Steps:**
-  - [ ] Gewicht automatisieren — Renpho API direkt? Apple Health Export? Shortcut der morgens den Wert an Felix schickt?
-  - [ ] Wetter am aktuellen Standort einbauen
-  - [ ] LinkedIn-Mentions/Nachrichten (wenn API verfügbar)
-  - [ ] Botica-Inbox (Zoho) — sobald "Send as" Alias in Gmail steht
+- Email-Scan (actionable vs noise), Kalender, Gewicht (manuell), Schlaf (Withings)
+- **Offen:** Wetter einbauen, LinkedIn-Mentions
 
 ### WA Inbox Digest (21:00 CET)
-- Alle eingehenden WhatsApp-Nachrichten der letzten 24h
-- Kontakt-Auflösung via people.md
-- Lothar entscheidet welche Chats Draft brauchen
-- **Limitation:** Lothars eigene Antworten nicht sichtbar (fromMe-Routing fehlt in OpenClaw)
+- Eingehende WhatsApp-Nachrichten, Kontakt-Auflösung via people.md
+- **Limitation:** Lothars eigene Antworten nicht sichtbar (fromMe-Routing fehlt)
 
-### Wind-Down Reminder (23:00 CET)
-- Schlaf-Nudge per WhatsApp
-
-### X Evening Digest (20:00 CET)
-- Twitter/X Mentions und relevante Tweets
+### Wind-Down (23:00 CET) + X Digest (20:00 CET)
+- Schlaf-Nudge + Twitter Mentions/Trends
 
 ### Observer Agent (Haiku 4.5)
-- Stummer Logger für alle Nicht-Lothar WhatsApp/Telegram DMs
-- Kein Leak, keine Tools, nur NO_REPLY
+- Stummer Logger, kein Leak, NO_REPLY only
+
+### Nylongerie Feed-Posts
+- Komplette Pipeline: Classify → Pair → Assign → Overlay → Caption → R2 → Publish
+- 100/1600 Bilder klassifiziert
+
+### Shopify Integration ✅ NEU
+- Produkte lesen, Collections browsen, Discount Codes erstellen (API)
+- Discount-Links: `nylongerie.com/discount/CODE` → automatisch angewendet
 
 ## 🟡 IN ARBEIT
 
-### Nylongerie Sub-Agent (Sonnet 4)
-- Agent registriert, Workspace aufgesetzt
-- Cron: 10:00 täglicher Batch
-- **Status:** Grundstruktur steht, erster echter Lauf noch ausstehend
-- **Scope aktuell:** Posts (Foto-Klassifizierung → Caption → Draft → Approve → Publish)
+### Nylongerie Story-Pipeline → Deadline: SA 14.03. 🎯
+**Status:** End-to-End Dry Run ✅, Template-Engine wird gebaut
+
+**Anlässe (Template-Typen):**
+| Typ | Beispiel | Frequenz |
+|-----|----------|----------|
+| **Flash Sale** | "30% off Shiny Tights, 48h only" | 2-3x/Woche |
+| **Bestseller** | Top-Produkt mit Preis featuren | 1x/Woche |
+| **New Arrivals** | Neue Produkte im Shop | Bei Bedarf |
+| **Bundle/Multipack** | "Save with our multipacks" | 1x/Woche |
+| **Model of the Week** | Persönlicher Code (WILLEKE20) | 1x/Woche |
+| **Category Spotlight** | "Discover our Opaque Collection" | 1-2x/Woche |
+| **Saisonal** | Valentine's, Spring, Summer, Xmas | Kalender-driven |
+
+**Flow:** Anlass → Shopify Produkt/Collection + Discount Code → Sharp Story-Bild → Approval → IG Story + Link Sticker
+
+**Nächste Schritte:**
+- [ ] Template-Engine bauen (5 SVG-Varianten)
+- [ ] 2-3 fertige Stories zur Freigabe (Freitag)
+- [ ] Erster Live-Post auf @nylongerie (Samstag)
+
+### GitHub Account für Felix
+- Nightly Backup: Configs, Skills, Memory, Pipeline-Scripts
+- **Status:** In Progress
+
+### Eigene Email für Felix
+- z.B. felix@botica.tech
+- **Status:** Backlog
 
 ## 🔴 BACKLOG (priorisiert nach Impact)
 
 ### P1 — Umsatz-Impact
 
-#### Nylongerie: Stories
-- Stories sind DER Umsatztreiber (direkte Produkt-Links, Swipe-Up)
-- Workflow: Produkt auswählen → Story-Template → Link → Publish
-- Instagram Graph API unterstützt Stories (image + video)
-- **Braucht:** Produkt-Katalog-Anbindung (Shopify API), Story-Templates, Frequenz 2-3/Tag/Account
-- **Abhängigkeit:** Shopify API Integration
-
 #### Nylongerie: Email-Kampagnen
 - 700 Kunden, 3% Conversion (10x Social!)
-- Shopify Email — Top-Performer der Woche, saisonale Kampagnen
-- **Braucht:** Shopify API, Performance-Tracking, Template-System
+- Shopify Email — Top-Performer, saisonale Kampagnen
+- **Braucht:** Template-System, Performance-Tracking
 
 #### Nylongerie: Reels
+- 253 Videos vorhanden, ungesichtet
 - Reels = Reichweite (Algorithmus bevorzugt Video)
-- 253 Reels bereits klassifiziert im Content-Pool
-- Instagram Graph API unterstützt Reels (video_url + media_type=REELS)
-- **Braucht:** Video-Verarbeitung (ffmpeg), Thumbnail-Generierung, Caption-Anpassung für Video
+- **Braucht:** Video-Sichtung, ffmpeg, Thumbnail, Caption
+
+#### Nylongerie: Headlines & Captions verbessern
+- Feed-Post Captions optimieren (mehr Engagement)
 
 ### P2 — Effizienz-Impact
 
 #### Gewicht-Automatisierung
-- Aktuell: Lothar gibt Wert manuell durch
-- Renpho-Waage → Apple Health → ??? → Felix
-- **Optionen:**
-  - Apple Health Shortcut der morgens automatisch den letzten Wert an Felix schickt
-  - Renpho API direkt (falls vorhanden)
-  - Manuelle Eingabe bleibt Fallback
-- **Aufwand:** Gering (Shortcut) bis Mittel (API)
+- Renpho → Apple Health → ??? → Felix
+- Optionen: Apple Shortcut, Renpho API direkt
 
-#### Email "Send as" Aliases
-- l.eckstein@botica.tech (Zoho SMTP) in Gmail
-- lowtar@mac.com (iCloud SMTP) in Gmail
-- Felix kann dann als richtige Absenderadresse antworten
-- **Status:** Pending — SMTP-Credentials nötig
+#### Community Skills evaluieren
+- ClawHub durchschauen, npx skills add
+- Memory Plugin (ClawVault/Supermemory) — niedrige Prio
 
-#### fromMe-Routing (OpenClaw Feature Request)
-- Observer sieht nur eingehende Nachrichten
-- fromMe-Routing würde echte "unbeantwortet"-Erkennung ermöglichen
-- **Status:** Feature Request vorbereitet, noch nicht eingereicht
-- GitHub: openclaw/openclaw
+#### Reddit im Evening Digest
+- Relevante Subreddits beobachten
 
 ### P3 — Nice to Have
 
-#### Reddit-Monitoring
-- Relevante Subreddits beobachten (welche? Mit Lothar klären)
-- Potenzial: Nylongerie-Community, AI/Agent-Szene, Business-Trends
-- **Braucht:** Reddit API oder Web-Scraping, Cron-Job, Digest-Format
-
 #### Kontakt-Tier-System
-- 5 Tiers (Family → Business) für automatisierte Antwort-Priorisierung
-- Design existiert, Implementation ausstehend
-- **Abhängigkeit:** fromMe-Routing für volle Funktionalität
+- 5 Tiers, Design existiert, Abhängigkeit: fromMe-Routing
 
 #### Manheimer Berlin Automation
-- Ähnlich wie Nylongerie, aber eigener Workflow
-- **Status:** Noch nicht spezifiziert
+- Ähnlich Nylongerie, eigener Workflow, noch nicht spezifiziert
 
-## 🏗️ ARCHITEKTUR-FRAGEN
+#### Email Auto-Triage
+- Smart Replies, automatische Kategorisierung
 
-### Sub-Agent-Strategie: Wie systematisch skalieren?
+#### Instagram Performance Tracking
+- Insights API, Engagement-Metriken pro Post/Story
 
-**Aktueller Stand (3 Agents):**
+#### Product Tags (IG Shopping)
+- Instagram Shopping Tags auf Posts
+
+## 🏗️ ARCHITEKTUR
+
+### Agents
 | Agent | Model | Kosten/Msg | Zweck |
 |-------|-------|-----------|-------|
 | Felix (main) | Opus 4.6 | ~€0.05 | Persönlicher Agent, Orchestrator |
-| Observer | Haiku 4.5 | ~€0.001 | Stummer WhatsApp/Telegram Logger |
+| Observer | Haiku 4.5 | ~€0.001 | Stummer Logger |
 | Nylongerie | Sonnet 4 | ~€0.01 | Instagram Content |
 
-**Prinzipien für neue Agents:**
-1. **Isolierung:** Eigener Workspace, eigene Sessions, kein Context-Bleed
-2. **Right-sized Model:** Haiku für Logging, Sonnet für Content, Opus nur für komplexe Entscheidungen
-3. **Cron-getrieben:** Agents werden geweckt, arbeiten Batch ab, schlafen ein
-4. **Draft-First:** Kein Agent sendet autonom — immer Draft → Lothar → Approve
-5. **Felix als Orchestrator:** Main Agent steuert Sub-Agents bei Bedarf an
-
-**Potenzielle zukünftige Agents:**
+### Potenzielle zukünftige Agents
 | Agent | Model | Trigger | Zweck |
 |-------|-------|---------|-------|
 | manheimer | Sonnet 4 | Cron | Manheimer Berlin Content |
-| shopify | Sonnet 4 | Cron/Event | Order-Management, Produkt-Updates |
+| shopify | Sonnet 4 | Event | Order-Management, Alerts |
 | research | Opus 4.6 | On-demand | Deep Research, Marktanalyse |
-| bookkeeper | Sonnet 4 | Cron weekly | Finanzen, Rechnungen, Ausgaben |
 
-**Wann lohnt sich ein neuer Agent?**
-- ✅ Eigener Workflow mit eigenem State (Files, Queue, Pipeline)
+### Wann neuer Agent?
+- ✅ Eigener Workflow mit eigenem State
 - ✅ Regelmäßig wiederkehrend (Cron-tauglich)
 - ✅ Würde Main Session Context aufblähen
-- ❌ Einmalaufgaben (→ sessions_spawn als Sub-Agent)
-- ❌ Kurze Interaktionen ohne eigenen State (→ bleibt bei Felix)
+- ❌ Einmalaufgaben → sessions_spawn
+- ❌ Kurze Interaktionen → bleibt bei Felix

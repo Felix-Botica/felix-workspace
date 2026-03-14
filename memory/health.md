@@ -26,8 +26,11 @@
 | 2026-03-06 | 88.18 |
 | 2026-03-07 | 87.65 |
 | 2026-03-08 | 87.35 |
+| 2026-03-11 | 88.20 |
+| 2026-03-12 | 87.90 |
+| 2026-03-13 | 87.30 |
 
-**Trend:** Starker Abwärtstrend hält! 90.85 → 87.35 in 6 Tagen. Durchschnitt letzte Woche: ~88.3 kg
+**Trend:** Schwankungen 87-90 kg, aber Gesamttrend weiter abwärts. Tiefstand: 87.30 (13.03). Nächstes Ziel: unter 87!
 
 ## Devices
 - **Withings ScanWatch** — Sleep, HR, SpO2, Activity, Body Temp
