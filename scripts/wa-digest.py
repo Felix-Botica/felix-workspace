@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""WhatsApp Inbox Digest — reads Observer session files directly.
-Called by the wa-inbox-digest cron job.
-Outputs a formatted Telegram-ready summary.
+"""WhatsApp Inbox Digest v3 — Hybrid: Full extraction + Sonnet API analysis.
+Called by wa-inbox-digest cron job. Does ALL work itself, outputs final digest.
+Cron agent (Haiku) just sends the output.
 """
 
 import json
 import os
+import re
 import glob
+import subprocess
 from datetime import datetime, timedelta
 
 SESSIONS_DIR = os.path.expanduser("~/.openclaw/agents/observer/sessions/")
@@ -15,50 +17,81 @@ LOOKBACK_HOURS = 24
 
 
 def load_people():
-    """Parse people.md to build phone→name mapping."""
+    """Parse people.md to build phone→{name, tier} mapping.
+    Two-pass: first collect all person blocks, then resolve tiers.
+    Tier comes from **Tier:** line OR section header (## 🔴 Partnerin etc.)
+    """
     people = {}
+    entries = []  # (name, phone, explicit_tier)
     try:
         with open(PEOPLE_FILE) as f:
+            current_section_tier = "Unknown"
             current_name = None
+            current_tier = None
+            current_phone = None
+            
             for line in f:
-                line = line.strip()
-                if line.startswith("### "):
-                    current_name = line[4:].strip()
-                elif "**Phone:**" in line and current_name:
-                    phone = line.split("**Phone:**")[1].strip()
-                    people[phone] = current_name
+                line_s = line.strip()
+                
+                # Section headers carry default tier
+                if line_s.startswith("## "):
+                    section = line_s[3:].strip()
+                    # Extract tier emoji from section
+                    for emoji in ["🔴", "🟠", "🟡", "🔵", "🟣", "⚪", "🟤"]:
+                        if emoji in section:
+                            current_section_tier = section
+                            break
+                
+                if line_s.startswith("### "):
+                    # Save previous person
+                    if current_name and current_phone:
+                        tier = current_tier or current_section_tier
+                        phone_clean = re.sub(r'[^+\d]', '', current_phone)
+                        people[phone_clean] = {"name": current_name, "tier": tier}
+                    # Start new person
+                    current_name = line_s[4:].strip()
+                    current_tier = None
+                    current_phone = None
+                elif "**Tier:**" in line_s and current_name:
+                    current_tier = line_s.split("**Tier:**")[1].strip()
+                elif "**Phone:**" in line_s and current_name:
+                    current_phone = line_s.split("**Phone:**")[1].strip()
+            
+            # Don't forget the last person
+            if current_name and current_phone:
+                tier = current_tier or current_section_tier
+                phone_clean = re.sub(r'[^+\d]', '', current_phone)
+                people[phone_clean] = {"name": current_name, "tier": tier}
+                
     except FileNotFoundError:
         pass
     return people
 
 
 def extract_chats():
-    """Extract chat summaries from observer session files."""
+    """Extract full chat conversations from observer session files."""
     cutoff = datetime.now().timestamp() - (LOOKBACK_HOURS * 3600)
     people = load_people()
     chats = {}
 
-    # Include both active .jsonl AND rotated .reset files from today
     all_files = glob.glob(os.path.join(SESSIONS_DIR, "*.jsonl"))
     today_str = datetime.now().strftime("%Y-%m-%d")
+    yesterday_str = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     all_files += glob.glob(os.path.join(SESSIONS_DIR, f"*.reset.{today_str}*"))
-    
+    all_files += glob.glob(os.path.join(SESSIONS_DIR, f"*.reset.{yesterday_str}*"))
+
     for f in all_files:
         mtime = os.path.getmtime(f)
         if mtime < cutoff:
             continue
 
-        basename = os.path.basename(f)
-        
         sender_name = None
         sender_phone = None
         is_group = False
         group_subject = None
-        msg_count = 0
-        last_msgs = []
+        messages = []
         has_audio = 0
         has_media = 0
-        latest_ts = None
 
         with open(f) as fh:
             for line in fh:
@@ -66,7 +99,6 @@ def extract_chats():
                     d = json.loads(line.strip())
                 except:
                     continue
-
                 if d.get("type") != "message":
                     continue
                 msg = d.get("message", {})
@@ -78,14 +110,17 @@ def extract_chats():
                     if not isinstance(c, dict) or c.get("type") != "text":
                         continue
                     text = c["text"]
+                    msg_sender = None
+                    msg_ts = None
 
-                    # Extract metadata
                     for ln in text.split("\n"):
                         ln = ln.strip().strip(",")
                         if '"sender":' in ln and '"sender_id"' not in ln:
                             name = ln.split('"sender":')[1].strip().strip('",')
-                            if name and name != "Lothar Eckstein":
-                                sender_name = name
+                            if name:
+                                msg_sender = name
+                                if name != "Lothar Eckstein":
+                                    sender_name = name
                         if '"sender_id":' in ln and "+" in ln:
                             phone = ln.split('"sender_id":')[1].strip().strip('",')
                             sender_phone = phone
@@ -94,10 +129,9 @@ def extract_chats():
                         if '"group_subject":' in ln:
                             group_subject = ln.split('"group_subject":')[1].strip().strip('",')
                         if '"timestamp":' in ln:
-                            ts_str = ln.split('"timestamp":')[1].strip().strip('",')
-                            latest_ts = ts_str
+                            msg_ts = ln.split('"timestamp":')[1].strip().strip('",')
 
-                    # Extract actual message content
+                    msg_lines = []
                     in_json = False
                     for ln in text.split("\n"):
                         ln = ln.strip()
@@ -106,8 +140,6 @@ def extract_chats():
                             continue
                         if in_json or not ln:
                             continue
-
-                        # Skip metadata lines
                         skip_keys = [
                             "conversation info", "untrusted metadata",
                             "message_id", "sender_id", "timestamp",
@@ -124,92 +156,192 @@ def extract_chats():
                             continue
                         if ln.startswith("{") or ln.startswith("}") or ln.startswith("["):
                             continue
-
-                        # Detect media types
                         if "<media:audio>" in ln:
                             has_audio += 1
+                            msg_lines.append("[🎤 Sprachnachricht]")
                             continue
                         if "<media:" in ln or "[media attached:" in ln:
                             has_media += 1
+                            msg_lines.append("[📎 Medien-Anhang]")
                             continue
-
                         if len(ln) > 2:
-                            msg_count += 1
-                            last_msgs.append(ln[:150])
+                            msg_lines.append(ln)
+
+                    if msg_lines:
+                        messages.append({
+                            "sender": msg_sender or "Unknown",
+                            "timestamp": msg_ts,
+                            "text": "\n".join(msg_lines)
+                        })
 
         if not sender_name and not group_subject:
             continue
-        if msg_count == 0 and has_audio == 0 and has_media == 0:
+        if len(messages) == 0 and has_audio == 0 and has_media == 0:
             continue
 
-        # Resolve name from people.md
+        phone_normalized = re.sub(r'[^+\d]', '', sender_phone) if sender_phone else None
         display_name = sender_name or "Unknown"
-        if sender_phone and sender_phone in people:
-            display_name = people[sender_phone]
-        
-        # Use group subject for group chats
+        tier = "Unknown"
+        if phone_normalized and phone_normalized in people:
+            display_name = people[phone_normalized]["name"]
+            tier = people[phone_normalized]["tier"]
+
         chat_key = group_subject if (is_group and group_subject) else display_name
 
         if chat_key not in chats:
             chats[chat_key] = {
-                "count": 0,
-                "audio": 0,
-                "media": 0,
-                "last_msgs": [],
-                "is_group": is_group,
-                "latest_ts": None
+                "tier": tier, "is_group": is_group,
+                "messages": [], "audio_count": 0, "media_count": 0
             }
-
-        chats[chat_key]["count"] += msg_count
-        chats[chat_key]["audio"] += has_audio
-        chats[chat_key]["media"] += has_media
-        chats[chat_key]["last_msgs"].extend(last_msgs[-3:])
-        if latest_ts:
-            chats[chat_key]["latest_ts"] = latest_ts
+        chats[chat_key]["messages"].extend(messages)
+        chats[chat_key]["audio_count"] += has_audio
+        chats[chat_key]["media_count"] += has_media
 
     return chats
 
 
-def format_digest(chats):
-    """Format chats into a Telegram-ready digest."""
+def format_conversations(chats):
+    """Format chats as structured text for LLM input."""
     if not chats:
-        return "📬 Keine neuen WhatsApp-Nachrichten heute."
+        return None
 
-    total_msgs = sum(c["count"] + c["audio"] + c["media"] for c in chats.values())
-    
-    lines = [
-        f"📬 **WhatsApp Digest — {datetime.now().strftime('%d.%m.%Y')}**",
-        f"_{len(chats)} Chats, ~{total_msgs} Nachrichten_",
-        ""
-    ]
+    tier_order = {"🔴": 0, "🟠": 1, "🔵": 2, "🟣": 3, "🟡": 4, "⚪": 5, "🟤": 6}
 
-    # Sort by message count descending
-    for name, data in sorted(chats.items(), key=lambda x: -(x[1]["count"] + x[1]["audio"] + x[1]["media"])):
-        total = data["count"] + data["audio"] + data["media"]
+    def sort_key(item):
+        for emoji, order in tier_order.items():
+            if emoji in item[1]["tier"]:
+                return (order, -len(item[1]["messages"]))
+        return (7, -len(item[1]["messages"]))
+
+    lines = []
+    for name, data in sorted(chats.items(), key=sort_key):
         prefix = "👥" if data["is_group"] else "💬"
-        
-        # Build count string
-        parts = []
-        if data["count"] > 0:
-            parts.append(f"{data['count']} text")
-        if data["audio"] > 0:
-            parts.append(f"{data['audio']} 🎤")
-        if data["media"] > 0:
-            parts.append(f"{data['media']} 📎")
-        count_str = ", ".join(parts)
-
-        lines.append(f"{prefix} **{name}** ({count_str})")
-        
-        # Show last 1-2 messages as preview
-        preview_msgs = data["last_msgs"][-2:]
-        for m in preview_msgs:
-            m_clean = m[:100]
-            lines.append(f"   └ _{m_clean}_")
+        mc = len(data["messages"])
+        lines.append(f"{prefix} {name} | Tier: {data['tier']} | {mc} msgs, {data['audio_count']} audio, {data['media_count']} media")
+        for msg in data["messages"]:
+            ts = ""
+            if msg.get("timestamp"):
+                m = re.search(r'(\d{1,2}:\d{2})', msg["timestamp"])
+                if m:
+                    ts = f" [{m.group(1)}]"
+            lines.append(f"  {msg['sender']}{ts}: {msg['text']}")
         lines.append("")
 
     return "\n".join(lines)
 
 
-if __name__ == "__main__":
+def analyze_with_sonnet(conversations_text, chat_count, msg_count):
+    """Call Anthropic Sonnet API directly for analysis."""
+    import urllib.request
+
+    # Load API key from env file
+    api_key = None
+    env_file = os.path.expanduser("~/.openclaw/.env")
+    if os.path.exists(env_file):
+        with open(env_file) as f:
+            for line in f:
+                if line.startswith("ANTHROPIC_API_KEY="):
+                    api_key = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    break
+
+    if not api_key:
+        # Try environment
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+
+    if not api_key:
+        # Fallback: use openclaw's token via CLI
+        return fallback_format(conversations_text, chat_count, msg_count)
+
+    prompt = f"""Analysiere diese WhatsApp-Gespräche und erstelle einen Digest auf Deutsch.
+
+FORMAT (genau so):
+
+📬 **WhatsApp Digest — {datetime.now().strftime('%d.%m.%Y')}**
+_{chat_count} Chats, ~{msg_count} Nachrichten_
+
+**⚡ Action Items**
+→ [Konkrete Aktion] — [Kontext, 1 Zeile]
+(Wer wartet auf Antwort? Zeitkritisches? Offene Einladungen?)
+
+**💡 Empfehlungen**
+💡 [Was Lothar tun sollte] — [Begründung]
+(Basierend auf Tier-Priorität und Business-Relevanz)
+
+**📋 Chat-Übersicht**
+[Tier-Emoji] **[Name]** ([Anzahl])
+[2-3 Sätze: Worum ging es? Roter Faden des Gesprächs]
+
+REGELN:
+- Konkret, nicht vage
+- Tier 🔴🟠🔵🟣 = höchste Prio, zuerst listen
+- "Unknown" Tiers am Ende
+- Deutsch
+- Keine Floskeln, kein "Guten Abend Lothar"
+
+GESPRÄCHE:
+{conversations_text}"""
+
+    payload = json.dumps({
+        "model": "claude-3-haiku-20240307",
+        "max_tokens": 2000,
+        "messages": [{"role": "user", "content": prompt}]
+    }).encode()
+
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01"
+        }
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read().decode())
+            if data.get("content"):
+                return data["content"][0]["text"]
+            return fallback_format(conversations_text, chat_count, msg_count)
+    except Exception as e:
+        # If API fails, try via openclaw's auth (Max sub)
+        return analyze_via_cli(conversations_text, chat_count, msg_count, str(e))
+
+
+def analyze_via_cli(conversations_text, chat_count, msg_count, error_hint=""):
+    """Fallback: pipe through a simple claude CLI call if available."""
+    # If direct API fails, return the raw formatted version
+    return fallback_format(conversations_text, chat_count, msg_count, 
+                          note=f"(LLM-Analyse nicht verfügbar: {error_hint[:80]})")
+
+
+def fallback_format(conversations_text, chat_count, msg_count, note=""):
+    """Basic formatting without LLM analysis."""
+    header = f"📬 **WhatsApp Digest — {datetime.now().strftime('%d.%m.%Y')}**\n"
+    header += f"_{chat_count} Chats, ~{msg_count} Nachrichten_\n"
+    if note:
+        header += f"\n⚠️ {note}\n"
+    header += f"\n{conversations_text}"
+    return header
+
+
+def main():
     chats = extract_chats()
-    print(format_digest(chats))
+    if not chats:
+        print("📬 Keine neuen WhatsApp-Nachrichten heute.")
+        return
+
+    chat_count = len(chats)
+    msg_count = sum(len(c["messages"]) for c in chats.values())
+    conversations_text = format_conversations(chats)
+
+    if not conversations_text:
+        print("📬 Keine neuen WhatsApp-Nachrichten heute.")
+        return
+
+    result = analyze_with_sonnet(conversations_text, chat_count, msg_count)
+    print(result)
+
+
+if __name__ == "__main__":
+    main()

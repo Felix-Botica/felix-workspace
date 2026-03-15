@@ -29,8 +29,9 @@
 | 2026-03-11 | 88.20 |
 | 2026-03-12 | 87.90 |
 | 2026-03-13 | 87.30 |
+| 2026-03-14 | 86.75 |
 
-**Trend:** Schwankungen 87-90 kg, aber Gesamttrend weiter abwärts. Tiefstand: 87.30 (13.03). Nächstes Ziel: unter 87!
+**Trend:** Klarer Abwärtstrend! Von ~90 kg Ende Februar auf 86.75 kg. Neuer Tiefstand! Nächstes Ziel: 85 kg.
 
 ## Devices
 - **Withings ScanWatch** — Sleep, HR, SpO2, Activity, Body Temp

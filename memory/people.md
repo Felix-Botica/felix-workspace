@@ -1,10 +1,32 @@
 # People — Lothar's Network
 
-## Inner Circle (weiß alles über Felix)
+## Kontakt-Tiers & Prio-System
+| Tier | Bedeutung | Digest-Prio |
+|------|-----------|-------------|
+| 🔴 Partnerin | Chanté | Immer oben |
+| 🟠 Engster Kreis | Weiß alles über Felix, persönlichste Beziehungen | Hoch |
+| 🟡 Enge Freunde | Vertraute Freunde, regelmäßiger Kontakt | Mittel-Hoch |
+| 🔵 Kunden (aktiv) | Bezahlende Botica-Clients | Hoch (Business) |
+| 🟣 Potenzielle Kunden | Pipeline, noch nicht signed | Mittel-Hoch (Business) |
+| ⚪ Business-Freunde | Netzwerk, gelegentlicher Kontakt | Mittel |
+| 🟤 Freunde | Sozialer Kreis | Normal |
+
+---
+
+## 🔴 Partnerin
+
+### Chanté-Whitney Heinz
+- **Phone:** +4917661407816
+- **Tier:** 🔴 Partnerin
+- **Ton:** Warm, persönlich
+
+---
+
+## 🟠 Engster Kreis (weiß alles über Felix)
 
 ### Andreas Büchelhofer
 - **Phone:** +491728246571
-- **Relationship:** Engster Freund
+- **Tier:** 🟠 Engster Kreis
 - **Location:** Roche, Schweiz
 - **Background:** Hat mehrere Homeshopping-Sender in Deutschland aufgebaut
 - **Aktuell:** Lothar plant April AirBnB in der Nähe (1 Monat). Ab Ende März mit Frau wieder in Roche oder Südspanien.
@@ -12,20 +34,15 @@
 
 ### Uwe Schröder
 - **Phone:** +491777990330
-- **Relationship:** Engster Freund, Nylongerie-Mitgründer
-- **Background:** Hat das Instagram-Posting-Format für Nylongerie entwickelt (kein Overlay, doppelter Credit)
+- **Tier:** 🟠 Engster Kreis
+- **Background:** Nylongerie-Mitgründer. Hat das Instagram-Posting-Format entwickelt (kein Overlay, doppelter Credit)
 - **Ton:** Locker, per Du
 
 ### Helmut Morent
 - **Phone:** +491726818566
-- **Relationship:** Engster Freund
+- **Tier:** 🟠 Engster Kreis + 🔵 Kunde (Seger/Voxa)
 
-## Partner & Girlfriend
-
-### Chanté-Whitney Heinz
-- **Phone:** +4917661407816
-- **Relationship:** Freundin
-- **Ton:** Warm, persönlich
+## Ex-Partnerinnen
 
 ### Sina Stücker
 - **Phone:** +4917623622380
@@ -33,158 +50,205 @@
 
 ### Annika von Taube
 - **Phone:** +4917623144046
-- **Relationship:** Ex-Freundin
 
-## Close Friends & Business Partners
+---
 
-### Peter Badge
-- **Phone:** +491716420074
-- **Relationship:** Enger Freund, Partner bei ScienceNow (35% Anteil)
-- **Background:** Fotograf, hat Nobel-Preisträger porträtiert
-- **Note:** Stephan Clausen adressierte eine Nachricht an "Herr Badge" über Lothars Nummer — Kontextverwechslung?
+## 🔵 Aktive Kunden (Botica.tech)
 
-### Mathias Valentin
-- **Phone:** +491713633632
-- **Relationship:** Enger Business-Freund, Partner "Sophie in Your Ear" Agent
+### Helmut Morent → siehe 🟠 Engster Kreis
+- Auch: Kunde (Seger/Voxa)
 
-### Andreas Valentin
-- **Phone:** +971503945943
-- **Relationship:** Enger Freund, Professor Fotografie, Partner Manheimer Garment
-- **Location:** Dubai/UAE
-
-### Karsten Thiel
-- **Phone:** +4915115222050
-- **Relationship:** Freund, Partner Manheimer Garment Project
-
-### Ingo Brinkmeier
-- **Phone:** +491734298036
-- **Relationship:** Enger Business-Freund, Partner Manheimer Garment
+### Max Engstler
+- **Phone:** +4916092426251
+- **Tier:** 🔵 Kunde
+- **Firma:** Seger/Voxa (zusammen mit Helmut Morent)
 
 ### Christian Bracht
 - **Phone:** +491715335338
-- **Relationship:** Enger Business-Freund, Client, Partner LUKSO Project
+- **Tier:** 🔵 Kunde
+- **Firma:** Sleek
+- **Background:** Auch LUKSO-Projekt-Partner
 
-### Giovanna Winterfeld
-- **Phone:** +4917664874665
-- **Relationship:** Enge Freundin
-- **⚠️ History:** Felix hat 3x versehentlich in ihrem Chat geantwortet (2026-03-05) — Vorsicht!
+### Fabian Vogelsteller
+- **Phone:** +4915771568060
+- **Tier:** 🔵 Kunde
+- **Firma:** LUKSO
+- **Background:** Co-developed Ethereum, hat Lothar auf OpenClaw gebracht
+
+### Peter Badge
+- **Phone:** +491716420074
+- **Tier:** 🔵 Kunde (ScienceNow) + 🟡 Enger Freund
+- **Firma:** ScienceNow (Lothar hält Shares, ist also auch eigener Kunde)
+- **Background:** Fotograf, hat Nobel-Preisträger porträtiert
+
+---
+
+## 🟣 Potenzielle Kunden (Pipeline)
+
+### Mathias Valentin
+- **Phone:** +491713633632
+- **Tier:** 🟣 Potenzieller Kunde + 🟡 Enger Freund
+- **Projekt:** "Sophie in Your Ear" Agent
+
+### Alexander Kubald
+- **Phone:** +491725115555
+- **Tier:** 🟣 Potenzieller Kunde + ⚪ Enger Business-Freund
+
+### Tung Nguyen-Khac
+- **Phone:** +491733709332
+- **Tier:** 🟣 Potenzieller Kunde + ⚪ Enger Business-Freund
+- **Background:** Co-Founder Agentic Preventive Health Companions (ex ProSieben/Bigpoint), Krebsüberlebender, Diabetiker seit 2025
+
+### Friederike Lindenberg
+- **Phone:** +491715118966
+- **Tier:** 🟣 Potenzielle Kundin
+
+### Beate Johnen
+- **Phone:** +498969313505 (Festnetz)
+- **Tier:** 🟣 Potenzielle Kundin
+
+---
+
+## 🟡 Enge Freunde
 
 ### Alexander Tramm
 - **Phone:** +491701821911
-- **Relationship:** Enger Freund
+- **Tier:** 🟡 Enger Freund
 
 ### Rainer Keller
 - **Phone:** +33607932200
-- **Relationship:** Enger Freund
+- **Tier:** 🟡 Enger Freund
 - **Location:** Frankreich
 
 ### Marc Fiedler
 - **Phone:** +491722984590
-- **Relationship:** Enger Freund
+- **Tier:** 🟡 Enger Freund
 
 ### Marcus Meyer
 - **Phone:** +491702268003
-- **Relationship:** Enger Freund
+- **Tier:** 🟡 Enger Freund
+
+### Giovanna Winterfeld
+- **Phone:** +4917664874665
+- **Tier:** 🟡 Enge Freundin
+- **⚠️ History:** Felix hat 3x versehentlich in ihrem Chat geantwortet (2026-03-05) — Vorsicht!
+
+### Michael Simon De Normier
+- **Phone:** +491711280313
+- **Tier:** 🟡 Enger Freund
+- **Background:** Oscar gewonnen für "The Reader", seitdem weniger Glück
 
 ### Kristian Schuller
 - **Phone:** +491716271112
-- **Relationship:** Freund, bekannter Fotograf
+- **Tier:** 🟡 Freund, bekannter Fotograf
 
-## Business Friends & Clients
+---
+
+## ⚪ Business-Freunde & Netzwerk
+
+### Andreas Valentin
+- **Phone:** +971503945943
+- **Tier:** ⚪ Enger Business-Freund
+- **Background:** Professor Fotografie, Partner Manheimer Garment
+- **Location:** Dubai/UAE
 
 ### Stephan Clausen
-- **Phone:** +491716420074
-- **Relationship:** PR-Berater
-- **Interesse:** Investment in Manheimer Berlin (familiärer Hintergrund ermöglicht es), will PR machen
-- **Verbindung:** Hat Turi2-Artikel über NZZ-Expansion geschickt (Kontext: ScienceNow-Präsentation bei NZZ)
+- **Phone:** +491717017171
+- **Tier:** ⚪ Business-Freund / PR-Berater
+- **Interesse:** Investment in Manheimer Berlin, will PR machen
+- **Verbindung:** Hat ScienceNow-Kontext (NZZ-Expansion)
 
 ### Iva Haldner
-- **Relationship:** Partnerin in der Schweiz
+- **Tier:** ⚪ Business-Partnerin
 - **Verbindung:** Hat ScienceNow bei der NZZ vorgestellt → große Begeisterung
 
 ### Prof. Dr. Peter Fissenewert
 - **Phone:** +4915129180300
-- **Relationship:** Enger Business-Freund
+- **Tier:** ⚪ Enger Business-Freund
 
-### Tung Nguyen-Khac
-- **Phone:** +491733709332
-- **Relationship:** Enger Business-Freund & potenzieller Client
-- **Background:** Co-Founder Agentic Preventive Health Companions (ex ProSieben/Bigpoint), Krebsüberlebender, Diabetiker seit 2025
+### Karsten Thiel
+- **Phone:** +4915115222050
+- **Tier:** ⚪ Business-Freund
+- **Projekt:** Partner Manheimer Garment
 
-### Alexander Kubald
-- **Phone:** +491725115555
-- **Relationship:** Enger Business-Freund
+### Ingo Brinkmeier
+- **Phone:** +491734298036
+- **Tier:** ⚪ Business-Freund
+- **Projekt:** Partner Manheimer Garment
 
 ### Manuel Cubero
 - **Phone:** +4916093979665
-- **Relationship:** Enger Business-Freund
+- **Tier:** ⚪ Enger Business-Freund
 
 ### Michael Ong Ong
 - **Phone:** +6590110044
-- **Relationship:** Business-Freund
+- **Tier:** ⚪ Business-Freund
 - **Location:** Singapur
 
 ### Andrea Malgara
 - **Phone:** +491751815168
-- **Relationship:** Enger Business-Freund
+- **Tier:** ⚪ Enger Business-Freund
 
 ### Daniel Morent
 - **Phone:** +491703033181
-- **Relationship:** Enger Business-Freund
-
-### Max Engstler
-- **Phone:** +4916092426251
-- **Relationship:** Business-Freund, Client bei Seger/Voxa
+- **Tier:** ⚪ Enger Business-Freund
 
 ### Christoph Nehring
 - **Phone:** +491797621364
-- **Relationship:** Enger Business-Freund, potenzieller Client HaPeKo
+- **Tier:** ⚪ Enger Business-Freund, potenzieller Client HaPeKo
 
 ### Johannes Siferlinger
 - **Phone:** +4915117167482
-- **Relationship:** Potenzieller Client (Rituals.com)
-
-### Fabian Vogelsteller
-- **Phone:** +4915771568060
-- **Relationship:** Business-Freund, Client bei LUKSO
-- **Background:** Co-developed Ethereum, hat Lothar auf OpenClaw gebracht
+- **Tier:** ⚪ Business-Freund (Rituals.com)
 
 ### Heiko Scherer
 - **Phone:** +491741805909
-- **Relationship:** Enger Business-Freund
+- **Tier:** ⚪ Enger Business-Freund
 - **Background:** Mitgründer Tchop.io mit Lothar (vor ~10 Jahren)
 
 ### Heiko Hubertz
 - **Phone:** +491712204110
-- **Relationship:** Enger Business-Freund
+- **Tier:** ⚪ Enger Business-Freund
 
 ### Dr. Dr. Ulrike Handel
-- **Phone:** +491717614613
-- **Relationship:** Enge Business-Freundin
+- **Phone:** +491717614171
+- **Tier:** ⚪ Enge Business-Freundin
 
 ### Bart Swanson
 - **Phone:** +16318004067
-- **Relationship:** Enger Business-Freund
+- **Tier:** ⚪ Enger Business-Freund
 
-## Friends
+### Viktor von Rheinbaben
+- **Phone:** +447825877852
+- **Tier:** ⚪ Enger Business-Freund + 🟣 Potenzieller Kunde
+- **Firma:** King International London (Hedgefund)
+- **Location:** London
 
-### Michael Simon De Normier
-- **Phone:** +491711280313
-- **Relationship:** Enger Freund
-- **Background:** Oscar gewonnen für "The Reader", seitdem weniger Glück
+### Lars Stegelmann
+- **Phone:** +491716453311
+- **Tier:** ⚪ Enger Business-Freund
+
+---
+
+## 🟤 Freunde
 
 ### Ines Schneider
 - **Phone:** +491729174234
-- **Relationship:** Enge Freundin
+- **Tier:** 🟤 Enge Freundin
 
 ### Juliet Kothe
 - **Phone:** +491776277608
-- **Relationship:** Freundin
+- **Tier:** 🟤 Freundin
 
 ### Holger Homann
 - **Phone:** +4915124145500
-- **Relationship:** Freund
+- **Tier:** 🟤 Freund
 
 ### Aiane Lamboy
 - **Phone:** +491723283716
-- **Relationship:** Freundin
+- **Tier:** 🟤 Freundin
+
+### Harald
+- **Phone:** +4917624333186
+- **Tier:** 🟤 Bekannter
+- **Note:** Nachname unbekannt. Kennt Lothar aus dem Berliner Nachtleben.

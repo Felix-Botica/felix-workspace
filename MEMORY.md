@@ -59,8 +59,10 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - **Live:** Morning Briefing, WA Inbox Digest (21:00), X Digest, Wind-Down, Observer, LinkedIn Summary (via Email)
 - **In Arbeit:** Nylongerie Sub-Agent optimieren & testen (Posts)
 - **In Arbeit:** Stories-Pipeline (technisch ✅, Text-Overlay-Templates noch offen), Shopify connected (ecb34e-4)
-- **P0 Next:** GitHub Account für Felix → Nightly Backup, Eigene Email für Felix
-- **P1 Backlog:** Community Skills evaluieren (ClawHub), Nylongerie Headlines & Captions verbessern, Reels-Pipeline (253 Videos vorhanden!), Email-Kampagnen, Reddit im Evening Digest
+- **P0 Next:** Nightly Backup (GitHub Account vorhanden)
+- **Felix Email:** felix@botica.tech — LIVE, kann senden + empfangen via Gmail/gog (eingerichtet zusammen mit GitHub Account ~12.03.2026)
+- **P1 Next:** Nylongerie CRM Workflow (Shopify Email-Kampagnen an Bestandskunden — 2. größte Umsatzquelle nach Stories)
+- **P1 Backlog:** Community Skills evaluieren (ClawHub), Nylongerie Headlines & Captions verbessern, Reels-Pipeline (253 Videos vorhanden!), Reddit im Evening Digest
 - **P2 Backlog:** Memory Plugin (ClawVault/Supermemory), Product Tags (IG Shopping), Instagram Performance Tracking, Gewicht-Auto
 - **P3 Backlog:** Kontakt-Tiers, Manheimer Automation, Email Auto-Triage
 
