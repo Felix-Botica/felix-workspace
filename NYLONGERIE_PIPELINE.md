@@ -3,6 +3,9 @@
 ## Overview
 Complete workflow for posting nylon/hosiery fashion content to 5 Instagram accounts.
 
+## ⚡ Topic 3 Context Rule
+When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"` before responding. This ensures context survives session resets — no more "which images?" confusion. Display pending drafts with their preview URLs so Lothar can approve/reject immediately.
+
 ## Accounts
 | Account | IG ID | Style |
 |---------|-------|-------|
