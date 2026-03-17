@@ -297,15 +297,23 @@ GESPRÄCHE:
         }
     )
 
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            data = json.loads(resp.read().decode())
-            if data.get("content"):
-                return data["content"][0]["text"]
-            return fallback_format(conversations_text, chat_count, msg_count)
-    except Exception as e:
-        # If API fails, try via openclaw's auth (Max sub)
-        return analyze_via_cli(conversations_text, chat_count, msg_count, str(e))
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read().decode())
+                if data.get("content"):
+                    return data["content"][0]["text"]
+                return fallback_format(conversations_text, chat_count, msg_count)
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 529) and attempt < max_retries - 1:
+                import time
+                wait = (attempt + 1) * 5  # 5s, 10s
+                time.sleep(wait)
+                continue
+            return analyze_via_cli(conversations_text, chat_count, msg_count, str(e))
+        except Exception as e:
+            return analyze_via_cli(conversations_text, chat_count, msg_count, str(e))
 
 
 def analyze_via_cli(conversations_text, chat_count, msg_count, error_hint=""):
