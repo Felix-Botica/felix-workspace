@@ -34,8 +34,10 @@
 
 ### Uwe Schröder
 - **Phone:** +491777990330
+- **Email:** uwe.schroeder@mac.com
 - **Tier:** 🟠 Engster Kreis
 - **Background:** Nylongerie-Mitgründer. Hat das Instagram-Posting-Format entwickelt (kein Overlay, doppelter Credit)
+- **Brevo:** Lothar hat alleinigen Zugang (nicht Uwe). API Key live seit 19.03.2026.
 - **Ton:** Locker, per Du
 
 ### Helmut Morent

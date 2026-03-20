@@ -87,6 +87,20 @@
 - **Content:** Email + calendar summary + health data (integrate Withings)
 - **Commands:** `openclaw cron list` / `openclaw cron run 2187e388-ef9c-4c8e-8f5b-57b64f8a87aa`
 
+### Brevo (Email CRM)
+- **Status:** CONNECTED
+- **Account:** Botica.tech (L.e@me.com)
+- **Plan:** Free — 300 emails/day
+- **Contacts:** 714 (imported from Shopify)
+- **Lists:** "Nylongerie Subscribers" (empty — needs assignment)
+- **Sender:** hello@nylongerie.com (verified + authenticated ✅), also L.e@me.com
+- **Domain:** nylongerie.com — SPF/DKIM/DMARC verified via Strato (managed by Uwe)
+- **API Key:** BREVO_API_KEY_REST in `~/.openclaw/.env` (xkeysib-...)
+- **SMTP Key:** BREVO_SMTP_KEY in `~/.openclaw/.env` (xsmtpsib-...)
+- **API Docs:** https://developers.brevo.com/reference
+- **Access:** Only Lothar (not Uwe)
+- **Skill:** To be built (Email/CRM skill)
+
 ## Not Yet Connected
 
 ### Contact Tier System

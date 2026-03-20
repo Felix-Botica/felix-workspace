@@ -20,6 +20,16 @@
 # - If disconnected, alert Lothar immediately
 # - WhatsApp sessions expire after ~14 days — warn 2 days before
 
+# 🔴 Integration Health Check (daily)
+# NO SILENT FAILS. If any integration is broken → alert Lothar in Health topic IMMEDIATELY.
+# Check:
+# - Withings: tokens non-empty in .env + test API call (v2/sleep getsummary)
+# - Gmail/gog: `gog auth status` returns valid
+# - WhatsApp: connection alive
+# - Shopify: token present
+# If ANY check fails → message Lothar with what's broken and how to fix it.
+# Never wait for him to discover it himself.
+
 # Google Cloud Trial Monitor (check weekly)
 # - Trial had ~€258 credit as of Feb 25, 2026
 # - Warn Lothar when credit drops below €50 or 5 days remain

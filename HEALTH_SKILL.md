@@ -1,5 +1,11 @@
 # HEALTH_SKILL.md — Withings Health Data Integration
 
+## OAuth Config
+- **Callback URL:** `http://localhost:8888/callback`
+- **Scopes:** `user.metrics,user.activity`
+- **User ID:** 23049153
+- **Re-Auth Flow:** Start local server on :8888, redirect to Withings authorize2, exchange code for tokens
+
 ## Setup
 - **API Endpoint:** https://wbsapi.withings.net
 - **Auth:** OAuth2 Bearer token from `~/.openclaw/.env`
