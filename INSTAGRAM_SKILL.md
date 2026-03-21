@@ -10,31 +10,37 @@
 
 ## Account Portfolio
 
-| Account | Username | IG ID | Followers | Posts | Niche |
-|---------|----------|-------|-----------|-------|-------|
-| Nylon Darling | @nylondarling | 17841429713561331 | 254,240 | 1,316 | Flagship, lifestyle |
-| Nylon Cherie | @nyloncherie | 17841402906657029 | 57,806 | 260 | Elegant/classic |
-| Nylongerie | @nylongerie | 17841402986367027 | 46,420 | 569 | Brand hub, product links |
-| Leg Fashion | @legfashion | 17841402884847036 | 45,618 | 421 | Legs & fashion focus |
-| Shiny Nylon Star | @shinynylonstar | 17841464191117228 | 33,546 | 230 | Shiny/glossy niche |
-| WALL MOON Studios | @wallmoonstudios | 17841445728077347 | 13 | 20 | Art/creative |
-| vimondo art | @vimondoart | 17841445492587197 | 3 | 1 | Art |
-| vimondo Group | @vimondogroup | 17841445836043232 | 6 | 1 | Group |
+| Account | Username | IG ID | FB Page ID | Followers | Posts | Niche |
+|---------|----------|-------|------------|-----------|-------|-------|
+| Nylon Darling | @nylondarling | 17841429713561331 | 199908979878201 | 254,240 | 1,326 | Flagship, lifestyle |
+| Nylon Cherie | @nyloncherie | 17841402906657029 | 296728683764872 | 57,751 | 260 | Elegant/classic (PAUSIERT) |
+| Nylongerie | @nylongerie | 17841402986367027 | 201263089908521 | 46,434 | 569 | Brand hub, product links |
+| Leg Fashion | @legfashion | 17841402884847036 | 192419927452526 | 45,551 | 428 | Legs & fashion focus |
+| Shiny Nylon Star | @shinynylonstar | 17841464191117228 | 227423323787660 | 33,503 | 236 | Shiny/glossy niche |
+| Black Shiny Nylon | @blackshinynylon | 17841471823236920 | 1033547679841747 | 7,511 | 30 | Black nylon niche |
+| Nextdoor Nylon | @nextdoornylon | 17841472299535162 | 1029497333582097 | 4,442 | 26 | Authentic/real content |
+| Planet Nylon | @planetnylon | 17841472009081615 | 1086581611195910 | 2,019 | 29 | Shiny + leather/vinyl |
+| WALL MOON Studios | @wallmoonstudios | 17841445728077347 | 100397958747527 | 13 | 20 | Art/creative |
+| vimondo art | @vimondoart | 17841445492587197 | 101548411956324 | 3 | 1 | Art |
+| vimondo Group | @vimondogroup | 17841445836043232 | 105337711569184 | 6 | 1 | Group |
 
-**Total followers:** ~437,000+
-**Core Nylongerie accounts (5):** @nylondarling, @nyloncherie, @nylongerie, @legfashion, @shinynylonstar
+**Total followers:** ~451,000+
+**Core Nylongerie accounts (8):** @nylondarling, @nyloncherie (pausiert), @nylongerie, @legfashion, @shinynylonstar, @blackshinynylon, @nextdoornylon, @planetnylon
 
 ## Critical Rule: One Photo, One Primary Account
 Each photo goes to ONE account only. Do not cross-post the same image across multiple accounts.
 **Exception:** Only truly standout content (1-2x per week max) may appear on its primary account plus @nylongerie with a product link.
 
 ## Content Assignment Logic
-- Classic/elegant → @nyloncherie
+- Classic/elegant → @nyloncherie (PAUSIERT)
 - Lifestyle/editorial → @nylondarling
 - Glossy/shiny → @shinynylonstar
 - Legs-focused → @legfashion
 - Product shots with shop links → @nylongerie
+- **Black nylons** (black tights, dark aesthetic) → @blackshinynylon
+- **Girl next door** (natural, authentic, casual, real — no AI, no overly polished) → @nextdoornylon
 - Art/creative → @wallmoonstudios
+- **Shiny + edge** (nylons with leather, vinyl, latex, boots, heels — edgier aesthetic) → @planetnylon
 
 ## Posting Flow (3-Step Process)
 

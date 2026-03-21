@@ -20,12 +20,29 @@ When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check `~/.open
 - **Queue:** `~/.openclaw/nylongerie/queue.json` (tracking all posts)
 - **Classifications:** `~/.openclaw/nylongerie/classify-results.json` (AI-categorized)
 
+## Stories Template Engine
+- **File:** `~/.openclaw/nylongerie/story-templates.js`
+- **Version:** v3 (Font-Fix update 20.03.2026)
+- **Templates:** sale, product, motw, season, category
+- **Fonts:** DancingScript (script headlines), Montserrat + Bold + ExtraBold
+- **Font Rules (MANDATORY):**
+  - Minimum font size: **30px** — nothing smaller, ever
+  - All Montserrat text: **bold** weight
+  - DancingScript: always with **4px stroke outline** for phone readability
+  - CTA: **52px bold** with semi-transparent **background box**
+  - Code pill: **44px bold**, **4px border**
+  - Branding: **32px bold**, opacity 0.7, with text shadow
+  - **Link sticker zone:** ~220px gap between CTA and branding (CTA ends ~1580, branding at ~1780)
+
 ## Style → Account Mapping
 - `elegant` → @nylondarling (was @nyloncherie — paused indefinitely since 09.03.2026)
 - `lifestyle` → @nylondarling
 - `shiny-glossy` → @shinynylonstar
 - `legs-focus` → @legfashion
+- `black` (black nylons, dark aesthetic) → @blackshinynylon
+- `girl-next-door` (natural, authentic, casual, real) → @nextdoornylon
 - Product shots → @nylongerie
+- `edgy` (shiny + leather, vinyl, latex, boots, heels) → @planetnylon
 - ⚠️ **@nyloncherie ist PAUSIERT** — keine Posts bis auf Weiteres
 
 ## Pipeline Steps
