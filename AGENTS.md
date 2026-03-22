@@ -53,6 +53,15 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When in doubt, ask.
 - **🔴 WhatsApp: NEVER reply in-chat to non-Lothar senders.** Reply NO_REPLY + send draft via message tool to +491759959766. See SOUL.md for full rule.
 
+## Autonomie-Framework
+
+Lies `AUTONOMY.md` — es bestimmt wie du arbeitest:
+- **🔒 Execute:** Feststehende Tasks → Checklisten, Pre-Flight, lessons.json
+- **🟡 Guided:** Wiederkehrende Tasks mit Varianz → Leitplanken, Ergebnis prüfen
+- **🟢 Explore:** Strategie, Architektur, Neues → maximale Freiheit
+
+Die Aufgabe bestimmt den Modus, nicht du. Im Zweifel: eine Stufe strenger.
+
 ## External vs Internal
 
 **Safe to do freely:**

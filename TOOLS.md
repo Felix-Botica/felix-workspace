@@ -88,18 +88,21 @@
 - **Commands:** `openclaw cron list` / `openclaw cron run 2187e388-ef9c-4c8e-8f5b-57b64f8a87aa`
 
 ### Brevo (Email CRM)
-- **Status:** CONNECTED
+- **Status:** READY TO SEND
 - **Account:** Botica.tech (L.e@me.com)
-- **Plan:** Free — 300 emails/day
-- **Contacts:** 714 (imported from Shopify)
-- **Lists:** "Nylongerie Subscribers" (empty — needs assignment)
-- **Sender:** hello@nylongerie.com (verified + authenticated ✅), also L.e@me.com
+- **Plan:** Free — 300 emails/day (3 Batches für volle Liste)
+- **Contacts:** 730 subscribed (von 908 total, nur Shopify marketing consent)
+- **Lists:** "Nylongerie Subscribers" (ID: 3) — 730 Kontakte zugewiesen
+- **Sender:** Alex <hello@nylongerie.com> (verified + authenticated ✅)
 - **Domain:** nylongerie.com — SPF/DKIM/DMARC verified via Strato (managed by Uwe)
 - **API Key:** BREVO_API_KEY_REST in `~/.openclaw/.env` (xkeysib-...)
 - **SMTP Key:** BREVO_SMTP_KEY in `~/.openclaw/.env` (xsmtpsib-...)
+- **Revenue Impact:** Email = #1 Revenue Channel — 40 Orders, €2.593 via Shopify Email
+- **Best Patterns:** Collection-focused, 25% discount, bold language, product-specific
+- **Rabattcode:** SPRING30 (30% off, bis 3. April, 1x/Kunde)
+- **Template v2:** Spring Sale ready — wartet auf Approval
 - **API Docs:** https://developers.brevo.com/reference
 - **Access:** Only Lothar (not Uwe)
-- **Skill:** To be built (Email/CRM skill)
 
 ## Not Yet Connected
 

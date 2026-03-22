@@ -1,0 +1,63 @@
+{
+  "email_campaigns": [
+    {
+      "rule": "Nie Massen-Emails über Shared-IP-Provider (Brevo Free) senden",
+      "reason": "11% Bounce Rate, Domain-Reputation-Schaden bei nylongerie.com Kampagne",
+      "date": "2026-03-21",
+      "severity": "critical"
+    },
+    {
+      "rule": "Vor erstem Versand über neuen Provider: Test-Batch (max 50) senden und Bounce-Rate prüfen",
+      "reason": "Shared IPs haben unberechenbare Zustellraten",
+      "date": "2026-03-21",
+      "severity": "critical"
+    },
+    {
+      "rule": "Email-Listen vor Versand bereinigen — Bounced/Invalid Adressen entfernen",
+      "reason": "Shopify-Kontaktliste hatte veraltete Adressen",
+      "date": "2026-03-21",
+      "severity": "high"
+    }
+  ],
+  "whatsapp": [
+    {
+      "rule": "Nie in fremden WhatsApp-Chats antworten — immer Draft an Lothar",
+      "reason": "Antworten erscheinen als grüne Nachrichten VON Lothar. Mehrfach passiert (Tramm, Badge, von Taube)",
+      "date": "2026-03-07",
+      "severity": "critical"
+    }
+  ],
+  "operations": [
+    {
+      "rule": "Mehrtägige Operationen sofort in operations.json loggen, nicht erst am Session-Ende",
+      "reason": "Session kann jederzeit enden, Kontext geht verloren",
+      "date": "2026-03-21",
+      "severity": "high"
+    },
+    {
+      "rule": "API-Status immer live prüfen — nie aus Memory-Files ableiten",
+      "reason": "Memory kann veraltet sein, führt zu falschen Annahmen",
+      "date": "2026-03-21",
+      "severity": "high"
+    }
+  ],
+  "pre_flight": {
+    "email_campaign": [
+      "Provider-IP-Typ prüfen (shared vs dedicated)",
+      "Test-Batch (max 50) senden und 1h warten",
+      "Bounce-Rate < 5% bestätigen",
+      "Sender-Domain SPF/DKIM verifiziert?",
+      "Email-Liste bereinigt (Bounces entfernt)?"
+    ],
+    "social_media_post": [
+      "Bild-Review (Nischen-Fit)",
+      "Caption-Check (Hashtags, Mentions)",
+      "Account-Cooldown prüfen (nicht >5 Posts/Tag)"
+    ],
+    "shopify_discount": [
+      "Bestehende aktive Codes prüfen",
+      "Ablaufdatum gesetzt?",
+      "Nutzungslimit gesetzt?"
+    ]
+  }
+}

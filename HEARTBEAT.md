@@ -30,6 +30,16 @@
 # If ANY check fails → message Lothar with what's broken and how to fix it.
 # Never wait for him to discover it himself.
 
+# 🔄 Operations State Check (EVERY heartbeat)
+# Read memory/operations.json FIRST. For each active operation:
+# - Check current status via API (don't trust memory alone)
+# - Update stats (delivered, bounced, opens, clicks)
+# - Execute next_action if next_action_date <= today
+# - Log results back to operations.json
+# - Alert Lothar in relevant topic if action needed or something failed
+# This is the SINGLE SOURCE OF TRUTH for multi-day tasks.
+# If operations.json doesn't exist or is empty → skip silently.
+
 # Google Cloud Trial Monitor (check weekly)
 # - Trial had ~€258 credit as of Feb 25, 2026
 # - Warn Lothar when credit drops below €50 or 5 days remain
