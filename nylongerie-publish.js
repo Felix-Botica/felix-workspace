@@ -27,11 +27,14 @@ const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 const API_VERSION = 'v25.0';
 
 const ACCOUNTS = {
-  nylondarling:   { igId: '17841429713561331', name: 'Nylon Darling' },
-  nyloncherie:    { igId: '17841402906657029', name: 'Nylon Cherie' },
-  nylongerie:     { igId: '17841402986367027', name: 'Nylongerie' },
-  legfashion:     { igId: '17841402884847036', name: 'Leg Fashion' },
-  shinynylonstar: { igId: '17841464191117228', name: 'Shiny Nylon Star' },
+  nylondarling:    { igId: '17841429713561331', name: 'Nylon Darling' },
+  nyloncherie:     { igId: '17841402906657029', name: 'Nylon Cherie' },
+  nylongerie:      { igId: '17841402986367027', name: 'Nylongerie' },
+  legfashion:      { igId: '17841402884847036', name: 'Leg Fashion' },
+  shinynylonstar:  { igId: '17841464191117228', name: 'Shiny Nylon Star' },
+  blackshinynylon: { igId: '17841471823236920', name: 'Black Shiny Nylon' },
+  planetnylon:     { igId: '17841472009081615', name: 'Planet Nylon' },
+  nextdoornylon:   { igId: '17841472299535162', name: 'Nextdoor Nylon' },
 };
 
 // --- R2 Upload ---
@@ -122,11 +125,16 @@ async function waitForContainer(containerId, maxWait = 60000) {
 
 // --- Queue ---
 function loadQueue() {
-  return JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf-8'));
+  const raw = JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf-8'));
+  // Support both array format and {posts:[]} format
+  if (Array.isArray(raw)) return { posts: raw };
+  return raw;
 }
 
 function saveQueue(queue) {
-  fs.writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2));
+  // Save back as array if originally array
+  const data = Array.isArray(queue) ? queue : (queue.posts || queue);
+  fs.writeFileSync(QUEUE_FILE, JSON.stringify(data, null, 2));
 }
 
 // --- Publish a single post ---

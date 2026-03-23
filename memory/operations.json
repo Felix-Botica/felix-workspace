@@ -1,43 +1,52 @@
 {
-  "version": 1,
-  "last_updated": "2026-03-21T17:07+01:00",
-  "operations": {
-    "brevo_spring_campaign": {
-      "type": "email_campaign",
-      "campaign_id": 1,
-      "name": "Spring Sale 2026",
-      "subject": "Spring Sale \u2726 30% Off Everything",
-      "discount_code": "SPRING30",
-      "discount_expires": "2026-04-03",
-      "total_contacts": 730,
-      "batches": [
-        {
-          "batch": 1,
-          "status": "completed",
-          "sent_at": "2026-03-20T19:50+01:00",
-          "count": 298,
-          "delivered": 248,
-          "hard_bounces": 49,
-          "soft_bounces": 1,
-          "opens": 50,
-          "clicks": 13,
-          "unsubscribes": 1
-        },
-        {
-          "batch": 2,
-          "status": "queued",
-          "queued_at": "2026-03-21T05:40+01:00",
-          "count": null,
-          "notes": "Re-activated suspended campaign via API sendNow"
+    "version": 1,
+    "last_updated": "2026-03-22T15:07+01:00",
+    "operations": {
+        "brevo_spring_campaign": {
+            "type": "email_campaign",
+            "campaign_id": 1,
+            "name": "Spring Sale 2026",
+            "subject": "Spring Sale ✦ 30% Off Everything",
+            "discount_code": "SPRING30",
+            "discount_expires": "2026-04-03",
+            "total_contacts": 730,
+            "batches": [
+                {
+                    "batch": 1,
+                    "status": "completed",
+                    "sent_at": "2026-03-20T19:50+01:00",
+                    "count": 298,
+                    "delivered": 248,
+                    "hard_bounces": 49,
+                    "soft_bounces": 1,
+                    "opens": 50,
+                    "clicks": 13,
+                    "unsubscribes": 1
+                },
+                {
+                    "batch": 2,
+                    "status": "queued",
+                    "queued_at": "2026-03-21T05:40+01:00",
+                    "count": null,
+                    "notes": "Re-activated suspended campaign via API sendNow"
+                },
+                {
+                    "batch": 2,
+                    "status": "sending",
+                    "sent_at": "2026-03-22T15:07+01:00",
+                    "count": 130,
+                    "campaign_id": 2,
+                    "list_id": 4,
+                    "notes": "Remaining 130 contacts who never received batch 1 (campaign was suspended after 598/730). List cleaned: 73 bad contacts removed before send."
+                }
+            ],
+            "next_action": "Check batch 2 delivery stats + bounce rate. If clean (<5%), plan next campaign.",
+            "next_action_date": "2026-03-23",
+            "post_campaign": [
+                "Export Brevo hard-bounce blacklist",
+                "Mark bounced addresses as unsubscribed in Shopify",
+                "Clean Brevo contact list"
+            ]
         }
-      ],
-      "next_action": "Check batch 2 delivery stats, queue batch 3 if remaining > 0",
-      "next_action_date": "2026-03-22",
-      "post_campaign": [
-        "Export Brevo hard-bounce blacklist",
-        "Mark bounced addresses as unsubscribed in Shopify",
-        "Clean Brevo contact list"
-      ]
     }
-  }
 }

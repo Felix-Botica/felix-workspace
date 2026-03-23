@@ -7,13 +7,16 @@ Complete workflow for posting nylon/hosiery fashion content to 5 Instagram accou
 When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"` before responding. This ensures context survives session resets — no more "which images?" confusion. Display pending drafts with their preview URLs so Lothar can approve/reject immediately.
 
 ## Accounts
-| Account | IG ID | Style |
-|---------|-------|-------|
-| @nylondarling | 17841429713561331 | Lifestyle/editorial, flagship |
-| @nyloncherie | 17841402906657029 | Classic/elegant |
-| @nylongerie | 17841402986367027 | Brand hub, product links |
-| @legfashion | 17841402884847036 | Legs-focused |
-| @shinynylonstar | 17841464191117228 | Shiny/glossy niche |
+| Account | IG ID | Style | Followers |
+|---------|-------|-------|-----------|
+| @nylondarling | 17841429713561331 | Lifestyle/editorial, flagship | 254K |
+| @nyloncherie | 17841402906657029 | Classic/elegant (PAUSED) | 58K |
+| @nylongerie | 17841402986367027 | Brand hub, product links | 46K |
+| @legfashion | 17841402884847036 | Legs-focused | 46K |
+| @shinynylonstar | 17841464191117228 | Shiny/glossy niche | 33K |
+| @blackshinynylon | 17841471823236920 | Dark/black nylon aesthetic | 7.5K |
+| @planetnylon | 17841472009081615 | Edgy: leather, vinyl, boots | 2K |
+| @nextdoornylon | 17841472299535162 | Girl-next-door, casual, natural | 4.5K |
 
 ## Content Sources
 - **Inbox:** `~/Desktop/nylongerie-content/inbox/` (raw images + videos)
@@ -223,11 +226,14 @@ Shiny Nylon Star™ legal notice: All copyrights belong to the model, brand or p
 □ Follow @nylondarling @nyloncherie @legfashion
 ```
 
-### 4. Send Preview to Lothar via WhatsApp
-Use `message(action=send, to="+491759959766", media=R2_URL, message="...")` with:
-- Account name
-- Proposed caption
+### 4. Send Preview to Lothar for Approval
+Send drafts to **Telegram Felix HQ → Approvals (Topic 6)** (chat: -1003775282698, topic: 6).
+Use `message(action=send, target="-1003775282698", threadId="6", media=R2_URL, message="...")` with:
+- Account name + image number
+- Model handle
+- Proposed headline
 - 👍 / ✏️ / ❌ options
+Keep it scannable — one message per image, no walls of text.
 
 ### 5. Publish to Instagram
 After Lothar approves:

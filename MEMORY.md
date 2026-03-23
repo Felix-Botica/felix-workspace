@@ -10,7 +10,7 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 
 ## Aktive Businesses
 - **Botica.tech** — AI Agents (Seger/Voxa, Festo, ScienceNow)
-- **Nylongerie** — E-Commerce + Instagram (437K Follower, 5 Accounts)
+- **Nylongerie** — E-Commerce + Instagram (490K+ Follower, 7 active Accounts inkl. @blackshinynylon 7.5K, @planetnylon 2K — neu seit 22.03.2026)
 - **Manheimer Berlin** — E-Commerce
 
 ## Wichtigste Beziehungen
@@ -25,7 +25,7 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
   - NylonGerie (Topic 3) — Content Pipeline
   - Digest (Topic 4) — Briefings & Summaries
   - Health (Topic 5) — Wind-Down, Gewicht
-  - Approvals (Topic 6) — Wartet auf OK
+  - Approvals (Topic 6) — IG-Drafts zur Genehmigung (ab 22.03.2026 aktiv genutzt)
 - **Fallback:** Telegram DM (@The1931FelixBot)
 - **Secondary:** WhatsApp — Observer + Inbox Digest only
 - **Felix HQ** (Telegram Supergroup -1003775282698):
