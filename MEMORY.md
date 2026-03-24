@@ -10,7 +10,9 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 
 ## Aktive Businesses
 - **Botica.tech** — AI Agents (Seger/Voxa, Festo, ScienceNow)
-- **Nylongerie** — E-Commerce + Instagram (490K+ Follower, 7 active Accounts inkl. @blackshinynylon 7.5K, @planetnylon 2K — neu seit 22.03.2026)
+- **Nylongerie** — E-Commerce + Instagram (490K+ Follower, 8 active Accounts — neu seit 22.03.2026: @blackshinynylon 7.5K, @nextdoornylon 4.5K, @planetnylon 2K)
+  - **Alle 8 Accounts:** @nylondarling (254K), @nylongerie (46K), @legfashion (46K), @shinynylonstar (33K), @blackshinynylon (7.5K), @nextdoornylon (4.5K), @planetnylon (2K) — @nyloncherie (58K) PAUSED
+  - **Posting-Ziel:** Daily across all 8 active accounts
 - **Manheimer Berlin** — E-Commerce
 
 ## Wichtigste Beziehungen
@@ -65,7 +67,7 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - **P1 Next:** Nylongerie CRM Workflow (Shopify Email-Kampagnen an Bestandskunden — 2. größte Umsatzquelle nach Stories)
 - **P1 Next:** Reels-Pipeline (253 Videos vorhanden — einziges fehlendes Content-Format)
 - **P1 Backlog:** Community Skills evaluieren (ClawHub), Nylongerie Headlines & Captions verbessern
-- **P2 Backlog:** Memory Plugin (ClawVault/Supermemory), Product Tags (IG Shopping), Instagram Performance Tracking, Gewicht-Auto
+- **P2 Backlog:** Inter-Agent Messaging (shared State-File für Observer→Felix Tasks, inspiriert von "My Brain Is Full Crew"), Connector-Agent (periodischer Memory-Scan auf unentdeckte Zusammenhänge), Memory Plugin (ClawVault/Supermemory), Product Tags (IG Shopping), Instagram Performance Tracking, Gewicht-Auto
 - **P3 Backlog:** Kontakt-Tiers, Manheimer Automation, Email Auto-Triage
 
 ## Operations State Tracking (seit 21.03.2026)
@@ -82,13 +84,15 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - Lothar will: Regeln wo nötig, Freiheit wo möglich. Nicht generell alles abbremsen.
 - Model-Routing: Haiku für Execute, Sonnet für Guided, Opus für Explore
 
-## Nylongerie Strategie (beschlossen 19.03.2026)
+## Nylongerie Strategie (aktualisiert 23.03.2026)
 - **Strategy B — Bold/American:** Tägliches Posting, Reels-Pipeline, Model-Collab-Flywheel, Cross-Promo, Flash Sales
 - **Revenue aktuell:** ~€200/Monat, 4-6 Orders, €42 avg, 315 Produkte
-- **Revenue-Ziel:** €5.000/Monat
-- **Key Unlocks:** Meta Conversations API (DM/Model Outreach), TikTok Mirror (kein Wettbewerb in Nische)
-- **Email = #1 Revenue Channel:** 40 Orders, €2.593 via Shopify Email — Brevo-Kampagnen fortsetzen
-- **5 Skills in 5 Days (19.03.):** Shopify ✅ → Analytics → Reels → Brevo/CRM → Competitor Intel
+- **Revenue-Ziel:** €2.000/Monat in 4 Monaten (historisch erreicht: Sommer/Herbst 2024, 6K Besucher)
+- **Erster Brevo-Sale:** 23.03.2026, Order #1297, €43,61 via SPRING30
+- **Email = #1 Revenue Channel:** 40 Orders, €2.593 via Shopify Email + jetzt Brevo live
+- **Shopify-Automationen:** Cart Recovery, Checkout Recovery, Returning Customer (alle OHNE Reward → verbessern), Bundles (eingerichtet, >1 Jahr nicht promotet), Free Shipping ab €50, Newsletter 15%
+- **Offene Hebel:** Cart Recovery + Reward, Bundles promoten, Wiederkäufer-Flow (Brevo), Flash Sales (monatlich), Google SEO (Produkttexte), IG→Newsletter Conversion
+- **Details:** → `memory/2026-03-23.md` (Revenue Strategy Sektion)
 - **Broader Business Strategy:** Botica Productization, ScienceNow×NZZ, Felix for Founders, PR Narrative → Revisit Mo 24.03. (Cron 315f3082)
 
 ## Reisen

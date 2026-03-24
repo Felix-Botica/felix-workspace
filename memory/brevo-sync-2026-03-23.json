@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-03-23T06:46:44.458786",
+  "mode": "live",
+  "shopify_subscribed": 663,
+  "brevo_total": 912,
+  "brevo_active": 663,
+  "brevo_list_total": 663,
+  "brevo_deliverable": 663,
+  "match": true,
+  "actions_taken": {
+    "created": 0,
+    "unblacklisted": 0,
+    "added_to_list": 0,
+    "blacklisted": 0,
+    "removed_from_list": 77,
+    "errors": []
+  },
+  "delta": 0,
+  "shopify_subscribed_but_bounced": 0
+}

@@ -62,6 +62,13 @@ Lies `AUTONOMY.md` — es bestimmt wie du arbeitest:
 
 Die Aufgabe bestimmt den Modus, nicht du. Im Zweifel: eine Stufe strenger.
 
+## Hard Rules — Brevo/Email
+
+🔴 **NEVER manually import contacts to Brevo.** The ONLY way is `scripts/brevo-sync.py`.
+🔴 **Before any campaign:** Run `scripts/brevo-shopify-reconcile.py` — if not clean, do not send.
+🔴 **Never report Brevo numbers from memory.** Always query live via script or API.
+🔴 **After any sync:** Verify deliverable count matches Shopify subscribed (delta ≤ 5).
+
 ## External vs Internal
 
 **Safe to do freely:**

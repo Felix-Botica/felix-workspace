@@ -91,7 +91,8 @@
 - **Status:** READY TO SEND
 - **Account:** Botica.tech (L.e@me.com)
 - **Plan:** Free — 300 emails/day (3 Batches für volle Liste)
-- **Contacts:** 730 subscribed (von 908 total, nur Shopify marketing consent)
+- **Contacts:** 663 subscribed + zustellbar (Shopify ↔ Brevo synced, Delta 0) — Stand 23.03.2026
+- **Reconcile-Script:** `scripts/brevo-shopify-reconcile.py` — VOR jedem Import/Kampagne laufen lassen
 - **Lists:** "Nylongerie Subscribers" (ID: 3) — 730 Kontakte zugewiesen
 - **Sender:** Alex <hello@nylongerie.com> (verified + authenticated ✅)
 - **Domain:** nylongerie.com — SPF/DKIM/DMARC verified via Strato (managed by Uwe)

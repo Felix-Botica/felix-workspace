@@ -17,6 +17,18 @@
       "reason": "Shopify-Kontaktliste hatte veraltete Adressen",
       "date": "2026-03-21",
       "severity": "high"
+    },
+    {
+      "rule": "Vor jedem Brevo-Import: Shopify email_marketing_consent.state prüfen — NUR 'subscribed' importieren. Nie pending/unsubscribed/not_subscribed.",
+      "reason": "914 Kunden total, nur 732 subscribed (Stand 23.03.2026). Lothar hat zurecht hinterfragt ob die Zahl zu hoch ist. Immer cross-checken.",
+      "date": "2026-03-23",
+      "severity": "high"
+    },
+    {
+      "rule": "Brevo-Kontaktzahl bei jedem Kampagnen-Start gegen Shopify verifizieren — nie blind aus Memory übernehmen",
+      "reason": "Zahlen ändern sich, neue Kunden kommen dazu, andere unsubscriben. Immer live prüfen.",
+      "date": "2026-03-23",
+      "severity": "high"
     }
   ],
   "whatsapp": [
@@ -47,7 +59,12 @@
       "Test-Batch (max 50) senden und 1h warten",
       "Bounce-Rate < 5% bestätigen",
       "Sender-Domain SPF/DKIM verifiziert?",
-      "Email-Liste bereinigt (Bounces entfernt)?"
+      "Email-Liste bereinigt (Bounces entfernt)?",
+      "Shopify consent states live geprüft (nur subscribed)?",
+      "Brevo-Listengröße gegen Shopify subscribed-Count verifiziert?",
+      "Reconcile-Script laufen lassen: scripts/brevo-shopify-reconcile.py",
+      "Blacklisted-in-List Count prüfen (Bounces von früheren Kampagnen)",
+      "Tatsächlich zustellbar = Listengröße - Blacklisted-in-List"
     ],
     "social_media_post": [
       "Bild-Review (Nischen-Fit)",

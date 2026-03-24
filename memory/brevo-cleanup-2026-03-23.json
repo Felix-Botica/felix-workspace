@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-03-23T06:33:47.806566",
+  "action": "brevo_cleanup",
+  "blacklisted_count": 172,
+  "blacklisted_target": 172,
+  "added_to_list_count": 8,
+  "errors": []
+}

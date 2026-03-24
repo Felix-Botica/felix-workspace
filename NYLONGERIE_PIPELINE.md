@@ -37,15 +37,31 @@ When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check `~/.open
   - Branding: **32px bold**, opacity 0.7, with text shadow
   - **Link sticker zone:** ~220px gap between CTA and branding (CTA ends ~1580, branding at ~1780)
 
+## ⚠️ Stories: NIEMALS via API publishen!
+Instagram API unterstützt KEINE Link-Sticker. Stories IMMER manuell via App posten.
+**Felix' Workflow:**
+1. Story-Bild generieren + auf R2 hochladen
+2. Link an Lothar schicken in Topic 3
+3. Lothar published manuell in der App + fügt Link-Sticker ein
+4. **NICHT `media_publish` mit `media_type=STORIES` aufrufen!**
+
 ## Style → Account Mapping
 - `elegant` → @nylondarling (was @nyloncherie — paused indefinitely since 09.03.2026)
 - `lifestyle` → @nylondarling
+- `editorial` → @nylondarling
 - `shiny-glossy` → @shinynylonstar
 - `legs-focus` → @legfashion
 - `black` (black nylons, dark aesthetic) → @blackshinynylon
-- `girl-next-door` (natural, authentic, casual, real) → @nextdoornylon
+- `casual` / `girl-next-door` (natural, authentic, casual, real) → @nextdoornylon
 - Product shots → @nylongerie
 - `edgy` (shiny + leather, vinyl, latex, boots, heels) → @planetnylon
+- ⚠️ **@nyloncherie ist PAUSIERT** — keine Posts bis auf Weiteres
+
+## Daily Posting Rotation
+- **5 Posts/Tag** across 7 active accounts (nyloncherie paused)
+- Rotation ensures each account gets regular content
+- Priority weighting: @nylondarling (daily), @legfashion (4x/week), rest (2-3x/week)
+- Morning batch proposal in Topic 3 for approval
 - ⚠️ **@nyloncherie ist PAUSIERT** — keine Posts bis auf Weiteres
 
 ## Pipeline Steps
@@ -60,6 +76,28 @@ When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check `~/.open
 All branding, CTA, and credit goes into the CAPTION only.
 
 Only use Sharp for resizing/quality optimization if needed, NOT for overlays.
+
+**⚠️ MANDATORY: Auto-crop white bars (screenshot artifacts) BEFORE any processing!**
+Many inbox images are phone screenshots with white UI bars at top/bottom.
+Always scan and remove white strips (avg brightness > 235) before cropping to aspect ratio.
+
+**⚠️ MANDATORY: Crop to 4:5 (1080×1350) before uploading to IG!**
+Instagram rejects images with unsupported aspect ratios (error 36003).
+Always use Sharp with extract + resize to enforce 4:5:
+```javascript
+sharp(path).metadata().then(meta => {
+    const ratio = 4/5;
+    let cropW, cropH;
+    if (meta.width / meta.height > ratio) {
+        cropH = meta.height; cropW = Math.round(meta.height * ratio);
+    } else {
+        cropW = meta.width; cropH = Math.round(meta.width / ratio);
+    }
+    return sharp(path)
+      .extract({ left: Math.round((meta.width-cropW)/2), top: Math.round((meta.height-cropH)/2), width: cropW, height: cropH })
+      .resize(1080, 1350).jpeg({ quality: 90 }).toFile(outputPath);
+});
+```
 
 ### OLD (DEPRECATED): Build CTA Overlay (Sharp) — DO NOT USE
 ```javascript
