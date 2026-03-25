@@ -58,7 +58,7 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
   - Kann: Produkte lesen, Rabattcodes erstellen/ablaufen, Orders tracken
 
 ## Produktionsstraße — Status
-- **Live:** Morning Briefing, WA Inbox Digest (21:00), X Digest, Wind-Down, Observer, LinkedIn Summary (via Email), Reddit im Evening Digest ✅, Stories-Pipeline ✅ (Templates v3, manueller Publish mit Link-Sticker)
+- **Live:** Morning Briefing (→Telegram), WA Inbox Digest (21:00), X Digest, Wind-Down, Observer, LinkedIn Summary (via Email), Reddit im Evening Digest ✅, Stories-Pipeline ✅ (Templates v3, manueller Publish mit Link-Sticker), Weekly Newsletter (Do 10:00, Brevo)
 - **In Arbeit:** Nylongerie Sub-Agent optimieren & testen (Posts)
 - **In Arbeit:** Reels-Pipeline (253 Videos vorhanden, nächster Schritt), Shopify connected (ecb34e-4)
 - **Topic 3 Context Rule:** Bei Nachricht in Topic 3 IMMER queue.json auf `draft_sent` prüfen — Session-Resets egal (eingeführt 15.03.2026)

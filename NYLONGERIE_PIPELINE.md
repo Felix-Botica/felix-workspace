@@ -57,12 +57,27 @@ Instagram API unterstützt KEINE Link-Sticker. Stories IMMER manuell via App pos
 - `edgy` (shiny + leather, vinyl, latex, boots, heels) → @planetnylon
 - ⚠️ **@nyloncherie ist PAUSIERT** — keine Posts bis auf Weiteres
 
-## Daily Posting Rotation
-- **5 Posts/Tag** across 7 active accounts (nyloncherie paused)
+## Daily Batch (nylongerie-daily-batch, 10:00 CET)
+**Besteht aus 2 Teilen:**
+
+### A) 5 Posts/Tag
+- Across 7 active accounts (nyloncherie paused)
 - Rotation ensures each account gets regular content
 - Priority weighting: @nylondarling (daily), @legfashion (4x/week), rest (2-3x/week)
 - Morning batch proposal in Topic 3 for approval
 - ⚠️ **@nyloncherie ist PAUSIERT** — keine Posts bis auf Weiteres
+
+### B) 1 Story/Tag
+- **Identische Story** wird bei 3 der 8 Accounts gepostet (Rotation oder Top-3)
+- **⚠️ MUSS manuell von Lothar gepostet werden** — API kann keine Link-Sticker!
+- **Bild MUSS ein Produktbild sein** (aus Shopify/Produktkatalog, KEIN Content-Bild)
+- Felix generiert Story-Bild + lädt auf R2 hoch + schickt Link in Topic 3
+
+### Story-Typen (Mix!)
+1. **Product Stories** — Direkte Produkt-Promotion mit Rabattcode/Bundle-Angebot
+2. **Newsletter Stories** — CTA zielt auf Newsletter-Anmeldung ("15% Rabatt für Subscriber!", "Join our VIP list")
+   - Newsletter-Subscriber convertieren am besten → strategisch wichtig!
+- **Verhältnis:** ~60% Product / 40% Newsletter (abwechselnd)
 
 ## Pipeline Steps
 
