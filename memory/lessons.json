@@ -76,5 +76,13 @@
       "Ablaufdatum gesetzt?",
       "Nutzungslimit gesetzt?"
     ]
+  },
+  "task_chaining": {
+    "id": "L007",
+    "date": "2026-03-25",
+    "trigger": "Published 4 IG posts but never confirmed or continued to Stories",
+    "rule": "Before ending ANY turn with async work: (1) verify all results are in, (2) confirm to Lothar, (3) chain into next step. If a poll returns success, the turn is NOT done — the follow-up is.",
+    "severity": "critical",
+    "applies_to": "all-async-tasks"
   }
 }
