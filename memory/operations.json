@@ -1,7 +1,20 @@
 {
     "version": 1,
-    "last_updated": "2026-03-22T15:07+01:00",
+    "last_updated": "2026-03-26T10:03+01:00",
     "operations": {
+        "weekly_newsletter_kw13": {
+            "type": "email_campaign",
+            "name": "Weekly NL KW13 — Last Chance SPRING30",
+            "status": "draft_pending_approval",
+            "created_at": "2026-03-26T10:03+01:00",
+            "reconcile": "CLEAN — 663 subscribed, 0 issues",
+            "discount_code": "SPRING30",
+            "discount_expires": "2026-04-03",
+            "concept": "Last chance urgency, bestsellers + bundles + free shipping",
+            "send_plan": "3 batches Thu-Fri-Sat (300/day free plan)",
+            "approval_sent_to": "Telegram Felix HQ Topic 3",
+            "next_action": "Await Lothar approval, then build HTML + schedule"
+        },
         "brevo_spring_campaign": {
             "type": "email_campaign",
             "campaign_id": 1,

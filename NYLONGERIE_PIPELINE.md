@@ -70,7 +70,7 @@ Instagram API unterstützt KEINE Link-Sticker. Stories IMMER manuell via App pos
 ### B) 1 Story/Tag
 - **Identische Story** wird bei 3 der 8 Accounts gepostet (Rotation oder Top-3)
 - **⚠️ MUSS manuell von Lothar gepostet werden** — API kann keine Link-Sticker!
-- **Bild MUSS ein Produktbild sein** (aus Shopify/Produktkatalog, KEIN Content-Bild)
+- **Bild MUSS ein Shopify-Produktbild sein** (aus Shopify Admin API, KEIN Content-Bild aus inbox — Copyright!)
 - Felix generiert Story-Bild + lädt auf R2 hoch + schickt Link in Topic 3
 
 ### Story-Typen (Mix!)

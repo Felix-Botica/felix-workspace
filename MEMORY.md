@@ -31,13 +31,13 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - **Fallback:** Telegram DM (@The1931FelixBot)
 - **Secondary:** WhatsApp — Observer + Inbox Digest only
 - **Felix HQ** (Telegram Supergroup -1003775282698):
-  - General (Topic 1) — Allgemein
-  - NylonGerie (Topic 3) — Instagram Content
-  - Approvals — Genehmigungen
-  - Health — Gesundheit
-  - Digest — Zusammenfassungen
-  - 📬 Inbox & Drafts (Topic 66) — WhatsApp-Drafts & Antwortvorschläge
-  - 🛠 Dev & Pipeline (Topic 125) — Technische Entwicklung & Research
+  - General (Topic 1) — Ad-hoc Gespräche mit Lothar
+  - NylonGerie (Topic 3) — Alles Nylongerie: Content, Approvals, Strategie, Newsletter
+  - Digest (Topic 4) — Alle Briefings (Morning, Evening, Wind-Down, WA Inbox)
+  - 📬 Inbox & Drafts (Topic 66) — WhatsApp-Antwortvorschläge für Nicht-Lothar
+  - 🛠 Dev & Pipeline (Topic 125) — Tech, System-Health, Integrations, Backups
+  - ~~Health (Topic 5)~~ — ARCHIVIERT (26.03.2026)
+  - ~~Approvals (Topic 6)~~ — ARCHIVIERT → merged in NylonGerie (26.03.2026)
 
 ## Agent-Architektur (Stand 09.03.2026)
 | Agent | Model | Zweck |
@@ -45,6 +45,11 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 | main (Felix) | Opus 4.6 | Lothars persönlicher Agent |
 | observer | Haiku 4.5 | Stummer Logger für Nicht-Lothar WhatsApp/Telegram |
 | nylongerie | Sonnet 4 | Instagram Content Management (isolierter Workflow) |
+
+## Remote Access
+- **Tailscale:** Aktiv seit 26.03.2026
+- Felix MacBook Air: 100.83.135.93 (Dashboard: :18789)
+- Lothar MacBook Air 2: 100.122.205.86
 
 ## Lokale Infrastruktur
 - Ollama läuft (LLaVA 7B, localhost:11434) — Bildklassifikation
