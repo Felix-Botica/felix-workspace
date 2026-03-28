@@ -1,25 +1,25 @@
 {
     "version": 1,
-    "last_updated": "2026-03-26T10:03+01:00",
+    "last_updated": "2026-03-27T19:00+01:00",
     "operations": {
         "weekly_newsletter_kw13": {
             "type": "email_campaign",
-            "name": "Weekly NL KW13 — Last Chance SPRING30",
+            "name": "Weekly NL KW13 \u2014 Final SPRING30 Push",
             "status": "draft_pending_approval",
-            "created_at": "2026-03-26T10:03+01:00",
-            "reconcile": "CLEAN — 663 subscribed, 0 issues",
+            "created_at": "2026-03-27T19:00+01:00",
+            "reconcile": "CLEAN \u2014 663 subscribed, 0 issues (verified 2026-03-27)",
             "discount_code": "SPRING30",
             "discount_expires": "2026-04-03",
-            "concept": "Last chance urgency, bestsellers + bundles + free shipping",
-            "send_plan": "3 batches Thu-Fri-Sat (300/day free plan)",
-            "approval_sent_to": "Telegram Felix HQ Topic 3",
+            "concept": "Last chance urgency, top sellers spotlight (Satin Leggings, Shiny Pantyhose, Garter Set, Comfort Tights), bundle suggestion, countdown to April 3",
+            "send_plan": "3 batches Sat/Sun/Mon (300/day free plan)",
+            "approval_sent_to": "Telegram Felix HQ Topic 3 (msg 1869)",
             "next_action": "Await Lothar approval, then build HTML + schedule"
         },
         "brevo_spring_campaign": {
             "type": "email_campaign",
             "campaign_id": 1,
             "name": "Spring Sale 2026",
-            "subject": "Spring Sale ✦ 30% Off Everything",
+            "subject": "Spring Sale \u2726 30% Off Everything",
             "discount_code": "SPRING30",
             "discount_expires": "2026-04-03",
             "total_contacts": 730,
