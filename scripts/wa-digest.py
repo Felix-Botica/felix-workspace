@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 SESSIONS_DIR = os.path.expanduser("~/.openclaw/agents/observer/sessions/")
 PEOPLE_FILE = os.path.expanduser("~/.openclaw/workspace/memory/people.md")
-LOOKBACK_HOURS = 24
+LOOKBACK_HOURS = 36
 
 
 def load_people():
@@ -277,6 +277,7 @@ REGELN:
 - "Unknown" Tiers am Ende
 - Deutsch
 - Keine Floskeln, kein "Guten Abend Lothar"
+- **"[📎 Medien-Anhang]" und "[🎤 Sprachnachricht]" nur faktisch erwähnen, wenn sie der einzige Inhalt sind. Beispiel: "hat ein Bild gesendet". NIE den Inhalt erraten.**
 
 GESPRÄCHE:
 {conversations_text}"""

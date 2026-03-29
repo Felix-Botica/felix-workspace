@@ -1,33 +1,34 @@
 {
   "email_campaigns": [
     {
-      "rule": "Nie Massen-Emails über Shared-IP-Provider (Brevo Free) senden",
-      "reason": "11% Bounce Rate, Domain-Reputation-Schaden bei nylongerie.com Kampagne",
-      "date": "2026-03-21",
+      "rule": "🔴 CRITICAL: After ANY campaign send (API or manual), verify within 15 minutes via live API call that status='sent' AND sent>0. Never trust HTTP status codes alone.",
+      "reason": "Brevo API campaigns 1-10 all returned 204 No Content but sent ZERO emails over 7 days. Silent failure discovered only when Lothar checked UI manually.",
+      "date": "2026-03-29",
+      "severity": "critical",
+      "verification_command": "curl -H 'api-key: $BREVO_API_KEY' https://api.brevo.com/v3/emailCampaigns/{id} | jq '.status, .statistics.globalStats.sent'"
+    },
+    {
+      "rule": "🔴 Email campaign pre-flight checklist MANDATORY: (1) Domain SPF/DKIM verified, (2) Plan supports volume, (3) Test send to self, (4) Quota check.",
+      "reason": "Missing domain verification + free plan limits caused all API campaigns to fail at send time with no useful error message.",
+      "date": "2026-03-29",
       "severity": "critical"
     },
     {
-      "rule": "Vor erstem Versand über neuen Provider: Test-Batch (max 50) senden und Bounce-Rate prüfen",
-      "reason": "Shared IPs haben unberechenbare Zustellraten",
-      "date": "2026-03-21",
-      "severity": "critical"
-    },
-    {
-      "rule": "Email-Listen vor Versand bereinigen — Bounced/Invalid Adressen entfernen",
-      "reason": "Shopify-Kontaktliste hatte veraltete Adressen",
-      "date": "2026-03-21",
+      "rule": "Never write delivery stats to operations.json unless verified via API query. If inferring from plans or logs, mark clearly as 'planned' not 'actual'.",
+      "reason": "operations.json contained '298 sent, 49 bounces' but API logs showed 0 sends. Created false confidence in system state.",
+      "date": "2026-03-29",
       "severity": "high"
     },
     {
-      "rule": "Vor jedem Brevo-Import: Shopify email_marketing_consent.state prüfen — NUR 'subscribed' importieren. Nie pending/unsubscribed/not_subscribed.",
-      "reason": "914 Kunden total, nur 732 subscribed (Stand 23.03.2026). Lothar hat zurecht hinterfragt ob die Zahl zu hoch ist. Immer cross-checken.",
-      "date": "2026-03-23",
+      "rule": "Before reporting campaign success/failure to Lothar, query live API status. Never rely on session memory or prior tool outputs.",
+      "reason": "Reported campaign stats that didn't match reality, mixing planned batches with actual sends.",
+      "date": "2026-03-29",
       "severity": "high"
     },
     {
-      "rule": "Brevo-Kontaktzahl bei jedem Kampagnen-Start gegen Shopify verifizieren — nie blind aus Memory übernehmen",
-      "reason": "Zahlen ändern sich, neue Kunden kommen dazu, andere unsubscriben. Immer live prüfen.",
-      "date": "2026-03-23",
+      "rule": "Brevo Free Plan: 300 emails/day limit, API campaigns >300 contacts require paid plan + domain verification.",
+      "reason": "Free plan blocked all API campaigns silently. Manual UI sends work up to daily quota.",
+      "date": "2026-03-29",
       "severity": "high"
     }
   ],
@@ -51,20 +52,42 @@
       "reason": "Memory kann veraltet sein, führt zu falschen Annahmen",
       "date": "2026-03-21",
       "severity": "high"
+    },
+    {
+      "rule": "When state files (operations.json, lessons.json) contain data that contradicts API reality, ALWAYS query API first, then update files.",
+      "reason": "operations.json had phantom campaign data (298 sends) that never happened. Files are NOT source of truth — live systems are.",
+      "date": "2026-03-29",
+      "severity": "critical"
+    },
+    {
+      "rule": "🔴 CRITICAL: For auth/config/status checks (domain verification, plan limits, feature availability), ALWAYS cross-check API response against UI screenshot. If they conflict, TRUST THE UI.",
+      "reason": "Brevo API /v3/senders/domains/nylongerie.com returned {verified: true, authenticated: true} but UI showed 'Not authenticated' with Authenticate button. API had stale/cached data. Falsely reported domain as verified, wasted troubleshooting time.",
+      "date": "2026-03-29",
+      "severity": "critical",
+      "high_risk_areas": [
+        "Domain verification status",
+        "Authentication/authorization state",
+        "Plan limits and quotas",
+        "Payment/billing status",
+        "Feature availability (free vs paid)"
+      ],
+      "protocol": "1. Query API, 2. Request UI screenshot, 3. Compare, 4. If conflict → trust UI + document discrepancy"
     }
   ],
   "pre_flight": {
     "email_campaign": [
-      "Provider-IP-Typ prüfen (shared vs dedicated)",
+      "🔴 Domain SPF/DKIM verified? (Check BOTH: API query + UI screenshot of domain status)",
+      "🔴 Plan supports send volume? (Free=300/day, API campaigns need paid plan)",
+      "🔴 Daily quota remaining? (Check via API before attempting send)",
       "Test-Batch (max 50) senden und 1h warten",
       "Bounce-Rate < 5% bestätigen",
-      "Sender-Domain SPF/DKIM verifiziert?",
       "Email-Liste bereinigt (Bounces entfernt)?",
       "Shopify consent states live geprüft (nur subscribed)?",
       "Brevo-Listengröße gegen Shopify subscribed-Count verifiziert?",
       "Reconcile-Script laufen lassen: scripts/brevo-shopify-reconcile.py",
       "Blacklisted-in-List Count prüfen (Bounces von früheren Kampagnen)",
-      "Tatsächlich zustellbar = Listengröße - Blacklisted-in-List"
+      "Tatsächlich zustellbar = Listengröße - Blacklisted-in-List",
+      "🔴 After sendNow: Set 15-min verification timer, check status='sent' and sent>0. Alert if suspended."
     ],
     "social_media_post": [
       "Bild-Review (Nischen-Fit)",

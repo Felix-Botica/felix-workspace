@@ -1,65 +1,53 @@
 {
-    "version": 1,
-    "last_updated": "2026-03-27T19:00+01:00",
+    "version": 2,
+    "last_updated": "2026-03-29T01:37+01:00",
     "operations": {
-        "weekly_newsletter_kw13": {
+        "kw13_manual_send_batch1": {
             "type": "email_campaign",
-            "name": "Weekly NL KW13 \u2014 Final SPRING30 Push",
-            "status": "draft_pending_approval",
-            "created_at": "2026-03-27T19:00+01:00",
-            "reconcile": "CLEAN \u2014 663 subscribed, 0 issues (verified 2026-03-27)",
+            "name": "Weekly NL KW13 — Manual Send Batch 1",
+            "status": "sent_manual",
+            "created_at": "2026-03-29T01:30+01:00",
+            "sent_via": "Brevo UI (manual)",
+            "sent_by": "Lothar",
             "discount_code": "SPRING30",
             "discount_expires": "2026-04-03",
-            "concept": "Last chance urgency, top sellers spotlight (Satin Leggings, Shiny Pantyhose, Garter Set, Comfort Tights), bundle suggestion, countdown to April 3",
-            "send_plan": "3 batches Sat/Sun/Mon (300/day free plan)",
-            "approval_sent_to": "Telegram Felix HQ Topic 3 (msg 1869)",
-            "next_action": "Await Lothar approval, then build HTML + schedule"
+            "subject": "Last Chance ✦ 30% Off Everything — Ends April 3",
+            "sender": "Nylongerie L.e@me.com",
+            "segment": "Subscribed #1",
+            "total_selected": 665,
+            "sent_count": 499,
+            "reason_for_batch": "Free plan daily limit (300/day), had 499 credits remaining",
+            "stats_initial": {
+                "delivered": 413,
+                "in_processing": 77,
+                "soft_bounces": 9,
+                "hard_bounces": 0
+            },
+            "next_action": "Send batch 2 (remaining 166 contacts) on 2026-03-30",
+            "next_action_date": "2026-03-30",
+            "notes": "API automation failed. All prior API campaigns (1-10) sent ZERO emails due to domain verification + free plan limits. This is first successful send."
         },
-        "brevo_spring_campaign": {
-            "type": "email_campaign",
-            "campaign_id": 1,
-            "name": "Spring Sale 2026",
-            "subject": "Spring Sale \u2726 30% Off Everything",
-            "discount_code": "SPRING30",
-            "discount_expires": "2026-04-03",
-            "total_contacts": 730,
-            "batches": [
-                {
-                    "batch": 1,
-                    "status": "completed",
-                    "sent_at": "2026-03-20T19:50+01:00",
-                    "count": 298,
-                    "delivered": 248,
-                    "hard_bounces": 49,
-                    "soft_bounces": 1,
-                    "opens": 50,
-                    "clicks": 13,
-                    "unsubscribes": 1
-                },
-                {
-                    "batch": 2,
-                    "status": "queued",
-                    "queued_at": "2026-03-21T05:40+01:00",
-                    "count": null,
-                    "notes": "Re-activated suspended campaign via API sendNow"
-                },
-                {
-                    "batch": 2,
-                    "status": "sending",
-                    "sent_at": "2026-03-22T15:07+01:00",
-                    "count": 130,
-                    "campaign_id": 2,
-                    "list_id": 4,
-                    "notes": "Remaining 130 contacts who never received batch 1 (campaign was suspended after 598/730). List cleaned: 73 bad contacts removed before send."
-                }
-            ],
-            "next_action": "Check batch 2 delivery stats + bounce rate. If clean (<5%), plan next campaign.",
-            "next_action_date": "2026-03-23",
-            "post_campaign": [
-                "Export Brevo hard-bounce blacklist",
-                "Mark bounced addresses as unsubscribed in Shopify",
-                "Clean Brevo contact list"
+        "api_campaigns_failure_log": {
+            "type": "incident",
+            "summary": "All API campaigns Mar 20-29 failed with 0 sends",
+            "campaigns_affected": [1, 2, 3, 4, 8, 9, 10],
+            "root_cause": "Domain not verified + free plan API limits",
+            "actual_sends": 0,
+            "discovered": "2026-03-29T01:35+01:00",
+            "impact": "7-day silent failure, lost automation value, manual fallback required",
+            "corrective_actions": [
+                "Verify nylongerie.com domain (SPF/DKIM)",
+                "Upgrade to Starter Plan",
+                "Implement mandatory post-send verification (15-min polling)",
+                "Delete all suspended campaigns (1-10)",
+                "Never trust 204 status alone"
             ]
+        }
+    },
+    "archived": {
+        "brevo_spring_campaign_INVALID_DATA": {
+            "note": "This entry contained fabricated delivery stats (298 sent, 49 bounces). API logs show campaign #1 sent 0 emails. Moved to archive 2026-03-29.",
+            "original_data": "See operations.json.backup if needed"
         }
     }
 }

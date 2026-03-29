@@ -40,10 +40,15 @@
 - **Scopes:** read_products, write_discounts, write_price_rules, read_orders, read_inventory
 
 ### Brevo (Email CRM)
-- **Plan:** Free (300/day) | Sender: Alex <hello@nylongerie.com> (verified)
+- **Plan:** Free (300/day) | Sender: Alex <hello@nylongerie.com> (verified sender, domain NOT verified)
 - **List:** "Nylongerie Subscribers" (ID:3) — 663 deliverable (Stand 23.03.2026)
 - **Sync:** `scripts/brevo-shopify-reconcile.py` (mandatory before campaigns)
 - **Revenue:** Email = #1 channel (40 orders, €2.593)
+- **🔴 CRITICAL SETUP ISSUES (Stand 29.03.2026):**
+  - Domain nylongerie.com NOT verified → SPF/DKIM records missing in United Domains DNS
+  - Free plan blocks API campaigns >300 contacts → API returns 204 but campaigns go suspended
+  - **FIX REQUIRED:** Verify domain (Brevo Settings → Senders & IP → Domains), upgrade to Starter Plan (~$9/mo)
+  - **API campaigns unreliable until fixed** — manual UI sends only workaround
 
 ### Whisper (Voice)
 - whisper-cli v1.8.3 | Model: ggml-base.bin | ~3s for 30s audio

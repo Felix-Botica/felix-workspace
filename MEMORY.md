@@ -63,17 +63,35 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
   - Kann: Produkte lesen, Rabattcodes erstellen/ablaufen, Orders tracken
 
 ## Produktionsstraße — Status
-- **Live:** Morning Briefing (→Telegram), WA Inbox Digest (21:00), X Digest, Wind-Down, Observer, LinkedIn Summary (via Email), Reddit im Evening Digest ✅, Stories-Pipeline ✅ (Templates v3, manueller Publish mit Link-Sticker), Weekly Newsletter (Do 10:00, Brevo)
-- **In Arbeit:** Nylongerie Sub-Agent optimieren & testen (Posts)
-- **In Arbeit:** Reels-Pipeline (253 Videos vorhanden, nächster Schritt), Shopify connected (ecb34e-4)
-- **Topic 3 Context Rule:** Bei Nachricht in Topic 3 IMMER queue.json auf `draft_sent` prüfen — Session-Resets egal (eingeführt 15.03.2026)
-- **P0 Next:** Nightly Backup (GitHub Account vorhanden)
-- **Felix Email:** felix@botica.tech — LIVE, kann senden + empfangen via Gmail/gog (eingerichtet zusammen mit GitHub Account ~12.03.2026)
-- **P1 Next:** Nylongerie CRM Workflow (Shopify Email-Kampagnen an Bestandskunden — 2. größte Umsatzquelle nach Stories)
-- **P1 Next:** Reels-Pipeline (253 Videos vorhanden — einziges fehlendes Content-Format)
-- **P1 Backlog:** Community Skills evaluieren (ClawHub), Nylongerie Headlines & Captions verbessern
-- **P2 Backlog:** Inter-Agent Messaging (shared State-File für Observer→Felix Tasks, inspiriert von "My Brain Is Full Crew"), Connector-Agent (periodischer Memory-Scan auf unentdeckte Zusammenhänge), Memory Plugin (ClawVault/Supermemory), Product Tags (IG Shopping), Instagram Performance Tracking, Gewicht-Auto
-- **P3 Backlog:** Kontakt-Tiers, Manheimer Automation, Email Auto-Triage
+- **Live:** Morning Briefing (→Digest), WA Inbox Digest (21:00→Digest), Evening Digest (→Digest), X Digest, Wind-Down (→Digest), Observer, LinkedIn Summary (via Email), Reddit im Evening Digest ✅, Stories-Pipeline ✅, Weekly Newsletter (Do 10:00, Brevo→NylonGerie), Nightly Backup (GitHub), Email Auto-Triage (→Inbox&Drafts), Self-Healing Watchdog ✅ (seit 28.03.2026)
+- **Topic 3 Context Rule:** Bei Nachricht in Topic 3 IMMER queue.json auf `draft_sent` prüfen
+- **Felix Email:** felix@botica.tech — LIVE via Gmail/gog
+
+### Backlog (aktualisiert 28.03.2026)
+**P0 — Resilience & Foundation:**
+- ✅ Self-Healing Watchdog (LaunchAgent, 5-Min-Intervall, Telegram-Alert bypass)
+- ✅ Gemini 2.5 Pro als Fallback-LLM konfiguriert
+- ⬜ Memory aktivieren (memory_search hat 0 chunks — semantische Suche einrichten)
+- ⬜ Command-Vokabular (mark_read, approve, reject, snooze, priority)
+
+**P1 — Produktivität & Revenue:**
+- ⬜ Homepage-Automation (write_themes + write_content Scope nötig → Banner, Promos, Featured Products automatisch updaten)
+- ⬜ Reels-Pipeline (253 Videos, einziges fehlendes Content-Format)
+- ⬜ IG Performance Tracking (in Weekly Review integriert, Daten sammeln)
+- ⬜ Shopify ↔ Instagram Closed Loop (UTM-Tracking, Auto-Discounts, Inventory-Awareness)
+- ⬜ Nylongerie Headlines & Captions verbessern
+- ⬜ Approval Auto-Escalation (4h Nudge → 8h Auto-Publish)
+
+**P2 — Intelligence & Automation:**
+- ⬜ Inter-Agent Messaging (shared State für Observer→Felix→Nylongerie)
+- ⬜ Pattern Recognition (Email→Order Korrelation, IG→Revenue Tracking)
+- ⬜ Proaktive Nudges (Follow-up Reminders, Deadline-Warnungen)
+- ⬜ Community Skills evaluieren (ClawHub)
+
+**P3 — Expansion:**
+- ⬜ Kontakt-Tiers (5 Stufen, automatische Priorisierung)
+- ⬜ Manheimer Automation
+- ⬜ Felix for Founders (Botica Productization des Operations-Frameworks)
 
 ## Operations State Tracking (seit 21.03.2026)
 - `memory/operations.json` = Single Source of Truth für mehrtägige Tasks
@@ -108,10 +126,14 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - Shell exec braucht `tools.exec.security: "full"`
 - WhatsApp-Sender-ID ist unzuverlässig — Drafts als Default für Nicht-Lothar
 - Antworten in fremden Chats erscheinen als grüne Nachrichten VON Lothar — ernst nehmen
-- **Mehrtägige Ops SOFORT in operations.json loggen** — nicht erst am Session-Ende in Daily Notes. Session kann jederzeit enden.
-- **API-Status immer live prüfen** — nie aus Memory-Files ableiten ob etwas gesendet wurde oder nicht.
-- **Immer Nummer → Name auflösen** via `memory/people.md` bevor Draft formuliert wird. "Draft für Chanté", nicht "Draft für +49...". Kontext des Kontakts hilft bei besseren Antwortvorschlägen.
-- **🔴 Allowlist am 07.03.2026 gekillt** — zu viele Leaks (Alexander Tramm, Annika von Taube, Peter Badge). Nur noch +491759959766 (Lothar). Muss sicher neu aufgebaut werden bevor andere Nummern wieder reinkommen.
+- **Mehrtägige Ops SOFORT in operations.json loggen** — nicht erst am Session-Ende in Daily Notes
+- **API-Status immer live prüfen** — nie aus Memory-Files ableiten
+- **Immer Nummer → Name auflösen** via `memory/people.md`
+- **🔴 Allowlist am 07.03.2026 gekillt** — nur +491759959766 (Lothar)
+- **🔴 NIEMALS `openclaw doctor` blind laufen lassen** — hat am 27.03.2026 den Anthropic API Key korruptiert (OAuth-Token statt API-Key eingesetzt). Ganzer Tag Ausfall.
+- **🔴 Gateway NICHT aus eigener Session restarten** — killt die laufende Session. Immer Lothar bitten oder CLI nutzen.
+- **Google Cloud auf "Production" publishen** — sonst laufen OAuth Refresh Tokens nach 7 Tagen ab (gefixt 26.03.2026)
+- **🔴 Brevo API 204 = nicht "Erfolg"** — Kampagnen 8/9/10 gingen auf suspended trotz 204 No Content. Root cause: (1) Domain nicht verifiziert (SPF/DKIM fehlen), (2) Free Plan blockt API-Kampagnen >300 Kontakte. Silent fail über 7 Tage, Lothar hat es im UI entdeckt. IMMER 15-Min-Timer setzen + Status prüfen bis sent>0.
 
 ## Memory-Architektur
 | Datei | Zweck | Geladen |
