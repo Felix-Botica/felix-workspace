@@ -104,6 +104,8 @@ def extract_chats():
                 msg = d.get("message", {})
                 if msg.get("role") != "user":
                     continue
+                
+                # CHANGED: Don't skip Lothar's messages anymore - we need context
 
                 content = msg.get("content", [])
                 for c in content:
@@ -119,7 +121,8 @@ def extract_chats():
                             name = ln.split('"sender":')[1].strip().strip('",')
                             if name:
                                 msg_sender = name
-                                if name != "Lothar Eckstein":
+                                # CHANGED: Track sender even if it's Lothar (for conversation partner identification)
+                                if name != "Lothar Eckstein" and not sender_name:
                                     sender_name = name
                         if '"sender_id":' in ln and "+" in ln:
                             phone = ln.split('"sender_id":')[1].strip().strip('",')
@@ -252,32 +255,47 @@ def analyze_with_sonnet(conversations_text, chat_count, msg_count):
         # Fallback: use openclaw's token via CLI
         return fallback_format(conversations_text, chat_count, msg_count)
 
-    prompt = f"""Analysiere diese WhatsApp-Gespräche und erstelle einen Digest auf Deutsch.
+    prompt = f"""Analysiere diese WhatsApp-Gespräche und erstelle einen ACTIONABLE Digest auf Deutsch.
+
+Du siehst VOLLSTÄNDIGE Gespräche (inkl. Lothars Antworten). Deine Aufgabe: Herausfiltern was WICHTIG ist.
 
 FORMAT (genau so):
 
 📬 **WhatsApp Digest — {datetime.now().strftime('%d.%m.%Y')}**
-_{chat_count} Chats, ~{msg_count} Nachrichten_
+_{chat_count} Chats analysiert_
 
 **⚡ Action Items**
-→ [Konkrete Aktion] — [Kontext, 1 Zeile]
-(Wer wartet auf Antwort? Zeitkritisches? Offene Einladungen?)
+→ [Konkrete Aktion] — [Warum/Kontext in 1 Zeile]
+
+Nur aufführen wenn:
+- Jemand wartet explizit auf Antwort (und Lothar hat noch nicht geantwortet)
+- Zeitkritisches (Deadlines, Termine, Zusagen)
+- Offene Fragen die Lothar ignoriert hat
+- Wichtige Information die Reaktion braucht
 
 **💡 Empfehlungen**
 💡 [Was Lothar tun sollte] — [Begründung]
-(Basierend auf Tier-Priorität und Business-Relevanz)
 
-**📋 Chat-Übersicht**
-[Tier-Emoji] **[Name]** ([Anzahl])
-[2-3 Sätze: Worum ging es? Roter Faden des Gesprächs]
+Nur wenn wirklich relevant:
+- Basierend auf Tier-Priorität (🔴🟠 = wichtiger)
+- Business-Chancen oder Risiken
+- Beziehungs-Pflege wo nötig
+
+**📋 Bemerkenswerte Gespräche**
+[Tier-Emoji] **[Name]**
+[1-2 Sätze: Was war wichtig/interessant? NUR wenn erwähnenswert]
+
+FILTER-KRITERIEN:
+✅ Zeige: Unbeantwortete Fragen, Konflikte, wichtige Updates, Business-Relevantes
+❌ Skippe: Small Talk, bereits geklärte Dinge, belanglose Updates
 
 REGELN:
+- QUALITÄT > QUANTITÄT — Lieber 2 wichtige Items als 10 unwichtige
+- Wenn nichts Action-würdig ist: "Keine dringenden Action Items"
 - Konkret, nicht vage
-- Tier 🔴🟠🔵🟣 = höchste Prio, zuerst listen
-- "Unknown" Tiers am Ende
 - Deutsch
-- Keine Floskeln, kein "Guten Abend Lothar"
-- **"[📎 Medien-Anhang]" und "[🎤 Sprachnachricht]" nur faktisch erwähnen, wenn sie der einzige Inhalt sind. Beispiel: "hat ein Bild gesendet". NIE den Inhalt erraten.**
+- Keine Floskeln
+- **NIE Medien-Inhalte erraten. Nur faktisch: "hat ein Bild/Audio gesendet"**
 
 GESPRÄCHE:
 {conversations_text}"""

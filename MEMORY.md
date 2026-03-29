@@ -62,8 +62,10 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
   - App: "Felix Integration" im Shopify Dev Dashboard (Client ID: 1f08eb20...)
   - Kann: Produkte lesen, Rabattcodes erstellen/ablaufen, Orders tracken
 
-## Produktionsstraße — Status
-- **Live:** Morning Briefing (→Digest), WA Inbox Digest (21:00→Digest), Evening Digest (→Digest), X Digest, Wind-Down (→Digest), Observer, LinkedIn Summary (via Email), Reddit im Evening Digest ✅, Stories-Pipeline ✅, Weekly Newsletter (Do 10:00, Brevo→NylonGerie), Nightly Backup (GitHub), Email Auto-Triage (→Inbox&Drafts), Self-Healing Watchdog ✅ (seit 28.03.2026)
+## Produktionsstraße — Status (Stand 29.03.2026)
+- **12 Active Cron Jobs:** Morning Briefing, Evening Digest, WA Inbox Digest (Smart Triage v3 ✅), Wind-Down, Felix Inbox Check, Nylongerie Daily Batch, Weekly Newsletter, Integration Healthcheck, Nightly Backup, Brevo-Shopify Sync, Weekly System Review, **Token Refresh (NEW, every 2h)** ✅
+- **All crons fixed:** lightContext: true requirement (29.03.2026)
+- **Supporting Systems:** Observer Agent, Self-Healing Watchdog, Gemini Fallback LLM, Memory Search (85 chunks)
 - **Topic 3 Context Rule:** Bei Nachricht in Topic 3 IMMER queue.json auf `draft_sent` prüfen
 - **Felix Email:** felix@botica.tech — LIVE via Gmail/gog
 
@@ -133,6 +135,7 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - **🔴 NIEMALS `openclaw doctor` blind laufen lassen** — hat am 27.03.2026 den Anthropic API Key korruptiert (OAuth-Token statt API-Key eingesetzt). Ganzer Tag Ausfall.
 - **🔴 Gateway NICHT aus eigener Session restarten** — killt die laufende Session. Immer Lothar bitten oder CLI nutzen.
 - **Google Cloud auf "Production" publishen** — sonst laufen OAuth Refresh Tokens nach 7 Tagen ab (gefixt 26.03.2026)
+- **🔴 Cron lightContext: true MANDATORY** — Isolated sessions brauchen `"lightContext": true` im payload für Telegram delivery. Ohne: "Outbound not configured" error. (29.03.2026)
 - **🔴 Brevo API 204 = nicht "Erfolg"** — Kampagnen 8/9/10 gingen auf suspended trotz 204 No Content. Root cause: (1) Domain nicht verifiziert (SPF/DKIM fehlen), (2) Free Plan blockt API-Kampagnen >300 Kontakte. Silent fail über 7 Tage, Lothar hat es im UI entdeckt. IMMER 15-Min-Timer setzen + Status prüfen bis sent>0.
 
 ## Memory-Architektur

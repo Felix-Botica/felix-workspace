@@ -1,111 +1,79 @@
 {
-  "email_campaigns": [
-    {
-      "rule": "🔴 CRITICAL: After ANY campaign send (API or manual), verify within 15 minutes via live API call that status='sent' AND sent>0. Never trust HTTP status codes alone.",
-      "reason": "Brevo API campaigns 1-10 all returned 204 No Content but sent ZERO emails over 7 days. Silent failure discovered only when Lothar checked UI manually.",
-      "date": "2026-03-29",
-      "severity": "critical",
-      "verification_command": "curl -H 'api-key: $BREVO_API_KEY' https://api.brevo.com/v3/emailCampaigns/{id} | jq '.status, .statistics.globalStats.sent'"
-    },
-    {
-      "rule": "🔴 Email campaign pre-flight checklist MANDATORY: (1) Domain SPF/DKIM verified, (2) Plan supports volume, (3) Test send to self, (4) Quota check.",
-      "reason": "Missing domain verification + free plan limits caused all API campaigns to fail at send time with no useful error message.",
-      "date": "2026-03-29",
-      "severity": "critical"
-    },
-    {
-      "rule": "Never write delivery stats to operations.json unless verified via API query. If inferring from plans or logs, mark clearly as 'planned' not 'actual'.",
-      "reason": "operations.json contained '298 sent, 49 bounces' but API logs showed 0 sends. Created false confidence in system state.",
-      "date": "2026-03-29",
-      "severity": "high"
-    },
-    {
-      "rule": "Before reporting campaign success/failure to Lothar, query live API status. Never rely on session memory or prior tool outputs.",
-      "reason": "Reported campaign stats that didn't match reality, mixing planned batches with actual sends.",
-      "date": "2026-03-29",
-      "severity": "high"
-    },
-    {
-      "rule": "Brevo Free Plan: 300 emails/day limit, API campaigns >300 contacts require paid plan + domain verification.",
-      "reason": "Free plan blocked all API campaigns silently. Manual UI sends work up to daily quota.",
-      "date": "2026-03-29",
-      "severity": "high"
-    }
-  ],
-  "whatsapp": [
-    {
-      "rule": "Nie in fremden WhatsApp-Chats antworten — immer Draft an Lothar",
-      "reason": "Antworten erscheinen als grüne Nachrichten VON Lothar. Mehrfach passiert (Tramm, Badge, von Taube)",
-      "date": "2026-03-07",
-      "severity": "critical"
-    }
-  ],
-  "operations": [
-    {
-      "rule": "Mehrtägige Operationen sofort in operations.json loggen, nicht erst am Session-Ende",
-      "reason": "Session kann jederzeit enden, Kontext geht verloren",
-      "date": "2026-03-21",
-      "severity": "high"
-    },
-    {
-      "rule": "API-Status immer live prüfen — nie aus Memory-Files ableiten",
-      "reason": "Memory kann veraltet sein, führt zu falschen Annahmen",
-      "date": "2026-03-21",
-      "severity": "high"
-    },
-    {
-      "rule": "When state files (operations.json, lessons.json) contain data that contradicts API reality, ALWAYS query API first, then update files.",
-      "reason": "operations.json had phantom campaign data (298 sends) that never happened. Files are NOT source of truth — live systems are.",
-      "date": "2026-03-29",
-      "severity": "critical"
-    },
-    {
-      "rule": "🔴 CRITICAL: For auth/config/status checks (domain verification, plan limits, feature availability), ALWAYS cross-check API response against UI screenshot. If they conflict, TRUST THE UI.",
-      "reason": "Brevo API /v3/senders/domains/nylongerie.com returned {verified: true, authenticated: true} but UI showed 'Not authenticated' with Authenticate button. API had stale/cached data. Falsely reported domain as verified, wasted troubleshooting time.",
-      "date": "2026-03-29",
-      "severity": "critical",
-      "high_risk_areas": [
-        "Domain verification status",
-        "Authentication/authorization state",
-        "Plan limits and quotas",
-        "Payment/billing status",
-        "Feature availability (free vs paid)"
-      ],
-      "protocol": "1. Query API, 2. Request UI screenshot, 3. Compare, 4. If conflict → trust UI + document discrepancy"
-    }
-  ],
-  "pre_flight": {
-    "email_campaign": [
-      "🔴 Domain SPF/DKIM verified? (Check BOTH: API query + UI screenshot of domain status)",
-      "🔴 Plan supports send volume? (Free=300/day, API campaigns need paid plan)",
-      "🔴 Daily quota remaining? (Check via API before attempting send)",
-      "Test-Batch (max 50) senden und 1h warten",
-      "Bounce-Rate < 5% bestätigen",
-      "Email-Liste bereinigt (Bounces entfernt)?",
-      "Shopify consent states live geprüft (nur subscribed)?",
-      "Brevo-Listengröße gegen Shopify subscribed-Count verifiziert?",
-      "Reconcile-Script laufen lassen: scripts/brevo-shopify-reconcile.py",
-      "Blacklisted-in-List Count prüfen (Bounces von früheren Kampagnen)",
-      "Tatsächlich zustellbar = Listengröße - Blacklisted-in-List",
-      "🔴 After sendNow: Set 15-min verification timer, check status='sent' and sent>0. Alert if suspended."
-    ],
-    "social_media_post": [
-      "Bild-Review (Nischen-Fit)",
-      "Caption-Check (Hashtags, Mentions)",
-      "Account-Cooldown prüfen (nicht >5 Posts/Tag)"
-    ],
-    "shopify_discount": [
-      "Bestehende aktive Codes prüfen",
-      "Ablaufdatum gesetzt?",
-      "Nutzungslimit gesetzt?"
-    ]
+  "meta": {
+    "description": "Hard-learned rules from production failures. Loaded ONLY in Execute mode (🔒).",
+    "last_updated": "2026-03-29"
   },
-  "task_chaining": {
-    "id": "L007",
-    "date": "2026-03-25",
-    "trigger": "Published 4 IG posts but never confirmed or continued to Stories",
-    "rule": "Before ending ANY turn with async work: (1) verify all results are in, (2) confirm to Lothar, (3) chain into next step. If a poll returns success, the turn is NOT done — the follow-up is.",
-    "severity": "critical",
-    "applies_to": "all-async-tasks"
-  }
+  "lessons": [
+    {
+      "id": "cron-lightcontext-required",
+      "date": "2026-03-29",
+      "severity": "critical",
+      "context": "OpenClaw cron jobs",
+      "problem": "5 cron jobs failed with 'Outbound not configured for channel: telegram' starting March 27",
+      "root_cause": "Missing 'lightContext: true' in payload - isolated sessions can't access outbound channel config without it",
+      "rule": "ALL isolated cron sessions MUST have 'lightContext': true in payload",
+      "validation": "Before deploying any cron: verify lightContext: true is set, compare with working cron template",
+      "reference": "CRON_RULES.md"
+    },
+    {
+      "id": "brevo-api-success-not-delivery",
+      "date": "2026-03-28",
+      "severity": "critical",
+      "context": "Brevo email campaigns",
+      "problem": "Newsletter campaigns showed API success (204) but sent: 0, delivered: 0 for a week",
+      "root_cause": "Brevo Free Plan API bug - sendNow returns success but campaign goes to 'suspended' instead of 'sent'",
+      "rule": "NEVER trust API success code alone - always verify actual outcome 15-30 minutes later (sent counter, delivered stats)",
+      "validation": "After any newsletter send: wait 15 min → check campaign status → alert if not 'sent'",
+      "reference": "memory/2026-03-29.md (Brevo Newsletter Disaster)"
+    },
+    {
+      "id": "openclaw-doctor-dangerous",
+      "date": "2026-03-27",
+      "severity": "critical",
+      "context": "OpenClaw maintenance",
+      "problem": "Full-day outage - Anthropic API key corrupted (OAuth token instead of API key)",
+      "root_cause": "`openclaw doctor` auto-ran after config patch and corrupted the key",
+      "rule": "NEVER run `openclaw doctor` automatically or blindly - always inspect what it will change first",
+      "validation": "Only run doctor manually when debugging specific issues, never as part of automated flows"
+    },
+    {
+      "id": "gateway-restart-kills-session",
+      "date": "2026-03-27",
+      "severity": "high",
+      "context": "OpenClaw gateway management",
+      "problem": "Gateway restart from within a session killed the running session",
+      "rule": "NEVER call `openclaw gateway restart` from within your own session - always ask Lothar or use CLI from outside",
+      "validation": "For config changes: use config.patch which triggers restart safely"
+    },
+    {
+      "id": "google-oauth-production-mode",
+      "date": "2026-03-26",
+      "severity": "high",
+      "context": "Google OAuth tokens",
+      "problem": "Gmail/Calendar OAuth tokens expired after 7 days",
+      "root_cause": "Google Cloud app was in 'Testing' mode - tokens expire after 7 days",
+      "rule": "Publish Google Cloud apps to 'Production' - tokens then last as long as they're used regularly",
+      "validation": "Check Google Cloud Console → OAuth consent screen → Publishing status = Production"
+    },
+    {
+      "id": "withings-token-auto-refresh",
+      "date": "2026-03-29",
+      "severity": "medium",
+      "context": "Withings API",
+      "problem": "Withings tokens expire after 3h, caused integration failures",
+      "solution": "Created automated token-refresh cron (every 2h) that refreshes Withings OAuth and verifies Twitter tokens",
+      "rule": "Withings tokens MUST be refreshed proactively (every 2h) before 3h expiry",
+      "reference": "scripts/token-refresh.sh, cron job: token-refresh"
+    },
+    {
+      "id": "wa-digest-context-loss",
+      "date": "2026-03-29",
+      "severity": "medium",
+      "context": "WhatsApp digest",
+      "problem": "Filtering out Lothar's messages caused context loss - couldn't understand conversation flow",
+      "solution": "Read full conversations (Lothar + others), let LLM filter what's actionable",
+      "rule": "For triage/analysis tasks: Read full context, let AI filter relevance - don't pre-filter important context",
+      "reference": "scripts/wa-digest.py v3"
+    }
+  ]
 }

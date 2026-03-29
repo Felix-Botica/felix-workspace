@@ -1,0 +1,4 @@
+{
+  "_note": "Track used images to avoid repeats within 90 days",
+  "_format": "filename: {used_date, accounts[], type}"
+}

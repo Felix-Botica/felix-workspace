@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /**
  * Nylongerie Image Classifier — LOCAL (Ollama LLaVA)
- * Zero API cost. Runs entirely on the M1 Mac.
  * 
- * Falls back to Anthropic Sonnet for ambiguous results.
+ * NEW: Color detection (black nylons), better style categories, handle extraction.
  * 
  * Usage:
  *   node nylongerie-classify-local.js [batch_size] [start_from]
@@ -14,7 +13,6 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const INBOX = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
-const QUEUE_FILE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'queue.json');
 const TEMP_DIR = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'temp');
 const RESULTS_FILE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'classify-results.json');
 
@@ -32,17 +30,54 @@ async function classifyWithOllama(imagePath) {
   const imageData = fs.readFileSync(imagePath);
   const base64 = imageData.toString('base64');
 
+  const prompt = `Classify this fashion image. Reply ONLY with valid JSON:
+
+{
+  "type": "screenshot or content",
+  "handle": "@username or null",
+  "model_name": "visible name or null",
+  "style": "see list below",
+  "nylon_color": "black, tan, white, other, or null",
+  "description": "one short sentence",
+  "sex_appeal": 1-10
+}
+
+TYPE:
+- "screenshot" if Instagram UI visible (likes/comments/profile/navigation/status bar)
+- "content" if clean photo without UI elements
+
+HANDLE extraction (CRITICAL):
+- Look for @username in image text (profile name, captions, overlays)
+- Format as "@username" (include @)
+- If no @ visible but a username is clear, use "@username"
+- If truly uncertain, use null
+
+STYLE categories (pick ONE):
+- "black-nylon" — BLACK hosiery/tights/stockings clearly visible (main focus)
+- "housewife" — domestic setting, apron, kitchen, casual home wear
+- "girl-next-door" — casual, friendly, approachable vibe (not high fashion)
+- "editorial" — professional fashion shoot, studio lighting
+- "elegant" — classy, sophisticated, formal wear
+- "shiny-glossy" — shiny/satin/latex/wet-look materials prominent
+- "legs-focus" — legs are main subject, often close-up
+- "lifestyle" — casual everyday scenes, outdoors, natural poses
+- "product" — product showcase, clean background
+- "other" — none of the above
+
+NYLON_COLOR (if visible):
+- "black" if dark/opaque black nylons
+- "tan" if nude/beige/natural tone
+- "white" if white/light
+- "other" if colored (red, patterned, etc)
+- null if no nylons visible or unclear
+
+Be precise with handles — this is used for copyright attribution.`;
+
   const response = await fetch('http://localhost:11434/api/generate', {
     method: 'POST',
     body: JSON.stringify({
       model: 'llava:7b',
-      prompt: `Classify this image. Reply ONLY with valid JSON, nothing else:
-{"type": "screenshot" or "content", "handle": "@handle if visible else null", "model_name": "name if visible else null", "style": "one of: editorial, elegant, casual, shiny-glossy, legs-focus, lifestyle, product, other", "description": "one sentence max", "sex_appeal": number 1-10}
-
-Rules:
-- "screenshot" = Instagram UI visible (likes, comments, profile header, navigation bars, status bar)
-- "content" = clean photo with no Instagram UI elements
-- For style: legs-focus means legs are the main subject. shiny-glossy means shiny/satin/glossy materials prominent. editorial means professional fashion shoot. elegant means classy/sophisticated.`,
+      prompt,
       images: [base64],
       stream: false
     })
@@ -51,33 +86,41 @@ Rules:
   const result = await response.json();
   const text = result.response || '';
   
-  // Try to extract JSON
+  // Extract JSON
   const jsonMatch = text.match(/\{[\s\S]*?\}/);
   if (jsonMatch) {
     try {
-      return JSON.parse(jsonMatch[0]);
+      const parsed = JSON.parse(jsonMatch[0]);
+      // Validate required fields
+      if (!parsed.type) parsed.type = 'content';
+      if (!parsed.style) parsed.style = 'other';
+      if (!parsed.sex_appeal) parsed.sex_appeal = 5;
+      // Clean handle
+      if (parsed.handle && parsed.handle !== 'null') {
+        parsed.handle = parsed.handle.trim();
+        if (!parsed.handle.startsWith('@')) parsed.handle = '@' + parsed.handle;
+      } else {
+        parsed.handle = null;
+      }
+      return parsed;
     } catch (e) {
-      // Try to fix common JSON issues
-      const fixed = jsonMatch[0]
-        .replace(/'/g, '"')
-        .replace(/(\w+):/g, '"$1":')
-        .replace(/,\s*}/g, '}');
-      try { return JSON.parse(fixed); } catch (e2) {}
+      console.error(`  JSON parse failed: ${e.message}`);
     }
   }
   
-  // If JSON parsing fails, extract what we can
-  const isScreenshot = text.toLowerCase().includes('screenshot') || 
-                       text.toLowerCase().includes('instagram ui') ||
-                       text.toLowerCase().includes('navigation bar');
+  // Fallback: basic text analysis
+  const isScreenshot = /screenshot|instagram ui|navigation|status bar|profile header/i.test(text);
+  const handleMatch = text.match(/@[\w.]+/);
+  
   return {
     type: isScreenshot ? 'screenshot' : 'content',
-    handle: null,
+    handle: handleMatch ? handleMatch[0] : null,
     model_name: null,
     style: 'other',
-    description: text.slice(0, 100),
+    nylon_color: null,
+    description: text.slice(0, 100).trim(),
     sex_appeal: 5,
-    _raw: true // Flag that this was a fallback parse
+    _raw_fallback: true
   };
 }
 
@@ -89,81 +132,80 @@ async function main() {
     .sort();
 
   const batch = allFiles.slice(START_FROM, START_FROM + BATCH_SIZE);
-  console.log(`Processing ${batch.length} images locally via Ollama LLaVA (FREE)`);
-  console.log(`Range: ${START_FROM} to ${START_FROM + batch.length - 1} of ${allFiles.length} total`);
+  console.log(`\n🔍 Classifying ${batch.length} images (${START_FROM} to ${START_FROM + batch.length - 1} of ${allFiles.length})`);
+  console.log(`Using: Ollama LLaVA 7B (localhost:11434)\n`);
 
   let results = [];
   if (fs.existsSync(RESULTS_FILE)) {
     results = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf-8'));
   }
-  const processedFiles = new Set(results.map(r => r.file));
+  const processedFiles = new Set(results.map(r => r.filename));
 
-  let processed = 0, screenshots = 0, content = 0, errors = 0;
+  let stats = { processed: 0, screenshots: 0, content: 0, errors: 0, handles: 0, blackNylon: 0 };
 
   for (const file of batch) {
     if (processedFiles.has(file)) {
-      continue; // Skip already processed
+      console.log(`  ⏭️  SKIP: ${file} (already processed)`);
+      continue;
     }
 
     const inputPath = path.join(INBOX, file);
     const tempPath = path.join(TEMP_DIR, file);
 
     if (!resizeImage(inputPath, tempPath)) {
-      console.log(`  ERROR resizing ${file}`);
-      errors++;
+      console.log(`  ❌ ERROR: Cannot resize ${file}`);
+      stats.errors++;
       continue;
     }
 
     try {
       const classification = await classifyWithOllama(tempPath);
-      classification.file = file;
+      classification.filename = file; // CRITICAL: always store filename
+      classification.file = file; // Alias for backward compat
       classification._model = 'llava:7b';
+      classification._classified_at = new Date().toISOString();
+      
       results.push(classification);
 
-      if (classification.type === 'screenshot') {
-        screenshots++;
-        console.log(`  📱 SCREENSHOT: ${file} → ${classification.handle || 'no handle'}`);
-      } else {
-        content++;
-        console.log(`  📷 CONTENT: ${file} → ${classification.style} | appeal: ${classification.sex_appeal} | ${classification.description?.slice(0,60)}`);
-      }
+      // Log results
+      const icon = classification.type === 'screenshot' ? '📱' : '📷';
+      const handleStr = classification.handle || '(no handle)';
+      const colorStr = classification.nylon_color ? ` | ${classification.nylon_color}` : '';
+      
+      console.log(`  ${icon} ${file}`);
+      console.log(`     → ${classification.style}${colorStr} | ${handleStr} | appeal:${classification.sex_appeal}`);
 
-      processed++;
-      if (processed % 10 === 0) {
+      if (classification.type === 'screenshot') stats.screenshots++;
+      else stats.content++;
+      
+      if (classification.handle && classification.handle !== 'null') stats.handles++;
+      if (classification.style === 'black-nylon' || classification.nylon_color === 'black') stats.blackNylon++;
+
+      stats.processed++;
+
+      // Save every 10 items
+      if (stats.processed % 10 === 0) {
         fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2));
-        console.log(`  --- Saved: ${processed} done (${screenshots} screenshots, ${content} content, ${errors} errors) ---`);
+        console.log(`\n  💾 Saved: ${stats.processed} done\n`);
       }
 
     } catch (e) {
-      console.log(`  ERROR ${file}: ${e.message}`);
-      errors++;
+      console.log(`  ❌ ERROR ${file}: ${e.message}`);
+      stats.errors++;
     }
   }
 
   // Final save
   fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2));
 
-  // Pairing logic
-  console.log('\n--- Pairing screenshots with content ---');
-  results.sort((a, b) => a.file.localeCompare(b.file));
-  
-  let currentHandle = null, currentCredit = null;
-  const pairs = [];
-  
-  for (const item of results) {
-    if (item.type === 'screenshot') {
-      currentHandle = item.handle;
-      currentCredit = item.model_name || item.handle;
-      pairs.push({ screenshot: item.file, handle: currentHandle, credit: currentCredit, content: [] });
-    } else if (currentCredit && pairs.length > 0) {
-      pairs[pairs.length - 1].content.push(item.file);
-    }
-  }
-
-  console.log(`\n✅ DONE (Ollama LLaVA — $0 cost)`);
-  console.log(`   Processed: ${processed} (${screenshots} screenshots, ${content} content)`);
-  console.log(`   Errors: ${errors}`);
-  console.log(`   Pairs: ${pairs.filter(p => p.screenshot).length}`);
+  console.log(`\n✅ CLASSIFICATION COMPLETE`);
+  console.log(`   Total processed: ${stats.processed}`);
+  console.log(`   Screenshots: ${stats.screenshots} | Content: ${stats.content}`);
+  console.log(`   With handles: ${stats.handles}`);
+  console.log(`   Black nylon candidates: ${stats.blackNylon}`);
+  console.log(`   Errors: ${stats.errors}`);
+  console.log(`\n📂 Results: ${RESULTS_FILE}`);
+  console.log(`\n⚡ Next: Run series-link.js to pair screenshots with content\n`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
