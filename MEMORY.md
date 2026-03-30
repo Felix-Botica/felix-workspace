@@ -69,14 +69,15 @@ _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
 - **Topic 3 Context Rule:** Bei Nachricht in Topic 3 IMMER queue.json auf `draft_sent` prüfen
 - **Felix Email:** felix@botica.tech — LIVE via Gmail/gog
 
-### Backlog (aktualisiert 28.03.2026)
+### Backlog (aktualisiert 29.03.2026)
 **P0 — Resilience & Foundation:**
 - ✅ Self-Healing Watchdog (LaunchAgent, 5-Min-Intervall, Telegram-Alert bypass)
 - ✅ Gemini 2.5 Pro als Fallback-LLM konfiguriert
-- ⬜ Memory aktivieren (memory_search hat 0 chunks — semantische Suche einrichten)
+- ✅ Memory aktivieren (88 chunks indexed, hybrid search working)
 - ⬜ Command-Vokabular (mark_read, approve, reject, snooze, priority)
 
 **P1 — Produktivität & Revenue:**
+- ⬜ Reddit API Authentication (proper OAuth instead of web_search fallback)
 - ⬜ Homepage-Automation (write_themes + write_content Scope nötig → Banner, Promos, Featured Products automatisch updaten)
 - ⬜ Reels-Pipeline (253 Videos, einziges fehlendes Content-Format)
 - ⬜ IG Performance Tracking (in Weekly Review integriert, Daten sammeln)
