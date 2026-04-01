@@ -31,10 +31,11 @@ if [ -n "$WITHINGS_REFRESH_TOKEN" ]; then
     NEW_REFRESH=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['body']['refresh_token'])" 2>/dev/null)
     
     if [ -n "$NEW_ACCESS" ] && [ -n "$NEW_REFRESH" ]; then
-      # Update .env file
-      sed -i.bak "s|WITHINGS_ACCESS_TOKEN=.*|WITHINGS_ACCESS_TOKEN=$NEW_ACCESS|" ~/.openclaw/.env
-      sed -i.bak "s|WITHINGS_REFRESH_TOKEN=.*|WITHINGS_REFRESH_TOKEN=$NEW_REFRESH|" ~/.openclaw/.env
-      
+      # Backup .env once (overwrite previous backup), then update in-place
+      cp ~/.openclaw/.env ~/.openclaw/.env.bak
+      sed -i '' "s|WITHINGS_ACCESS_TOKEN=.*|WITHINGS_ACCESS_TOKEN=$NEW_ACCESS|" ~/.openclaw/.env
+      sed -i '' "s|WITHINGS_REFRESH_TOKEN=.*|WITHINGS_REFRESH_TOKEN=$NEW_REFRESH|" ~/.openclaw/.env
+
       REFRESHED+=("✅ Withings token refreshed")
       echo "  ✅ Success" >> "$LOG_FILE"
     else
