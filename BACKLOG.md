@@ -108,16 +108,16 @@ _Was läuft, was kommt, was wartet. Priorisiert nach Impact._
 ### Agents
 | Agent | Model | Kosten/Msg | Zweck |
 |-------|-------|-----------|-------|
-| Felix (main) | Opus 4.6 | ~€0.05 | Persönlicher Agent, Orchestrator |
-| Observer | Haiku 4.5 | ~€0.001 | Stummer Logger |
-| Nylongerie | Sonnet 4 | ~€0.01 | Instagram Content |
+| Felix (main) | google/gemini-2.5-flash | ~€0.001 | Persönlicher Agent, Orchestrator |
+| Observer | anthropic/claude-haiku-4-5 | ~€0.001 | Stummer Logger |
+| Nylongerie | google/gemini-2.5-flash | ~€0.001 | Instagram Content |
 
 ### Potenzielle zukünftige Agents
 | Agent | Model | Trigger | Zweck |
 |-------|-------|---------|-------|
-| manheimer | Sonnet 4 | Cron | Manheimer Berlin Content |
-| shopify | Sonnet 4 | Event | Order-Management, Alerts |
-| research | Opus 4.6 | On-demand | Deep Research, Marktanalyse |
+| manheimer | google/gemini-2.5-flash | Cron | Manheimer Berlin Content |
+| shopify | google/gemini-2.5-flash | Event | Order-Management, Alerts |
+| research | google/gemini-2.5-flash | On-demand | Deep Research, Marktanalyse |
 
 ### Wann neuer Agent?
 - ✅ Eigener Workflow mit eigenem State
@@ -125,3 +125,20 @@ _Was läuft, was kommt, was wartet. Priorisiert nach Impact._
 - ✅ Würde Main Session Context aufblähen
 - ❌ Einmalaufgaben → sessions_spawn
 - ❌ Kurze Interaktionen → bleibt bei Felix
+
+## Personal Assistant — Backlog (Priorität)
+
+### P1 — Conil Woche 1
+- [ ] Weekly Strategy Review aktivieren (Montag 10:00)
+- [ ] Proaktive Eskalation: SPRING30-Typ Reminder
+- [ ] Morning Briefing vollständig verifizieren
+
+### P2 — Conil Woche 2
+- [ ] Reddit OAuth + Evening Digest verifizieren
+- [ ] Reise-Kontext: Gmail-Reservierungen lesen
+- [ ] Meeting-Vorbereitung 30min vor Termin
+
+### P3 — Später
+- [ ] Withings → konkrete Tagesempfehlung
+- [ ] LinkedIn Mentions im Briefing
+- [ ] install.sh auf neuem Mac testen
