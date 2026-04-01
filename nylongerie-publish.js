@@ -146,7 +146,14 @@ async function publishPost(postId, dryRun = false) {
   if (!post.account) { console.log(`Post ${postId} has no account assigned`); return false; }
   if (!post.caption && !dryRun) { console.log(`Post ${postId} has no caption`); return false; }
   if (!ACCOUNTS[post.account]) { console.log(`Unknown account: ${post.account}`); return false; }
-  
+
+  // Freigabe-Gate: niemals direkt von draft_sent publishen
+  if (!dryRun && post.status !== 'approved') {
+    console.log(`❌ Post ${postId} hat Status "${post.status}" — nur "approved" darf publiziert werden.`);
+    console.log(`   Bitte erst freigeben: status → "approved", approvedAt + approvedBy setzen.`);
+    return false;
+  }
+
   const account = ACCOUNTS[post.account];
   console.log(`\n📸 Publishing: ${post.originalFile}`);
   console.log(`   Account: @${post.account} (${account.name})`);
@@ -182,12 +189,17 @@ async function publishPost(postId, dryRun = false) {
   const mediaId = await publishMedia(account.igId, containerId);
   console.log(`   ✅ Published! Media ID: ${mediaId}`);
   
-  // Step 5: Update queue
+  // Step 5: Update queue (preserve approval metadata)
   post.status = 'published';
   post.publishedAt = new Date().toISOString();
   post.postId = mediaId;
   post.r2Url = publicUrl;
   post.updatedAt = new Date().toISOString();
+  // approvedAt and approvedBy should already be set from approval step
+  if (!post.approvedAt) {
+    console.log(`   ⚠️  Warning: approvedAt was not set — backdating to now`);
+    post.approvedAt = new Date().toISOString();
+  }
   saveQueue(queue);
   
   return true;
