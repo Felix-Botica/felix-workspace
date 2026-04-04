@@ -11,7 +11,7 @@ TIMEOUT=10
 STATE_FILE="$HOME/.openclaw/workspace/scripts/.gateway-health-state"
 
 # Telegram alert config (from openclaw.json)
-TG_BOT_TOKEN="8129988237:AAFuQcHXgc1rVFPXn28-DTT4_vcyY1qc7Vk"
+TG_BOT_TOKEN="8129988237:AAGiEWOlVLrPTz-GVv0l70RGXRXGfukWtvo"
 TG_CHAT_ID="287505381"
 
 send_alert() {
