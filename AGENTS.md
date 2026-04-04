@@ -228,7 +228,7 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
 
-## 🔴 Nylongerie Posting — FROZEN 🔴
-**READ INSTAGRAM_OPERATIONS_FROZEN.md FIRST**
-All Instagram operations suspended as of 2026-03-29.
-Do NOT create posts, stories, or run any nylongerie scripts until Lothar gives explicit approval.
+## ✅ Nylongerie Posting — ACTIVE
+**READ INSTAGRAM_OPERATIONS.md FIRST**
+Posts active since 2026-04-04, Stories active since 2026-04-06.
+All publishing requires Lothar's approval via Telegram Topic 3.
