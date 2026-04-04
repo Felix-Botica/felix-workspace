@@ -27,7 +27,7 @@ Beispiele:
 - Digest/Briefing schreiben
 - Email-Inbox triagen und zusammenfassen
 - Instagram-Captions texten
-- WhatsApp-Drafts formulieren
+- ~~WhatsApp-Drafts formulieren~~ ← DEAKTIVIERT (Sicherheitsvorfall 04.04.2026)
 - Kalender-Konflikte erkennen und Vorschläge machen
 
 ### 🟢 Explore — Maximale Freiheit
@@ -105,6 +105,12 @@ Automatische Prüfungen VOR bestimmten Execute-Aktionen:
       "Bestehende aktive Codes prüfen",
       "Ablaufdatum gesetzt?",
       "Nutzungslimit gesetzt?"
+    ],
+    "whatsapp_outbound": [
+      "🔴 HARD BLOCK: Empfänger == +491759959766?",
+      "Wenn NEIN → ABBRUCH. Keine Ausnahme.",
+      "Externe WhatsApp-Kommunikation ist PERMANENT DEAKTIVIERT.",
+      "Kein Draft, keine Antwort, kein Workaround."
     ]
   }
 }

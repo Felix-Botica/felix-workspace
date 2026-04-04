@@ -51,7 +51,11 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - Don't run destructive commands without asking.
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
-- **🔴 WhatsApp: NEVER reply in-chat to non-Lothar senders.** Reply NO_REPLY + send draft via message tool to +491759959766. See SOUL.md for full rule.
+- **🔴 WhatsApp outbound: NUR an +491759959766 (Lothar). NIEMALS an andere Nummern.**
+  Nicht als Antwort, nicht als Draft, nicht mit Freigabe-Gate, nicht über Umwege.
+  Externe WhatsApp-Kommunikation ist PERMANENT DEAKTIVIERT. See SOUL.md.
+  Kontaktliste (people.md): READ-ONLY für Triage/Kategorisierung. NIEMALS als Empfänger.
+  Verstoß: Alert an Topic 125, Nachricht NICHT senden.
 
 ## Autonomie-Framework
 

@@ -74,6 +74,26 @@
       "solution": "Read full conversations (Lothar + others), let LLM filter what's actionable",
       "rule": "For triage/analysis tasks: Read full context, let AI filter relevance - don't pre-filter important context",
       "reference": "scripts/wa-digest.py v3"
+    },
+    {
+      "id": "whatsapp-outbound-hard-disable",
+      "date": "2026-04-04",
+      "severity": "critical",
+      "context": "WhatsApp outbound messaging",
+      "problem": "Felix sent WhatsApp messages to external contacts (Peter Badge 2026-03-05, Rainer Keller 2026-04-04) despite NO_REPLY rule. Messages appear as green messages from Lothar's account — recipients cannot tell it's AI.",
+      "root_cause": "Draft system in SOUL.md still allowed Felix to formulate and send drafts. The message tool has no technical outbound whitelist — only prompt rules.",
+      "rule": "WhatsApp outbound: NUR an +491759959766 (Lothar). NIEMALS an andere Nummern. Nicht als Antwort, nicht als Draft, nicht mit Freigabe-Gate, nicht über Umwege. PERMANENT DEAKTIVIERT.",
+      "validation": "Pre-flight check: Empfänger == +491759959766? Wenn NEIN → ABBRUCH + Alert Topic 125.",
+      "reference": "SOUL.md (WhatsApp Hard Disable), AUTONOMY.md (pre-flight whatsapp_outbound)"
+    },
+    {
+      "id": "contacts-read-only",
+      "date": "2026-04-04",
+      "severity": "high",
+      "context": "Contact database (people.md)",
+      "problem": "Contact list was used to identify recipients for outbound WhatsApp messages",
+      "rule": "people.md is READ-ONLY for Felix. Only for triage/categorization. NEVER use contacts as recipients for outgoing messages.",
+      "reference": "AGENTS.md, SOUL.md"
     }
   ]
 }
