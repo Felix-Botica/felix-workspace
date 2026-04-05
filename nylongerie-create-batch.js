@@ -71,7 +71,7 @@ function generateHeadline(description, style) {
     return 'Legs in focus';
   }
   
-  if (style === 'black') {
+  if (style === 'black' || style === 'black-nylon') {
     if (hasShiny) return 'Dark glossy elegance';
     return 'Noir sophistication';
   }
@@ -80,7 +80,16 @@ function generateHeadline(description, style) {
     if (hasLeopard) return 'Wild & casual chic';
     return 'Real-life style';
   }
-  
+
+  if (style === 'editorial') {
+    if (hasElegance) return 'Editorial elegance';
+    return 'Fashion statement';
+  }
+
+  if (style === 'other') {
+    return 'Style statement';
+  }
+
   return 'Style statement';
 }
 
@@ -135,21 +144,14 @@ async function cropImage(inputPath) {
 
 // Main
 async function createBatch(selections) {
-  const classified = JSON.parse(fs.readFileSync(CLASSIFY_FILE, 'utf8'));
-  const queue = JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8'));
+  const queue = fs.existsSync(QUEUE_FILE) ? JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8')) : [];
   const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
-  
+
   const drafts = [];
-  
+
   for (let i = 0; i < selections.length; i++) {
     const sel = selections[i];
-    const entry = classified.find(c => c.file === sel.file);
-    
-    if (!entry) {
-      console.warn(`⚠️  File not found in classify-results: ${sel.file}`);
-      continue;
-    }
-    
+
     const inputPath = path.join(INBOX_DIR, sel.file);
     if (!fs.existsSync(inputPath)) {
       console.warn(`⚠️  File not found in inbox: ${sel.file}`);

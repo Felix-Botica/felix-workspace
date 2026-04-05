@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 require('dotenv').config({ path: path.join(process.env.HOME, '.openclaw', '.env'), override: true });
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
@@ -47,18 +48,31 @@ const s3 = new S3Client({
   }
 });
 
-async function uploadToR2(filePath, key) {
-  const body = fs.readFileSync(filePath);
-  const ext = path.extname(filePath).toLowerCase();
-  const contentType = ext === '.mp4' ? 'video/mp4' : 'image/jpeg';
-  
+async function cropTo4x5(inputPath) {
+  const img = sharp(inputPath);
+  const meta = await img.metadata();
+  const targetRatio = 1080 / 1350; // 0.8
+  const currentRatio = meta.width / meta.height;
+  let width, height, left = 0, top = 0;
+  if (currentRatio > targetRatio) {
+    height = meta.height;
+    width = Math.round(height * targetRatio);
+    left = Math.round((meta.width - width) / 2);
+  } else {
+    width = meta.width;
+    height = Math.round(width / targetRatio);
+    top = Math.round((meta.height - height) / 2);
+  }
+  return img.extract({ left, top, width, height }).resize(1080, 1350, { fit: 'cover' }).jpeg({ quality: 92 }).toBuffer();
+}
+
+async function uploadToR2(body, key, contentType = 'image/jpeg') {
   await s3.send(new PutObjectCommand({
     Bucket: process.env.R2_BUCKET,
     Key: key,
     Body: body,
     ContentType: contentType
   }));
-  
   return `${R2_PUBLIC_URL}/${key}`;
 }
 
@@ -145,7 +159,9 @@ async function publishPost(postId, dryRun = false) {
   if (!post) { console.log(`Post ${postId} not found`); return false; }
   if (!post.account) { console.log(`Post ${postId} has no account assigned`); return false; }
   if (!post.caption && !dryRun) { console.log(`Post ${postId} has no caption`); return false; }
-  if (!ACCOUNTS[post.account]) { console.log(`Unknown account: ${post.account}`); return false; }
+  // Normalize account: strip leading @ if present
+  const accountKey = post.account.replace(/^@/, '');
+  if (!ACCOUNTS[accountKey]) { console.log(`Unknown account: ${post.account}`); return false; }
 
   // Freigabe-Gate: niemals direkt von draft_sent publishen
   if (!dryRun && post.status !== 'approved') {
@@ -154,15 +170,24 @@ async function publishPost(postId, dryRun = false) {
     return false;
   }
 
-  const account = ACCOUNTS[post.account];
-  console.log(`\n📸 Publishing: ${post.originalFile}`);
-  console.log(`   Account: @${post.account} (${account.name})`);
-  console.log(`   Credit: ${post.credit || 'none'}`);
-  
-  // Step 1: Upload to R2
-  const r2Key = `posts/${post.account}/${Date.now()}-${post.originalFile}`;
+  const account = ACCOUNTS[accountKey];
+  const imageFile = post.file || post.originalFile;
+  const imagePath = post.filePath || path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox', imageFile);
+  console.log(`\n📸 Publishing: ${imageFile}`);
+  console.log(`   Account: @${accountKey} (${account.name})`);
+  console.log(`   Credit: ${post.model || post.credit || 'none'}`);
+
+  if (!fs.existsSync(imagePath)) {
+    console.error(`   ❌ Image not found: ${imagePath}`);
+    return false;
+  }
+
+  // Step 1: Crop to 4:5 and upload to R2
+  const r2Key = `posts/${accountKey}/${Date.now()}-${imageFile}`;
+  console.log(`   Cropping to 4:5...`);
+  const cropped = await cropTo4x5(imagePath);
   console.log(`   Uploading to R2...`);
-  const publicUrl = await uploadToR2(post.filePath, r2Key);
+  const publicUrl = await uploadToR2(cropped, r2Key);
   console.log(`   URL: ${publicUrl}`);
   
   if (dryRun) {
