@@ -1,144 +1,64 @@
-# BACKLOG.md — Felix Produktionsstraße
-_Was läuft, was kommt, was wartet. Priorisiert nach Impact._
+# BACKLOG.md — Nylongerie & Felix
+# Updated: April 6, 2026 — Conil de la Frontera
 
-## 🟢 LIVE (funktioniert)
+---
 
-### Morning Briefing (07:30 CET)
-- Email-Scan (actionable vs noise), Kalender, Gewicht (manuell), Schlaf (Withings)
-- **Offen:** Wetter einbauen, LinkedIn-Mentions
+## ✅ COMPLETED (April 4-6, 2026)
 
-### WA Inbox Digest (21:00 CET)
-- Eingehende WhatsApp-Nachrichten, Kontakt-Auflösung via people.md
-- **Limitation:** Lothars eigene Antworten nicht sichtbar (fromMe-Routing fehlt)
+- [x] Nylongerie production cron live (09:00 daily, 438 groups)
+- [x] Felix → correct Brevo account (Nylongerie)
+- [x] nylongerie.com + botica.tech authenticated in Brevo
+- [x] hello@nylongerie.com sender verified (DKIM + DMARC green)
+- [x] 6 Brevo automations: Welcome/SIGNUP15, Winback/10%, Browse, Purchase, Abandoned cart, VIP/20%
+- [x] Shopify Messaging OFF — Brevo is single email system
+- [x] Shopify Shipping update template — branded, Cainiao tracking
+- [x] STRATEGY.md committed to Felix
+- [x] Weekly Strategy Review cron (Monday 10:00)
+- [x] Morning Briefing working (07:30)
+- [x] All 5 Telegram topics routing correctly
 
-### Wind-Down (23:00 CET) + X Digest (20:00 CET)
-- Schlaf-Nudge + Twitter Mentions/Trends
+---
 
-### Observer Agent (Haiku 4.5)
-- Stummer Logger, kein Leak, NO_REPLY only
+## P1 — Conil Week 2
 
-### Nylongerie Feed-Posts
-- Komplette Pipeline: Classify → Pair → Assign → Overlay → Caption → R2 → Publish
-- 100/1600 Bilder klassifiziert
+- [ ] A1: Goal Agent Architecture — GOALS.md, daily KPI to Digest, escalate if queue < 14
+- [ ] E2: Instagram Performance Tracking — Graph API polling per post per account
+- [ ] A3: Instagram DM Ingestion — 200 model DMs → candidate record → Telegram approval → pipeline
 
-### Shopify Integration ✅ NEU
-- Produkte lesen, Collections browsen, Discount Codes erstellen (API)
-- Discount-Links: `nylongerie.com/discount/CODE` → automatisch angewendet
+---
 
-## 🟡 IN ARBEIT
+## P2 — Week 3
 
-### Nylongerie Story-Pipeline → Deadline: SA 14.03. 🎯
-**Status:** End-to-End Dry Run ✅, Template-Engine wird gebaut
+- [ ] B2: Headlines & Captions for Conversion (needs E2 data first)
+- [ ] A2: KPI Tracking & Learning Loop (needs E2)
+- [ ] B3: AI-Ready SEO — Classic Shopify first, GEO second
+- [ ] A8: Reels Pipeline — highest reach format
+- [ ] A4: Content Pool Auto-Ingestion — R2 inbox → classify-v2 → merge
+- [ ] B4: Model CRM — approved models → managed roster → follow-up cadence
+- [ ] B1: Content Newsletter — nylons in movies, history, culture
+- [ ] A5: Monthly Product Drop — Shopify + 7 accounts + Brevo
+- [ ] D2: finance-agent — weekly P&L to Digest
+- [ ] D5: weekly-strategy-review.sh script build
 
-**Anlässe (Template-Typen):**
-| Typ | Beispiel | Frequenz |
-|-----|----------|----------|
-| **Flash Sale** | "30% off Shiny Tights, 48h only" | 2-3x/Woche |
-| **Bestseller** | Top-Produkt mit Preis featuren | 1x/Woche |
-| **New Arrivals** | Neue Produkte im Shop | Bei Bedarf |
-| **Bundle/Multipack** | "Save with our multipacks" | 1x/Woche |
-| **Model of the Week** | Persönlicher Code (WILLEKE20) | 1x/Woche |
-| **Category Spotlight** | "Discover our Opaque Collection" | 1-2x/Woche |
-| **Saisonal** | Valentine's, Spring, Summer, Xmas | Kalender-driven |
+---
 
-**Flow:** Anlass → Shopify Produkt/Collection + Discount Code → Sharp Story-Bild → Approval → IG Story + Link Sticker
+## P3 — Horizon
 
-**Nächste Schritte:**
-- [ ] Template-Engine bauen (5 SVG-Varianten)
-- [ ] 2-3 fertige Stories zur Freigabe (Freitag)
-- [ ] Erster Live-Post auf @nylongerie (Samstag)
+- [ ] A6: Performance-Based Account Weighting (needs 4+ weeks data)
+- [ ] D3: Contact Tier System
+- [ ] E3: X/Twitter Token regeneration
+- [ ] E4: Reddit OAuth
+- [ ] E5: NemoClaw Multi-Tenant (6-12 months)
+- [ ] C1: Media & Licensing Pivot (when system proven)
 
-### GitHub Account für Felix
-- Nightly Backup: Configs, Skills, Memory, Pipeline-Scripts
-- **Status:** In Progress
+---
 
-### Eigene Email für Felix
-- z.B. felix@botica.tech
-- **Status:** Backlog
-
-## 🔴 BACKLOG (priorisiert nach Impact)
-
-### P1 — Umsatz-Impact
-
-#### Nylongerie: Email-Kampagnen
-- 700 Kunden, 3% Conversion (10x Social!)
-- Shopify Email — Top-Performer, saisonale Kampagnen
-- **Braucht:** Template-System, Performance-Tracking
-
-#### Nylongerie: Reels
-- 253 Videos vorhanden, ungesichtet
-- Reels = Reichweite (Algorithmus bevorzugt Video)
-- **Braucht:** Video-Sichtung, ffmpeg, Thumbnail, Caption
-
-#### Nylongerie: Headlines & Captions verbessern
-- Feed-Post Captions optimieren (mehr Engagement)
-
-### P2 — Effizienz-Impact
-
-#### Gewicht-Automatisierung
-- Renpho → Apple Health → ??? → Felix
-- Optionen: Apple Shortcut, Renpho API direkt
-
-#### Community Skills evaluieren
-- ClawHub durchschauen, npx skills add
-- Memory Plugin (ClawVault/Supermemory) — niedrige Prio
-
-#### Reddit im Evening Digest
-- Relevante Subreddits beobachten
-
-### P3 — Nice to Have
-
-#### Kontakt-Tier-System
-- 5 Tiers, Design existiert, Abhängigkeit: fromMe-Routing
-
-#### Manheimer Berlin Automation
-- Ähnlich Nylongerie, eigener Workflow, noch nicht spezifiziert
-
-#### Email Auto-Triage
-- Smart Replies, automatische Kategorisierung
-
-#### Instagram Performance Tracking
-- Insights API, Engagement-Metriken pro Post/Story
-
-#### Product Tags (IG Shopping)
-- Instagram Shopping Tags auf Posts
-
-## 🏗️ ARCHITEKTUR
-
-### Agents
-| Agent | Model | Kosten/Msg | Zweck |
-|-------|-------|-----------|-------|
-| Felix (main) | google/gemini-2.5-flash | ~€0.001 | Persönlicher Agent, Orchestrator |
-| Observer | anthropic/claude-haiku-4-5 | ~€0.001 | Stummer Logger |
-| Nylongerie | google/gemini-2.5-flash | ~€0.001 | Instagram Content |
-
-### Potenzielle zukünftige Agents
-| Agent | Model | Trigger | Zweck |
-|-------|-------|---------|-------|
-| manheimer | google/gemini-2.5-flash | Cron | Manheimer Berlin Content |
-| shopify | google/gemini-2.5-flash | Event | Order-Management, Alerts |
-| research | google/gemini-2.5-flash | On-demand | Deep Research, Marktanalyse |
-
-### Wann neuer Agent?
-- ✅ Eigener Workflow mit eigenem State
-- ✅ Regelmäßig wiederkehrend (Cron-tauglich)
-- ✅ Würde Main Session Context aufblähen
-- ❌ Einmalaufgaben → sessions_spawn
-- ❌ Kurze Interaktionen → bleibt bei Felix
-
-## Personal Assistant — Backlog (Priorität)
-
-### P1 — Conil Woche 1
-- [ ] Weekly Strategy Review aktivieren (Montag 10:00)
-- [ ] Proaktive Eskalation: SPRING30-Typ Reminder
-- [ ] Morning Briefing vollständig verifizieren
-
-### P2 — Conil Woche 2
-- [ ] Reddit OAuth + Evening Digest verifizieren
-- [ ] Reise-Kontext: Gmail-Reservierungen lesen
-- [ ] Meeting-Vorbereitung 30min vor Termin
-
-### P3 — Später
-- [ ] Withings → konkrete Tagesempfehlung
-- [ ] LinkedIn Mentions im Briefing
-- [ ] install.sh auf neuem Mac testen
+## NEVER DO
+- openclaw doctor --fix
+- Overwrite series-map-final.json
+- classify-results.json without --output flag
+- Opus or gemini-2.5-pro
+- openclaw config (destructive)
+- sed on openclaw.json
+- Trust Felix self-reported status without pgrep
+- brew upgrade openclaw-cli without stopping gateway first
