@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-04-05",
+  "action": "bounce_cleanup_list3",
+  "brevo_total_contacts": 915,
+  "total_blacklisted": 253,
+  "blacklisted_in_list3": 2,
+  "removed_from_list3": [
+    "mfelsoci@comcast.net",
+    "casuallegol@gmail.com"
+  ],
+  "list3_before": 663,
+  "list3_after": 661,
+  "note": "Both contacts were already blacklisted in Brevo (no sends possible), but still counted as list members. Removed for accurate subscriber count."
+}

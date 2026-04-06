@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const CLASSIFY = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'classify-results.json');
+const CLASSIFY = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'classify-results-clean.json');
 const SERIES_MAP = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'series-map-final.json');
 const QUEUE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'queue.json');
 const OUTPUT = path.join(process.env.HOME, '.openclaw', 'workspace', 'batch-selections.json');
