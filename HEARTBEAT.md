@@ -44,3 +44,14 @@
 # - Trial had ~€258 credit as of Feb 25, 2026
 # - Warn Lothar when credit drops below €50 or 5 days remain
 # - Losing this means Gmail and Calendar APIs stop working
+
+# 🔐 Token Expiry Monitor (EVERY heartbeat)
+# Read memory/tokens.json and check for upcoming expiries:
+# - WhatsApp: Alert if < 2 days until expiry (manual re-scan required)
+# - Instagram: Alert if < 7 days until expiry (auto-refresh will attempt)
+# - Google: Verify OAuth is fresh (gog handles auto-refresh)
+# - Withings: Monitor (auto-refresh runs daily at 08:00)
+# Format alert as:
+#   "⚠️ TOKEN EXPIRY ALERT: [Service] expires in X days. Action: [what to do]"
+# Send to Topic 125 (Health & Pipeline)
+# This prevents silent token failures.

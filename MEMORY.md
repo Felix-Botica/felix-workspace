@@ -1,6 +1,6 @@
 # MEMORY.md — Felix's Long-Term Memory
 _Schlank halten! Details → memory/*.md (durchsuchbar via memory_search)_
-_Aktualisiert: 02.04.2026_
+_Aktualisiert: 08.04.2026 21:29_ ← **FULL Nylongerie Build Spec LOCKED IN**
 
 ## Lothar — Wer er ist
 - First Managing Director Amazon Germany (Team 800) — world-class Karriere
@@ -89,6 +89,197 @@ _Aktualisiert: 02.04.2026_
 - **Email = #1 Revenue Channel:** 40 Orders, €2.593 via Shopify Email + Brevo
 - **Offene Hebel:** Cart Recovery + Reward, Bundles promoten, Flash Sales, Google SEO, IG→Newsletter
 - **Details:** → `memory/2026-03-23.md`, `NYLONGERIE_PIPELINE.md`
+
+## 🚀 Nylongerie Growth Machine — PERMANENTE ZIELE (seit 2026-04-08)
+
+### 📧 Newsletter/Woche (Samstag 16:00 CET) — FINAL SPECIFICATION
+
+**Approval Workflow:**
+- **Freitag:** Lothar gibt mir Wochenpromo (Theme, Code, optional Products)
+- **Samstag 14:00:** Felix generiert Draft → Topic 3
+- **Samstag 15:00:** Lothar approvest
+- **Samstag 16:00:** Auto-versand via Brevo an List 3 (662 Subscribers)
+
+**Theme Auswahl (I suggest, Lothar picks):**
+- Valentines Day | Black Friday | Sommeranfang
+- **Frühling** (Spring33 sehr erfolgreich!)
+- Frauentag | **Shiny** (erfolgreich!) | **Open Crotch** (erfolgreich!)
+
+**Product Selection Logic:**
+1. Lese Shopify Produktbeschreibungen/Headlines
+2. Wähle 3-4 Produkte die zum Theme passen
+3. Grabber featured images (Shopify API)
+4. Mobile-optimiert (80% mobile users!)
+5. Responsive design
+6. Matching discount code aus aktiven Shopify Codes (oder neuer)
+7. Fallback wenn Image fehlt: Skip product (keine Verzögerung!)
+
+**Price Display Format:**
+```
+€24.90 → €17.43 (mit Rabatt)
+[CTA Button - theme-aware]
+```
+
+**CTA Button Style:**
+- Gold (#D4AF37) Button
+- **Text:** Theme-aware (z.B. "Embrace Spring", "Get Shiny", "Explore Open")
+- **Recommendation für Konversion:** Button > Link
+
+**Email Subject + Preheader (Afficionados!):**
+- **Mit Emoji**
+- **Dynamic basierend auf Theme**
+- Beispiel: "Step Into Spring with 33% Off ✨" | "Shiny tights you'll love — now 33% off. Limited time."
+
+**Newsletter Body Structure:**
+```
+[BLACK HEADER]
+NYLONGERIE
+FASHION & FRIENDS BY ALEX S.
+
+[WHITE BODY]
+- Story hook (emotional, theme-aware)
+- 3-4 Products:
+  * Product Image (responsive, mobile)
+  * Product Name
+  * €Old → €New
+  * Gold CTA Button (theme-aware)
+- Gold code box (Code + "Valid until...")
+- Closing (emotional, FOMO)
+
+[SAME FOOTER]
+NYLONGERIE | FASHION & FRIENDS BY ALEX S.
+[Contact] [Unsubscribe] [Privacy]
+© 2026 Nylongerie
+```
+
+**Brevo Integration:**
+- Newsletter = Manual campaign (draft → approval → versand)
+- Automations = Already live, need image integration
+- **Same template structure für Newsletter + Automations**
+- **Same footer für alle**
+
+**Approval Gate:**
+- Aktuell: Manual every week
+- Später: Can automate if pattern successful
+
+### 🖼️ Brevo Image Integration (Newsletter + Automations)
+
+**Image Placement Strategy:**
+- Content-dependent (nicht always same position)
+- If too complex: **Standardformat = Headline → Image → Story → CTA**
+- Images als Shopify featured images (mobile-optimized)
+- Brevo HTML format: `<img src="{{PRODUCT_IMAGE_URL}}" style="width:100%; max-width:500px; height:auto;">`
+- Variable Format: Shopify product featured_image via API
+
+**Fallback Image (Default Hero):**
+- Stored in Shopify Medien
+- Lothar uploads URL tomorrow
+- Use wenn: Product image missing, Fallback required
+- No delay! Skip product + use fallback for rest
+
+### 🛍️ Shopify Product Selection Logic
+
+**Strategy:**
+1. **Tag-based matching:** Read product tags (e.g., "shiny", "red", "opencrotch")
+2. **Headline-based:** Search headlines for theme keywords
+3. **Description-based:** Scan product descriptions
+4. **TOP-SELLER preference:** When available AND matching theme
+   - Red Tights theme → All red products, TOP-SELLER first
+   - Opencrotch theme → All opencrotch products, TOP-SELLER first
+   - Shiny theme → All shiny products, TOP-SELLER first
+5. **Pick 3-4 matches** (mix of high-sellers + variety)
+6. **Grab featured images** (Shopify API)
+
+**NO manual product ID input needed.** I determine via tags/headlines/descriptions.
+
+### 🏠 Homepage Update Specification
+
+**Goal:** Newsletter promo → Homepage banner
+
+**What to sync (from Newsletter to Homepage):**
+- ✅ Product image (same image from newsletter)
+- ✅ Product name/headline
+- ✅ CTA text (same as newsletter button)
+- ✅ Promo code link
+- ✅ Story copy (adapted for homepage)
+
+**How to build:**
+- Shopify Liquid template or custom section
+- **Banner placement:** Hero section? Above fold? Below header?
+- **Design:** Match newsletter aesthetic (black + gold)
+- **Update timing:** Auto-sync with newsletter OR manual?
+
+**Current status:** Lothar to clarify if manually via Shopify admin OR Felix builds automation.
+
+### 📱 Model DM Outreach (Instagram) — FUTURE (P2)
+
+**Platform:** Instagram DMs (not WhatsApp)
+
+**Current Status:**
+- ✅ 3 accounts already have DM access
+- ⏳ More accounts pending Meta approval (process ongoing)
+
+**Goal:**
+- Collect photos from models (direct collaboration)
+- Get permission to publish model content
+- Models WANT our reach (they ask often!)
+- Build mutual following + publishing partnership
+
+**Messaging Strategy:**
+- Frei nach Gutdünken (my discretion)
+- Template TBD (will craft based on context)
+- Message: "We'd love to feature your photos. Here's our reach + audience. Interested in collaboration?"
+- Collect: Photos + permission screenshots
+- Store: In nylongerie image pool for future posts
+
+**Next Steps:**
+- Wait for Meta approval on remaining accounts
+- Draft DM template
+- Start outreach (1x/month as planned)
+
+### 📊 Success Monitoring / Learning Loop
+
+**Metrics to track (once newsletter running):**
+- Open rate (via Brevo)
+- Click rate (via Brevo)
+- Revenue (via Shopify UTM)
+- Conversion rate (orders from newsletter)
+- Best-performing products
+- Best-performing themes
+- Best-performing codes
+
+**Reporting:**
+- Weekly summary (parallel to newsletter approval)
+- Best of last week + recommendations for next week
+- Send to Topic 4 (Digest) or Topic 3 (Nylongerie)?
+
+**Daily Operations:**
+1. ✅ **4-5 Posts/Tag** (10:00 CET) — Mit Credentials, Model Handles, alle 6 Accounts erwähnt
+2. ✅ **1 Story/Tag** (11:00 CET) — CTA, Preisvergleich, Shop Link, Produktfoto, wechselnd Email+Sale, Rabatt aus Shopify
+
+**Weekly Operations:**
+3. ⏳ **1 Newsletter/Woche** (Donnerstag) — Mit CTA, Bildern, Rabatt, Produkten → Entwurf Topic 3, deine Approval, Versand Freitag 20:00
+4. ⏳ **1 Homepage Update/Woche** — Reflektiert aktuelle Promotion (selber CTA, Bilder, Link wie Newsletter)
+5. ⏳ **Brevo Automationen + Bilder** — Alle Auto-Emails (Abandoned Cart, Welcome, Post-Purchase) mit Bildern statt leer
+
+**Monthly Operations:**
+6. ⏳ **Neue Produkte recherchieren & ins Backend** (1x/Monat) — Shopify Inventory erweitern
+7. ⏳ **Marketing Drop** (1x/Monat) — Newsletter + Homepage + Social coordinated
+8. ⏳ **Model DM Outreach** (1x/Monat) — Kooperationen anbieten (Shout-Outs, Following, Publishing). Screenshots + Bilder in Pool ablegen.
+
+**Continuous:**
+9. ⏳ **Success Monitoring / Learning Loop** — Track conversions, optimize based on data
+
+**Status (2026-04-08 20:40):**
+- ✅ Daily Posts (Cron live)
+- ✅ Daily Stories (Cron live, mit intelligenter Code-Logik)
+- ⏳ Weekly Newsletter (P1 — in progress)
+- ⏳ Brevo Automationen + Bilder (P1 — in progress)
+- ⏳ Homepage Updates (P2)
+- ⏳ Model DM Outreach (P2)
+- ⏳ Monthly Ops (P3)
+
+**Next Build:** Newsletter/Woche + Brevo Automations (heute abend oder morgen früh)
 
 ## Reisen
 - **29.03–01.04.2026:** Monaco
