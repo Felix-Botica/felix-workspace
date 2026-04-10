@@ -1,53 +1,59 @@
 {
-    "version": 2,
-    "last_updated": "2026-03-29T01:37+01:00",
-    "operations": {
-        "kw13_manual_send_batch1": {
-            "type": "email_campaign",
-            "name": "Weekly NL KW13 — Manual Send Batch 1",
-            "status": "sent_manual",
-            "created_at": "2026-03-29T01:30+01:00",
-            "sent_via": "Brevo UI (manual)",
-            "sent_by": "Lothar",
-            "discount_code": "SPRING30",
-            "discount_expires": "2026-04-03",
-            "subject": "Last Chance ✦ 30% Off Everything — Ends April 3",
-            "sender": "Nylongerie L.e@me.com",
-            "segment": "Subscribed #1",
-            "total_selected": 665,
-            "sent_count": 499,
-            "reason_for_batch": "Free plan daily limit (300/day), had 499 credits remaining",
-            "stats_initial": {
-                "delivered": 413,
-                "in_processing": 77,
-                "soft_bounces": 9,
-                "hard_bounces": 0
-            },
-            "next_action": "Send batch 2 (remaining 166 contacts) on 2026-03-30",
-            "next_action_date": "2026-03-30",
-            "notes": "API automation failed. All prior API campaigns (1-10) sent ZERO emails due to domain verification + free plan limits. This is first successful send."
+  "version": 2,
+  "last_updated": "2026-04-09T10:01+02:00",
+  "current_status": {
+    "weekly_newsletter_task": {
+      "task_id": "8999926f-56b3-44a2-b694-6c4c918641d3",
+      "run_date": "2026-04-09T10:01+02:00",
+      "status": "draft_prepared",
+      "reconciliation": {
+        "shopify_subscribed": 738,
+        "brevo_list_count": 662,
+        "brevo_total_contacts": 916,
+        "clean": true,
+        "issues": 0,
+        "action": "Ready to send"
+      },
+      "promotion": {
+        "code": "SPRING30",
+        "discount": "30% off",
+        "expires": "2026-04-03",
+        "status": "EXPIRED - 6 days ago",
+        "action": "Need new promotion for this week or reference past offer"
+      },
+      "top_products": [
+        {
+          "rank": 1,
+          "title": "10D Shiny Stretchy Skin Tone Pantyhose",
+          "price": "\u20ac11.90",
+          "discount": "\u20ac8.33 (was)"
         },
-        "api_campaigns_failure_log": {
-            "type": "incident",
-            "summary": "All API campaigns Mar 20-29 failed with 0 sends",
-            "campaigns_affected": [1, 2, 3, 4, 8, 9, 10],
-            "root_cause": "Domain not verified + free plan API limits",
-            "actual_sends": 0,
-            "discovered": "2026-03-29T01:35+01:00",
-            "impact": "7-day silent failure, lost automation value, manual fallback required",
-            "corrective_actions": [
-                "Verify nylongerie.com domain (SPF/DKIM)",
-                "Upgrade to Starter Plan",
-                "Implement mandatory post-send verification (15-min polling)",
-                "Delete all suspended campaigns (1-10)",
-                "Never trust 204 status alone"
-            ]
+        {
+          "rank": 2,
+          "title": "10D Transparent Lace Stockings",
+          "price": "\u20ac9.90",
+          "discount": "\u20ac6.93 (was)"
+        },
+        {
+          "rank": 3,
+          "title": "10D Ultra-Shiny Backseam Tights",
+          "price": "\u20ac18.90",
+          "discount": "\u20ac13.23 (was)"
+        },
+        {
+          "rank": 4,
+          "title": "110cm 5D Ultra-Thin Thigh-High Stockings",
+          "price": "\u20ac14.90",
+          "discount": "\u20ac10.43 (was)"
+        },
+        {
+          "rank": 5,
+          "title": "12D Oily Shiny Glossy Tights",
+          "price": "\u20ac12.90",
+          "discount": "\u20ac9.03 (was)"
         }
-    },
-    "archived": {
-        "brevo_spring_campaign_INVALID_DATA": {
-            "note": "This entry contained fabricated delivery stats (298 sent, 49 bounces). API logs show campaign #1 sent 0 emails. Moved to archive 2026-03-29.",
-            "original_data": "See operations.json.backup if needed"
-        }
+      ],
+      "next_action": "Awaiting approval in Topic 3 to send to 662 contacts"
     }
+  }
 }
