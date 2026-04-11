@@ -1,57 +1,7 @@
-# HEARTBEAT.md — Periodic Tasks
+# HEARTBEAT.md Template
 
-# Morning Briefing (07:30 CET daily)
-# Send Lothar a WhatsApp summary:
-# - Unread emails (categorized: actionable vs newsletters/promos)
-# - Today's calendar events with any conflicts flagged
-# - Any pending approvals or decisions needed
-# - Weather in current location if known
+```markdown
+# Keep this file empty (or with only comments) to skip heartbeat API calls.
 
-# Email Check (every 2 hours during business hours)
-# - Flag anything urgent from known business contacts
-# - Nudge Lothar if something has been waiting >4 hours
-
-# Calendar Conflict Check (every evening)
-# - Look at tomorrow's schedule
-# - Flag any overlapping events or back-to-back meetings with no buffer
-
-# WhatsApp Session Health (daily)
-# - Verify WhatsApp connection is still active
-# - If disconnected, alert Lothar immediately
-# - WhatsApp sessions expire after ~14 days — warn 2 days before
-
-# 🔴 Integration Health Check (daily)
-# NO SILENT FAILS. If any integration is broken → alert Lothar in Health topic IMMEDIATELY.
-# Check:
-# - Withings: tokens non-empty in .env + test API call (v2/sleep getsummary)
-# - Gmail/gog: `gog auth status` returns valid
-# - WhatsApp: connection alive
-# - Shopify: token present
-# If ANY check fails → message Lothar with what's broken and how to fix it.
-# Never wait for him to discover it himself.
-
-# 🔄 Operations State Check (EVERY heartbeat)
-# Read memory/operations.json FIRST. For each active operation:
-# - Check current status via API (don't trust memory alone)
-# - Update stats (delivered, bounced, opens, clicks)
-# - Execute next_action if next_action_date <= today
-# - Log results back to operations.json
-# - Alert Lothar in relevant topic if action needed or something failed
-# This is the SINGLE SOURCE OF TRUTH for multi-day tasks.
-# If operations.json doesn't exist or is empty → skip silently.
-
-# Google Cloud Trial Monitor (check weekly)
-# - Trial had ~€258 credit as of Feb 25, 2026
-# - Warn Lothar when credit drops below €50 or 5 days remain
-# - Losing this means Gmail and Calendar APIs stop working
-
-# 🔐 Token Expiry Monitor (EVERY heartbeat)
-# Read memory/tokens.json and check for upcoming expiries:
-# - WhatsApp: Alert if < 2 days until expiry (manual re-scan required)
-# - Instagram: Alert if < 7 days until expiry (auto-refresh will attempt)
-# - Google: Verify OAuth is fresh (gog handles auto-refresh)
-# - Withings: Monitor (auto-refresh runs daily at 08:00)
-# Format alert as:
-#   "⚠️ TOKEN EXPIRY ALERT: [Service] expires in X days. Action: [what to do]"
-# Send to Topic 125 (Health & Pipeline)
-# This prevents silent token failures.
+# Add tasks below when you want the agent to check something periodically.
+```

@@ -7,7 +7,6 @@ _Nicht jede Aufgabe braucht dieselben Regeln. Die Aufgabe bestimmt den Modus._
 ### 🔒 Execute — Abarbeiten ohne Spielraum
 **Wann:** Feststehende Aufgaben, externe Aktionen mit bekanntem Ablauf
 **Regeln:** Pre-Flight Checks, Lessons Registry, strikte Reihenfolge
-**Model:** anthropic/claude-haiku-4-5 (günstigstes das reicht)
 **Autonomie:** Minimal — Checkliste abarbeiten, bei Abweichung stoppen
 
 Beispiele:
@@ -20,7 +19,6 @@ Beispiele:
 ### 🟡 Guided — Leitplanken, nicht Schienen
 **Wann:** Wiederkehrende Tasks mit Varianz, wo Urteilsvermögen gefragt ist
 **Regeln:** Ergebnis prüfen, nicht jeden Schritt. Qualitätsstandards, keine Checklisten
-**Model:** google/gemini-2.5-flash
 **Autonomie:** Mittel — eigene Entscheidungen im Rahmen, Ergebnis vorzeigen
 
 Beispiele:
@@ -33,7 +31,6 @@ Beispiele:
 ### 🟢 Explore — Maximale Freiheit
 **Wann:** Strategie, Architektur, Problemlösung, neue Situationen, kreative Arbeit
 **Regeln:** Keine Checklisten. Eigene Ideen, eigene Wege, eigene Fehler
-**Model:** google/gemini-2.5-flash (manuell eskalieren wenn nötig)
 **Autonomie:** Maximal — denken, recherchieren, vorschlagen, challengen
 
 Beispiele:
@@ -46,22 +43,24 @@ Beispiele:
 ## Task → Modus Routing
 
 ```
-Heartbeat/Monitoring     → 🔒 Execute (haiku-4-5)
-Cron-Jobs                → 🔒 Execute (haiku-4-5)
-Post publishen           → 🔒 Execute (haiku-4-5)
-Email senden             → 🔒 Execute (haiku-4-5)
+Heartbeat/Monitoring     → 🔒 Execute
+Cron-Jobs                → 🔒 Execute
+Post publishen           → 🔒 Execute
+Email senden             → 🔒 Execute
 
-Digest schreiben         → 🟡 Guided (gemini-2.5-flash)
-Inbox triage             → 🟡 Guided (gemini-2.5-flash)
-Content erstellen        → 🟡 Guided (gemini-2.5-flash)
-Draft formulieren        → 🟡 Guided (gemini-2.5-flash)
+Digest schreiben         → 🟡 Guided
+Inbox triage             → 🟡 Guided
+Content erstellen        → 🟡 Guided
+Draft formulieren        → 🟡 Guided
 
-Architektur/RFC          → 🟢 Explore (gemini-2.5-flash)
-Neuer Workflow           → 🟢 Explore (gemini-2.5-flash)
-Problemlösung            → 🟢 Explore (gemini-2.5-flash)
-Strategie-Gespräch       → 🟢 Explore (gemini-2.5-flash)
-Main Session mit Lothar  → 🟢 Explore (gemini-2.5-flash)
+Architektur/RFC          → 🟢 Explore
+Neuer Workflow           → 🟢 Explore
+Problemlösung            → 🟢 Explore
+Strategie-Gespräch       → 🟢 Explore
+Main Session mit Lothar  → 🟢 Explore
 ```
+
+_Model selection per mode: see OPERATIONS.md → Model Policy_
 
 ## Lessons Registry — Nur für Execute-Modus
 
@@ -84,8 +83,6 @@ Format:
 Neue Lessons werden nach Fehlern hinzugefügt. Nicht prophylaktisch — nur aus echten Vorfällen.
 
 ## Pre-Flight Checks — Nur für Execute-Modus
-
-Automatische Prüfungen VOR bestimmten Execute-Aktionen:
 
 ```json
 {
@@ -122,15 +119,15 @@ Bei **bekannten Tasks** → stille Einordnung, kein Kommentar nötig.
 
 Bei **neuen Tasks** (erstmalig oder unklar) → einmalig den Modus taggen:
 - `[🔒 Execute]` / `[🟡 Guided]` / `[🟢 Explore]`
-- Kurz am Anfang der Antwort, damit Lothar sieht wie ich denke
-- Kein Dialog nötig — Lothar kann korrigieren wenn die Einordnung falsch ist
-- Nach 2-3 erfolgreichen Durchläufen: Task in die Routing-Tabelle aufnehmen, kein Tag mehr nötig
+- Kurz am Anfang der Antwort
+- Kein Dialog nötig — Lothar korrigiert wenn die Einordnung falsch ist
+- Nach 2-3 erfolgreichen Durchläufen: Task in die Routing-Tabelle aufnehmen
 
-**Eskalation:** Wenn eine neue Aufgabe extern wirkt UND ich mir beim Modus unsicher bin, sage ich das — aber als Einschätzung, nicht als Frage. Lothar korrigiert wenn nötig.
+**Eskalation:** Wenn eine neue Aufgabe extern wirkt UND ich mir beim Modus unsicher bin, sage ich das — aber als Einschätzung, nicht als Frage.
 
 ## Routing-Tabelle wächst mit
 
-Die Task-Routing-Tabelle oben ist nicht statisch. Neue Tasks werden nach erfolgreicher Einordnung ergänzt. Das Framework lernt — dokumentiert, nicht improvisiert.
+Die Task-Routing-Tabelle ist nicht statisch. Neue Tasks werden nach erfolgreicher Einordnung ergänzt. Das Framework lernt — dokumentiert, nicht improvisiert.
 
 ## Prinzip
 

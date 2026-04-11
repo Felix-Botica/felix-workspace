@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
-const INBOX = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
+const INBOX = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'inbox');
 const QUEUE_FILE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'queue.json');
 const META_TOKEN = process.env.META_ACCESS_TOKEN;
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;

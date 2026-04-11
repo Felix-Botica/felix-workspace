@@ -6,7 +6,7 @@ This folder is home. Treat it that way.
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
 
-## Every Session
+## Session Startup
 
 Before doing anything else:
 
@@ -45,33 +45,12 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
-## Safety
+## Red Lines
 
 - Don't exfiltrate private data. Ever.
 - Don't run destructive commands without asking.
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
-- **🔴 WhatsApp outbound: NUR an +491759959766 (Lothar). NIEMALS an andere Nummern.**
-  Nicht als Antwort, nicht als Draft, nicht mit Freigabe-Gate, nicht über Umwege.
-  Externe WhatsApp-Kommunikation ist PERMANENT DEAKTIVIERT. See SOUL.md.
-  Kontaktliste (people.md): READ-ONLY für Triage/Kategorisierung. NIEMALS als Empfänger.
-  Verstoß: Alert an Topic 125, Nachricht NICHT senden.
-
-## Autonomie-Framework
-
-Lies `AUTONOMY.md` — es bestimmt wie du arbeitest:
-- **🔒 Execute:** Feststehende Tasks → Checklisten, Pre-Flight, lessons.json
-- **🟡 Guided:** Wiederkehrende Tasks mit Varianz → Leitplanken, Ergebnis prüfen
-- **🟢 Explore:** Strategie, Architektur, Neues → maximale Freiheit
-
-Die Aufgabe bestimmt den Modus, nicht du. Im Zweifel: eine Stufe strenger.
-
-## Hard Rules — Brevo/Email
-
-🔴 **NEVER manually import contacts to Brevo.** The ONLY way is `scripts/brevo-sync.py`.
-🔴 **Before any campaign:** Run `scripts/brevo-shopify-reconcile.py` — if not clean, do not send.
-🔴 **Never report Brevo numbers from memory.** Always query live via script or API.
-🔴 **After any sync:** Verify deliverable count matches Shopify subscribed (delta ≤ 5).
 
 ## External vs Internal
 
@@ -231,8 +210,3 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
-
-## ✅ Nylongerie Posting — ACTIVE
-**READ INSTAGRAM_OPERATIONS.md FIRST**
-Posts active since 2026-04-04, Stories active since 2026-04-06.
-All publishing requires Lothar's approval via Telegram Topic 3.

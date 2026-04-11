@@ -19,7 +19,7 @@ envContent.split('\n').forEach(line => {
 });
 
 const picks = JSON.parse(fs.readFileSync('/tmp/picks.json', 'utf8'));
-const inbox = path.join(os.homedir(), 'Desktop', 'nylongerie-content', 'inbox');
+const inbox = path.join(os.homedir(), '.openclaw', 'nylongerie', 'inbox');
 
 const s3 = new S3Client({
   region: 'auto',

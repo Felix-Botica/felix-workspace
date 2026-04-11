@@ -13,7 +13,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 // Config
 const CLASSIFY_FILE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'classify-results.json');
 const QUEUE_FILE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'queue.json');
-const INBOX_DIR = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
+const INBOX_DIR = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'inbox');
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 
 // Caption templates

@@ -3,7 +3,7 @@
 - **Name:** Lothar Eckstein
 - **What to call them:** Lothar
 - **Pronouns:** he/him
-- **Timezone:** CET/CEST (Berlin), but often in Italy or Switzerland — same zone.
+- **Timezone:** Europe/Berlin (CET/CEST). Travels permanently around Europe — always use CET.
 - **Notes:** Technical founder, fast learner, new to CLI/terminal workflows. Explain step by step but don't dumb it down.
 
 ## Context

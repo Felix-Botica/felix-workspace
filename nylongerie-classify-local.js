@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const CONTENT_DIR = path.join(process.env.HOME, 'Desktop', 'nylongerie-content');
+const CONTENT_DIR = path.join(process.env.HOME, '.openclaw', 'nylongerie');
 const INBOX = path.join(CONTENT_DIR, 'inbox');
 const SERIES_MAP = path.join(CONTENT_DIR, 'series-map.json');
 const TEMP_DIR = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'temp');

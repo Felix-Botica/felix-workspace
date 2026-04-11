@@ -10,10 +10,10 @@ const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 require('dotenv').config({ path: path.join(process.env.HOME, '.openclaw', '.env'), override: true });
 
-const INBOX = path.join(process.env.HOME, 'Desktop/nylongerie-content/inbox');
-const OUTPUT = path.join(process.env.HOME, 'Desktop/nylongerie-content/handle-map.json');
-const LOG = path.join(process.env.HOME, 'Desktop/nylongerie-content/handle-extraction.log');
-const CLASSIFICATION_FILE = path.join(process.env.HOME, 'Desktop/nylongerie-content/classification-raw.json');
+const INBOX = path.join(process.env.HOME, '.openclaw/nylongerie/inbox');
+const OUTPUT = path.join(process.env.HOME, '.openclaw/nylongerie/handle-map.json');
+const LOG = path.join(process.env.HOME, '.openclaw/nylongerie/handle-extraction.log');
+const CLASSIFICATION_FILE = path.join(process.env.HOME, '.openclaw/nylongerie/classification-raw.json');
 
 const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genai.getGenerativeModel({ model: 'gemini-2.5-flash' });

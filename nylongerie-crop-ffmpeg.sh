@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-INBOX="$HOME/Desktop/nylongerie-content/inbox"
+INBOX="$HOME/.openclaw/nylongerie/inbox"
 WORKSPACE="$HOME/.openclaw/workspace/temp-crop"
 mkdir -p "$WORKSPACE"
 

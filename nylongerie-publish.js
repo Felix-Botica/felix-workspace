@@ -172,7 +172,7 @@ async function publishPost(postId, dryRun = false) {
 
   const account = ACCOUNTS[accountKey];
   const imageFile = post.file || post.originalFile;
-  const imagePath = post.filePath || path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox', imageFile);
+  const imagePath = post.filePath || path.join(process.env.HOME, '.openclaw', 'nylongerie', 'inbox', imageFile);
   console.log(`\n📸 Publishing: ${imageFile}`);
   console.log(`   Account: @${accountKey} (${account.name})`);
   console.log(`   Credit: ${post.model || post.credit || 'none'}`);

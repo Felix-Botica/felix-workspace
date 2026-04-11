@@ -11,7 +11,7 @@ require('dotenv').config({ path: path.join(process.env.HOME, '.openclaw', '.env'
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const QUEUE_FILE = path.join(process.env.HOME, '.openclaw/nylongerie/queue.json');
-const INBOX_DIR = path.join(process.env.HOME, 'Desktop/nylongerie-content/inbox');
+const INBOX_DIR = path.join(process.env.HOME, '.openclaw/nylongerie/inbox');
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 
 const ACCOUNTS = [
