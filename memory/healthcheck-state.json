@@ -1,6 +1,7 @@
 {
-  "lastRun": 1774717246,
-  "lastRunISO": "2026-03-28T17:00:46Z",
+  "lastRun": 1775984400,
+  "lastRunISO": "2026-04-12T17:00:00Z",
   "failures": 0,
-  "warnings": 1
+  "warnings": 0,
+  "note": "Reset 2026-04-12. Healthcheck now uses X_BEARER_TOKEN. gemini-2.0-flash replaced with 2.5-flash."
 }

@@ -37,4 +37,16 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+## Integration Status — NEVER answer from memory!
+
+When asked about the status of any integration (Twitter, Gmail, Withings, Instagram, etc.):
+1. **Always run the check live** — `bash ~/.openclaw/integration_healthcheck.sh` or test the API directly
+2. **Never answer from session memory** — tokens get refreshed, scripts get fixed, variable names change. Your memory of "Twitter is broken" may be hours or days stale.
+3. **Read .env fresh** before testing: `source ~/.openclaw/.env`
+
+### Known Issues (non-blocking)
+- **X/Twitter OAuth2 Client Credentials** (`X_CLIENT_ID` / `X_CLIENT_SECRET`): Currently broken (`unauthorized_client`). Not needed — Felix only reads via Bearer Token (`X_BEARER_TOKEN`), which works. Only matters if/when we add tweet posting.
+
+---
+
 Add whatever helps you do your job. This is your cheat sheet.

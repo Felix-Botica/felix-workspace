@@ -195,7 +195,7 @@ def main():
     shopify_token = os.environ.get('SHOPIFY_ACCESS_TOKEN', '')
     brevo_key = os.environ.get('BREVO_API_KEY_REST', '')
     shop = 'ecb34e-4.myshopify.com'
-    list_id = 3  # Nylongerie Subscribers
+    list_id = 9  # Nylongerie Subscribers
     
     if not shopify_token or not brevo_key:
         print("ERROR: Missing SHOPIFY_ACCESS_TOKEN or BREVO_API_KEY_REST", file=sys.stderr)

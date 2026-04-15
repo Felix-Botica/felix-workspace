@@ -45,11 +45,34 @@ _Single source of truth for all Nylongerie content operations._
 
 ## ⚡ Topic 3 Context Rule
 
-When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"` before responding. Display pending drafts with preview URLs so Lothar can approve/reject immediately.
+When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check these files before responding:
+
+### 1. Post/Reel Queue
+Check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"`. Display pending drafts with preview URLs so Lothar can approve/reject immediately.
+
+**On approval (👍, "approve", "ja", "publish"):**
+1. Set entry status to `"approved"` in queue.json
+2. Run: `cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-publish.js --id <ENTRY_ID>`
+3. Report result to Topic 3
+
+### 2. Newsletter State
+Check `~/.openclaw/nylongerie/newsletter-state.json` for current status:
+
+**If `status: "pending_approval"` and Lothar replies 1, 2, 3, or a custom topic:**
+→ Run: `cd /Users/lothareckstein/.openclaw/nylongerie && node newsletter-build.js approve <choice>`
+→ This auto-builds the newsletter and sends a preview back to Topic 3
+
+**If `status: "pending_send"` and Lothar replies "senden" / "send" / "ja":**
+→ Run: `cd /Users/lothareckstein/.openclaw/nylongerie && node newsletter-build.js send`
+→ This sends the campaign to all subscribers via Brevo
+
+**If Lothar replies "abbrechen" / "cancel" / "nein":**
+→ Run: `cd /Users/lothareckstein/.openclaw/nylongerie && node newsletter-build.js reset`
+→ Confirm cancellation in Topic 3
 
 ---
 
-## Daily Batch (2 parts)
+## Daily Batch (3 parts + weekly newsletter)
 
 ### A) 5 Posts/Tag (10:00 CET)
 
@@ -337,13 +360,54 @@ Update `used-images.json` with date, accounts, type.
 
 ---
 
+## Daily REELS (12:00 CET)
+
+### C) 1-3 Reels/Tag (12:00 CET)
+
+- Videos from `classify-results.json` with `type: "reel"`
+- Same credit rule as posts: **handle required, no post without credit**
+- Same caption templates as posts (with `#reels` hashtag added)
+- Published via Instagram Graph API with `media_type: REELS`
+- Reels also appear in feed (`share_to_feed: true`)
+- **Always send preview to Topic 3 for Lothar approval before publishing**
+
+### Reel Stats
+- Total reels in inbox: 253 videos
+- Reels with verified handles: 243
+- Duration range: 3-90 seconds (enforced by selection script)
+
+### Reel Workflow
+1. **Select reels:** `node ~/.openclaw/workspace/nylongerie-create-reel-batch.js --count 3`
+   - Picks reels with real handles, not yet used, 1 per model
+   - Uploads video to R2 under `reels/` prefix
+   - Creates queue entries with `type: "reel"` + `video_url`
+   - Updates `used-images.json`
+2. **Send preview to Topic 3** with R2 video URL + caption for Lothar approval
+3. **After approval:** Approve in queue.json → run `node ~/.openclaw/nylongerie/nylongerie-publish.js`
+   - Publish script detects `type: "reel"` automatically
+   - Uses `video_url` + `media_type: REELS` via Graph API
+   - Polls container status until video processing is FINISHED (up to 2 min)
+
+### Reel Scripts
+- **Handle propagation:** `~/.openclaw/workspace/nylongerie-reel-handles.js` (run once after new reels added)
+- **Create batch:** `~/.openclaw/workspace/nylongerie-create-reel-batch.js --count N [--dry-run]`
+- **Publish:** `~/.openclaw/nylongerie/nylongerie-publish.js` (same script as posts, auto-detects reels)
+
+### Account Routing (same as posts)
+- Reels without style classification default to @nylondarling (flagship)
+- Style-based routing applies if style is set
+
+---
+
 ## Scripts
 
 - **Classify:** `~/.openclaw/workspace/nylongerie-classify-local.js`
-- **Publish:** `~/.openclaw/workspace/nylongerie-publish.js`
+- **Publish:** `~/.openclaw/nylongerie/nylongerie-publish.js`
 - **Select Batch:** `~/.openclaw/workspace/nylongerie-select-batch-v2.js`
 - **Create Batch:** `~/.openclaw/workspace/nylongerie-create-batch.js`
 - **Crop Batch:** `~/.openclaw/workspace/nylongerie-crop-batch.js`
+- **Reel Handles:** `~/.openclaw/workspace/nylongerie-reel-handles.js`
+- **Reel Batch:** `~/.openclaw/workspace/nylongerie-create-reel-batch.js`
 - **Daily Script:** `~/.openclaw/scripts/nylongerie-daily.sh`
 
 ## Rules Summary

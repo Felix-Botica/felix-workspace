@@ -13,6 +13,7 @@ const path = require('path');
 const CLASSIFY = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'classify-results-clean.json');
 const SERIES_MAP = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'series-map-final.json');
 const QUEUE = path.join(process.env.HOME, '.openclaw', 'nylongerie', 'queue.json');
+const INBOX_DIR = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
 const OUTPUT = path.join(process.env.HOME, '.openclaw', 'workspace', 'batch-selections.json');
 
 // Load data
@@ -128,10 +129,15 @@ const ACCOUNTS = [
 ];
 
 // Filter: valid handle, not already used, has image
+const VALID_HANDLE_PATTERN = /^[a-zA-Z0-9_.]+$/;
 const available = classified.filter(c =>
   c.handle &&
   c.handle.startsWith('@') &&
   c.handle.length > 3 &&
+  !c.handle.includes('if visible') &&
+  !c.handle.includes('else null') &&
+  !c.handle.includes('username') &&
+  VALID_HANDLE_PATTERN.test(c.handle.replace('@', '')) &&
   c.style !== 'error' &&
   c.style !== 'unknown' &&
   !usedFiles.has(c.screenshot)
@@ -158,16 +164,36 @@ for (const acct of ACCOUNTS) {
     continue;
   }
 
+  // Check if any image from this group exists in inbox AND is not used
+  const getAvailableImage = (group, screenshot) => {
+    if (!group || !group.images) return null;
+    // Find first image that exists in inbox AND is not used
+    const available = group.images.find(img => 
+      fs.existsSync(path.join(INBOX_DIR, img)) && !usedFiles.has(img)
+    );
+    return available || null;
+  };
+  
   // Pick from top 5 randomly (for variety)
   const topN = scored.slice(0, Math.min(5, scored.length));
-  const pick = topN[Math.floor(Math.random() * topN.length)];
-
-  // Find best image file: prefer first content image, fallback to screenshot
-  const group = groupByScreenshot[pick.screenshot];
-  let imageFile = pick.screenshot;
-  if (group && group.images && group.images.length > 0) {
-    imageFile = group.images[0]; // First content image (not screenshot)
+  
+  // Filter out picks where NO content image is available in inbox
+  const eligiblePicks = topN.filter(pick => {
+    const g = groupByScreenshot[pick.screenshot];
+    const availableImage = getAvailableImage(g, pick.screenshot);
+    return availableImage !== null; // Only pass if there's an available image
+  });
+  
+  if (eligiblePicks.length === 0) {
+    console.warn(`⚠️  All top picks for ${acct.account} have used images, skipping`);
+    continue;
   }
+  
+  const pick = eligiblePicks[Math.floor(Math.random() * eligiblePicks.length)];
+
+  // Find best image file: use the available image we already checked, fallback to screenshot
+  const group = groupByScreenshot[pick.screenshot];
+  let imageFile = getAvailableImage(group, pick.screenshot) || pick.screenshot;
 
   selected.push({
     file: imageFile,

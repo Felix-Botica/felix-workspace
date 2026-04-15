@@ -31,10 +31,40 @@ function main() {
   const results = JSON.parse(fs.readFileSync(RESULTS_FILE, 'utf-8'));
   console.log(`\n🔗 Series Linking: ${results.length} files\n`);
 
-  // Sort by filename (alphabetical = chronological for iPhone photos)
+  // Sort by file creation date (preserves iPhone chronological order for all file types)
+  // Falls back to filename sort if creation dates unavailable
+  const INBOX = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
+  const { execSync } = require('child_process');
+
+  // Build creation date cache via mdls (macOS Spotlight metadata)
+  const creationDates = {};
+  try {
+    for (const item of results) {
+      const fn = item.filename || item.file || '';
+      const fp = path.join(INBOX, fn);
+      if (fs.existsSync(fp)) {
+        try {
+          const out = execSync(`mdls -name kMDItemContentCreationDate -raw "${fp}"`, { timeout: 2000 }).toString().trim();
+          if (out && out !== '(null)') {
+            creationDates[fn] = new Date(out).getTime();
+          }
+        } catch {}
+      }
+    }
+    console.log(`   Creation dates found: ${Object.keys(creationDates).length}/${results.length}`);
+  } catch (e) {
+    console.log(`   ⚠️ mdls failed, falling back to filename sort`);
+  }
+
   results.sort((a, b) => {
     const fa = a.filename || a.file || '';
     const fb = b.filename || b.file || '';
+    const da = creationDates[fa] || 0;
+    const db = creationDates[fb] || 0;
+    // Sort by creation date if both have one, else by filename
+    if (da && db) return da - db;
+    if (da) return -1;
+    if (db) return 1;
     return fa.localeCompare(fb);
   });
 
@@ -70,7 +100,7 @@ function main() {
           currentSeries = null;
         }
       }
-    } else if (item.type === 'content' && currentSeries) {
+    } else if ((item.type === 'content' || item.type === 'reel') && currentSeries) {
       // Add content to current series
       currentSeries.content.push(filename);
       

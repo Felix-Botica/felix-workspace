@@ -30,7 +30,7 @@ async function run() {
         subject: originalCampaign.subject,
         sender: { name: originalCampaign.sender.name, email: originalCampaign.sender.email },
         htmlContent: originalCampaign.htmlContent,
-        recipients: { listIds: [3] }, // Target the main list
+        recipients: { listIds: [9] }, // Target the main list
         previewText: originalCampaign.previewText
     };
 

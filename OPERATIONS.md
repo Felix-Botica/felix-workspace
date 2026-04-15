@@ -1,7 +1,7 @@
 # OPERATIONS.md — Felix Operational Knowledge
 
 _Single source of truth for models, infrastructure, tools, crons, tokens, and rules._
-_Updated: 2026-04-10 18:30 CET_
+_Updated: 2026-04-12 17:00 CET_
 
 ---
 
@@ -42,7 +42,7 @@ _Updated: 2026-04-10 18:30 CET_
 | **Primary** | minimax/MiniMax-M2.7 | 205k ctx, for EVERYTHING |
 | **Fallback 1** | google/gemini-2.5-flash | 1M ctx |
 | **Fallback 2** | anthropic/claude-haiku-4-5 | |
-| **Vision** | google/gemini-2.0-flash | Image classification, handle extraction |
+| **Vision** | google/gemini-2.5-flash | Image classification, handle extraction |
 
 - **MiniMax API:** ✅ WORKING — baseUrl: `https://api.minimax.io/anthropic/v1`, Bearer auth
 - **🔴 ABSOLUTES VERBOT:** NIEMALS `anthropic/claude-opus-*` oder `gemini-2.5-pro` verwenden
@@ -79,8 +79,9 @@ _Updated: 2026-04-10 18:30 CET_
 
 ### X / Twitter
 - **Account:** @lothareckstein (ID: 13020562) | Pay Per Use tier
-- **Status:** ❌ Bearer token expired (401), deferred
+- **Status:** ✅ X_BEARER_TOKEN valid (read-only). OAuth2 Client Credentials (X_CLIENT_ID/X_CLIENT_SECRET) broken — not needed for current read-only usage.
 - **Rule:** Always draft + approval before posting
+- **WICHTIG:** Healthcheck uses `X_BEARER_TOKEN` (nicht `TWITTER_BEARER_TOKEN`)
 
 ### Withings Health
 - **User:** 23049153 | ScanWatch + Body+ + Renpho
@@ -99,7 +100,7 @@ _Updated: 2026-04-10 18:30 CET_
 
 ### Brevo (Email CRM)
 - **Plan:** Free (300/day) | Sender: Alex <hello@nylongerie.com> (verified sender + domain)
-- **List:** "Nylongerie Subscribers" (ID:3) — 663 deliverable
+- **List:** "Nylongerie Subscribers" (ID:9) — 739 deliverable
 - **Sync:** `scripts/brevo-shopify-reconcile.py` (mandatory before campaigns)
 - **Revenue:** Email = #1 channel (40 orders, €2.593)
 - **🔴 RULES:**
@@ -137,12 +138,12 @@ gog auth status
 
 ---
 
-## Cron Jobs (13 Active)
+## Cron Jobs (10 Active)
 
-Morning Briefing, Evening Digest, WA Inbox Digest, Wind-Down, Felix Inbox Check, Weekly Newsletter, Integration Healthcheck, Nightly Backup, Brevo-Shopify Sync, Weekly System Review, Token Refresh (every 2h), Nylongerie Daily POST (10:00), Nylongerie Daily STORY (11:00)
+Morning Briefing, Evening Digest, Wind-Down, Felix Inbox Check, Weekly Newsletter, Integration Healthcheck, Nightly Backup, Brevo-Shopify Sync, Weekly System Review, Token Refresh (every 2h, timeout 120s), Nylongerie Daily STORY (11:00)
 
 **External Monitors (crontab):** gateway-health (5min), briefing-monitor (07:45), digest-monitor (20:45 + retries)
-**Disabled:** Nylongerie Daily Batch, Weekly Classification
+**Disabled:** WA Inbox Digest, Nylongerie Daily POST (handled by nylongerie agent via heartbeat ~09:00), Nylongerie Daily Batch, Weekly Classification
 
 ### Cron Mandatory Config
 
@@ -278,47 +279,39 @@ When receiving a heartbeat poll, use it productively — don't just reply `HEART
 
 ## Nylongerie Growth Machine — PERMANENT GOALS (since 2026-04-08)
 
-### 📧 Newsletter/Week (Saturday 16:00 CET) — FINAL SPECIFICATION
+### 📧 Newsletter/Week (Thursday 10:00 CET) — FINAL SPECIFICATION
 
-**Approval Workflow:**
-- **Friday:** Lothar gives weekly promo (Theme, Code, optional Products)
-- **Saturday 14:00:** Felix generates Draft → Topic 3
-- **Saturday 15:00:** Lothar approves
-- **Saturday 16:00:** Auto-send via Brevo to List 3 (662 Subscribers)
+**Script:** `~/.openclaw/nylongerie/newsletter-build.js`
+**Cron:** Thursday 10:00 CET → Felix runs `propose`
 
-**Theme Selection (Felix suggests, Lothar picks):**
-Valentines Day | Black Friday | Sommeranfang | **Frühling** (Spring33 sehr erfolgreich!) | Frauentag | **Shiny** (erfolgreich!) | **Open Crotch** (erfolgreich!)
+**Workflow (state machine: idle → pending_approval → pending_send → sent):**
+1. **Thursday 10:00:** Felix runs `node newsletter-build.js propose` → 3 AI-generated topic suggestions to Topic 3
+2. **Lothar replies 1/2/3:** Felix runs `node newsletter-build.js approve <choice>` → auto-builds email + sends preview
+3. **Lothar replies "senden":** Felix runs `node newsletter-build.js send` → campaign sent to Brevo List 9 (739 Subscribers)
+4. **Lothar replies "abbrechen":** Felix runs `node newsletter-build.js reset` → cancelled
+
+**Commands:** `propose` | `approve <1|2|3>` | `send` | `status` | `reset`
 
 **Product Selection Logic:**
-1. Read Shopify product descriptions/headlines
-2. Select 3-4 products matching theme
-3. Grab featured images (Shopify API)
-4. Mobile-optimized (80% mobile users!)
-5. Matching discount code from active Shopify codes
-6. Fallback: Skip product if image missing (no delay!)
+1. Fetch bestsellers from last 30 days of Shopify orders (ranked by quantity)
+2. Fetch collection products matching theme (full product data with variants/prices)
+3. Bestsellers first, then collection fill — 6 products total
+4. Filter: must have image + price > 0
+5. Mobile-optimized table layout (2-column, responsive)
 
-**Price Display:** `€24.90 → €17.43 (with discount)` + Gold CTA button (#D4AF37), theme-aware text
+**Discount Code:** Auto-created in Shopify per newsletter (format: NL{WEEK}{LETTER})
+- Variable: 15% (standard), 20% (seasonal push), 25% (big action) — Gemini suggests
+- Valid 7 days, max 200 uses
+- Fallback: NYLONGERIE15
 
-**Email Structure:**
-```
-[BLACK HEADER] NYLONGERIE — FASHION & FRIENDS BY ALEX S.
-[WHITE BODY]
-- Story hook (emotional, theme-aware)
-- 3-4 Products: Image + Name + €Old→€New + Gold CTA
-- Gold code box (Code + "Valid until...")
-- Closing (emotional, FOMO)
-[FOOTER] Contact | Unsubscribe | Privacy | © 2026 Nylongerie
-```
+**Copy Tone:** Connoisseur/Aficionado — written for the Kenner, the passionate collector who knows the difference between 10D and 20D. Sinnlich but geschmackvoll, exklusiv but einladend.
 
-### 🖼️ Brevo Image Integration
+**Email Template:** `~/.openclaw/nylongerie/newsletter-template.html`
+- Table-based (Gmail/Outlook compatible), inline styles
+- Black header + hero image + headline overlay + intro + discount banner + 6 product cards + CTA + footer
+- All IG accounts in footer (@nylondarling, @nylongerie, @legfashion, @shinynylonstar)
 
-- Content-dependent placement (default: Headline → Image → Story → CTA)
-- Shopify featured images, mobile-optimized
-- Fallback hero image stored in Shopify Media
-
-### 🛍️ Shopify Product Selection
-
-Tag-based → Headline-based → Description-based matching, TOP-SELLER preference when matching theme. Pick 3-4 matches, grab featured images. NO manual product ID input needed.
+**Campaign History:** `~/.openclaw/nylongerie/newsletter-history.json` (archived after each send)
 
 ### Operations Status (2026-04-08)
 
