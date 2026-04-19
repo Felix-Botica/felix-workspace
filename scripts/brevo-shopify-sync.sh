@@ -1,6 +1,6 @@
 #!/bin/bash
 # Brevo ↔ Shopify Subscriber Sync
-# Syncs only email_marketing_consent.state=="subscribed" customers to Brevo list 9
+# Syncs only email_marketing_consent.state=="subscribed" customers to Brevo list 3 ("Nylongerie Subscribers", Botica.tech account)
 # Run weekly via OpenClaw cron
 
 source ~/.openclaw/.env 2>/dev/null
@@ -10,7 +10,7 @@ echo "Fetching Brevo contacts..."
 > /tmp/brevo_emails.txt
 OFFSET=0
 while true; do
-  RESP=$(curl -s -H "api-key: $BREVO_API_KEY_REST" "https://api.brevo.com/v3/contacts?limit=50&offset=$OFFSET&listIds=9")
+  RESP=$(curl -s -H "api-key: $BREVO_API_KEY_REST" "https://api.brevo.com/v3/contacts?limit=50&offset=$OFFSET&listIds=3")
   COUNT=$(echo "$RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d.get('contacts',[])))" 2>/dev/null)
   [ "$COUNT" = "0" ] && break
   echo "$RESP" | python3 -c "import sys,json; [print(c['email'].lower()) for c in json.load(sys.stdin).get('contacts',[])]" >> /tmp/brevo_emails.txt 2>/dev/null
@@ -62,7 +62,7 @@ if [ "$ADD_COUNT" -gt 0 ]; then
 import json
 with open('/tmp/to_add.txt') as f:
     emails = [l.strip() for l in f if l.strip()]
-body = {'listIds': [9], 'updateExistingContacts': False, 'jsonBody': [{'email': e} for e in emails]}
+body = {'listIds': [3], 'updateExistingContacts': False, 'jsonBody': [{'email': e} for e in emails]}
 with open('/tmp/brevo_add.json', 'w') as f:
     json.dump(body, f)
 "
@@ -87,7 +87,7 @@ with open(os.path.expanduser("~/.openclaw/.env")) as f:
             api_key = line.split("=", 1)[1].strip().strip('"').strip("'")
 with open("/tmp/to_remove.txt") as f:
     emails = [l.strip() for l in f if l.strip()]
-url = "https://api.brevo.com/v3/contacts/lists/9/contacts/remove"
+url = "https://api.brevo.com/v3/contacts/lists/3/contacts/remove"
 headers = {"api-key": api_key, "Content-Type": "application/json"}
 for i in range(0, len(emails), 150):
     chunk = emails[i:i+150]

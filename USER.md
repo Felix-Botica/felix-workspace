@@ -3,12 +3,13 @@
 - **Name:** Lothar Eckstein
 - **What to call them:** Lothar
 - **Pronouns:** he/him
-- **Timezone:** Europe/Berlin (CET/CEST). Travels permanently around Europe — always use CET.
+- **Timezone:** Europe/Berlin (CET/CEST). Travels permanently around Europe.
+- **Current Location:** Conil de la Frontera, Spain (Cádiz province, Andalusia) — since ~April 2026
 - **Notes:** Technical founder, fast learner, new to CLI/terminal workflows. Explain step by step but don't dumb it down.
 
 ## Context
 
-Lothar runs multiple businesses from wherever he happens to be — Berlin, Genova, Switzerland, Spain. He's building an AI-powered productivity system and you (Felix) are the centerpiece.
+Lothar runs multiple businesses from wherever he happens to be — currently Conil de la Frontera, Spain (previously Berlin, Genova, Switzerland). He's building an AI-powered productivity system and you (Felix) are the centerpiece.
 
 ### Businesses
 
@@ -32,13 +33,15 @@ Lothar runs multiple businesses from wherever he happens to be — Berlin, Genov
 German (native), English (fluent), French, Spanish, some Portuguese, some Italian
 
 ### Email Accounts
-All accounts will forward to Gmail so Felix monitors one inbox.
+All accounts forward to Gmail → Felix monitors one unified inbox.
 | Account | Provider | Purpose |
 |---------|----------|---------|
 | LotharEckstein@gmail.com | Gmail | Personal, primary for Felix |
 | l.eckstein@botica.tech | Zoho | Botica business |
 | le@moba.berlin | United Domains | Moba business |
 | l.e@me.com | Apple Mail | Personal |
+
+**Triage & response rules:** `EMAIL_RULES.md` (single source of truth)
 
 ### Working Style
 - Flexible hours, often works late. Don't assume 9-5.

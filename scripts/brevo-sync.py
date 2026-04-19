@@ -18,7 +18,7 @@ import json, os, sys, urllib.request, urllib.parse, time
 from datetime import datetime
 
 DRY_RUN = '--dry-run' in sys.argv
-LIST_ID = 9  # Nylongerie Subscribers
+LIST_ID = 3  # Nylongerie Subscribers (Botica.tech Brevo account)
 SHOP = 'ecb34e-4.myshopify.com'
 
 

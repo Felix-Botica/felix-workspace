@@ -59,12 +59,13 @@ _Updated: 2026-04-12 17:00 CET_
 
 ## Active Integrations
 
-### Gmail (via gog CLI)
-- **Account:** LotharEckstein@gmail.com
-- **Commands:** `gog gmail search`, `gog gmail send`, `gog gmail read`
+### Gmail / Email (via gog CLI)
+- **Account:** LotharEckstein@gmail.com (unified inbox)
+- **Commands:** `gog gmail search`, `gog gmail send`, `gog gmail read`, `gog gmail modify`
 - **Google Cloud:** verdant-nova-488516-n7 (Production, OAuth tokens don't expire if used regularly)
 - **Aliases:** l.eckstein@botica.tech, lowtar@mac.com (Send As configured)
 - **Forwarding:** Zoho + iCloud → Gmail active
+- **⚠️ EMAIL RULES:** All triage, routing, and response rules → `EMAIL_RULES.md`
 
 ### Google Calendar (via gog CLI)
 - `gog calendar list` / `gog calendar events <id> --from <iso> --to <iso>`
@@ -366,6 +367,7 @@ When receiving a heartbeat poll, use it productively — don't just reply `HEART
 | memory/people.md | Contacts, network, relationships | On demand |
 | memory/business.md | Deals, projects, intelligence | On demand |
 | memory/health.md | Health, weight, sleep | On demand |
+| EMAIL_RULES.md | Email triage & response rules | Always (email operations) |
 | memory/YYYY-MM-DD.md | Daily notes | On demand |
 
 **Last Verified:** 2026-04-10 18:30 CET
