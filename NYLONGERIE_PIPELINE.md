@@ -35,9 +35,9 @@ _Single source of truth for all Nylongerie content operations._
 
 - **Inbox:** `~/.openclaw/nylongerie/inbox/` (symlink → `~/Desktop/nylongerie-content/inbox/`)
 - **Queue:** `~/.openclaw/nylongerie/queue.json`
-- **Classifications:** `~/.openclaw/nylongerie/classify-results.json`
+- **Classifications:** `~/.openclaw/nylongerie/classify-results-clean.json` (active — 438 images)
 - **Series Map:** `~/.openclaw/nylongerie/series-map-final.json` (🔴 NEVER overwrite — 12hr Ollama run)
-- **Used Images:** `~/.openclaw/nylongerie/used-images.json`
+- **Used Images:** `~/.openclaw/nylongerie/used-images.json` (single source of truth, managed by v3 + publish)
 - **Banned Images:** `~/.openclaw/nylongerie/banned-images.json`
 - **Story Templates:** `~/.openclaw/nylongerie/story-templates.js`
 
@@ -99,8 +99,9 @@ Check `~/.openclaw/nylongerie/newsletter-state.json` for current status:
 
 ### Classification System
 - **Script:** `~/.openclaw/workspace/nylongerie-classify-local.js`
-- **Results:** `~/.openclaw/nylongerie/classify-results.json`
-- **Progress:** 910/1588 images classified (as of 2026-03-29)
+- **Results:** `~/.openclaw/nylongerie/classify-results-clean.json` (active — 438 images)
+- **Old files:** `classify-results.json`, `classify-results-NEW.json`, `classify-results-v2.json` → archived/
+- **Progress:** 438 images classified (as of 2026-04-19)
 
 ### Selection Criteria
 - **Type:** Must be `"content"` (not `"screenshot"`)
@@ -127,14 +128,23 @@ Series linking propagates handles from screenshots to adjacent content images.
 ## Used Images Tracking
 
 **File:** `~/.openclaw/nylongerie/used-images.json`
-**Rule:** Do NOT reuse an image for 90 days.
+**Rule:** Do NOT reuse an image for the same account for 90 days. Cross-account usage is allowed.
+
+**Single Source of Truth:** `nylongerie-select-v3.js` + `nylongerie-publish.js` manage this automatically.
+- Selection (v3): marks image as `selected` in used-images.json immediately when picked
+- Publish: updates status to `published` and records `ig_post_id`
+- Blocking: image blocked for account X if `used_date + 90 days > today` AND `accounts[]` includes X
+
+**Manual cleanup:** `nylongerie-cleanup-used-images.js` — run if inconsistencies appear
 
 ```json
 {
   "FILENAME.jpg": {
     "used_date": "2026-03-29",
-    "accounts": ["@nylondarling"],
-    "type": "post"
+    "accounts": ["nylondarling"],
+    "type": "post",
+    "status": "published",
+    "ig_post_ids": { "nylondarling": "179xxxxxxxxxxx" }
   }
 }
 ```
@@ -402,13 +412,16 @@ Update `used-images.json` with date, accounts, type.
 ## Scripts
 
 - **Classify:** `~/.openclaw/workspace/nylongerie-classify-local.js`
+- **Select Batch:** `~/.openclaw/nylongerie/nylongerie-select-v3.js` ← 90-day blocking (single source of truth)
 - **Publish:** `~/.openclaw/nylongerie/nylongerie-publish.js`
-- **Select Batch:** `~/.openclaw/workspace/nylongerie-select-batch-v2.js`
+- **Cleanup used-images:** `~/.openclaw/nylongerie/nylongerie-cleanup-used-images.js`
 - **Create Batch:** `~/.openclaw/workspace/nylongerie-create-batch.js`
 - **Crop Batch:** `~/.openclaw/workspace/nylongerie-crop-batch.js`
 - **Reel Handles:** `~/.openclaw/workspace/nylongerie-reel-handles.js`
 - **Reel Batch:** `~/.openclaw/workspace/nylongerie-create-reel-batch.js`
 - **Daily Script:** `~/.openclaw/scripts/nylongerie-daily.sh`
+
+**⚠️ Daily POST batch (10:00) cron is DISABLED** — selection now requires manual trigger or new cron setup
 
 ## Rules Summary
 

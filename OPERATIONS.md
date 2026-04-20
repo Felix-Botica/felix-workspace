@@ -144,7 +144,7 @@ gog auth status
 Morning Briefing, Evening Digest, Wind-Down, Felix Inbox Check, Weekly Newsletter, Integration Healthcheck, Nightly Backup, Brevo-Shopify Sync, Weekly System Review, Token Refresh (every 2h, timeout 120s), Nylongerie Daily STORY (11:00)
 
 **External Monitors (crontab):** gateway-health (5min), briefing-monitor (07:45), digest-monitor (20:45 + retries)
-**Disabled:** WA Inbox Digest, Nylongerie Daily POST (handled by nylongerie agent via heartbeat ~09:00), Nylongerie Daily Batch, Weekly Classification
+**Disabled:** WA Inbox Digest (heartbeat-run mid-April while token refresh was broken — now fixed), Nylongerie Daily POST (disabled, was running via nylongerie subagent heartbeat Apr 12-18 — crons repaired Apr 19, main agent handles now), Weekly Classification
 
 ### Cron Mandatory Config
 

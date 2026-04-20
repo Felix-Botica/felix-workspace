@@ -1,7 +1,7 @@
 {
   "meta": {
-    "description": "Hard-learned rules from production failures. Loaded ONLY in Execute mode (🔒).",
-    "last_updated": "2026-03-29"
+    "description": "Hard-learned rules from production failures. Loaded in Execute mode. Also read by nylongerie subagent via workspace-nylongerie/memory/lessons reference.",
+    "last_updated": "2026-04-19"
   },
   "lessons": [
     {
@@ -94,6 +94,16 @@
       "problem": "Contact list was used to identify recipients for outbound WhatsApp messages",
       "rule": "people.md is READ-ONLY for Felix. Only for triage/categorization. NEVER use contacts as recipients for outgoing messages.",
       "reference": "AGENTS.md, SOUL.md"
+    },
+    {
+      "id": "reel-cross-post-source-verification",
+      "date": "2026-04-19",
+      "severity": "critical",
+      "context": "Nylongerie REEL publishing",
+      "problem": "Subagent posted YESTERDAY's REEL (@joanasilva1018) to 4 accounts instead of TODAY's REEL (@vochkassevera_). Lothar manually deleted the wrong posts.",
+      "root_cause": "Hardcoded source entry in cross-posting workflow — did not verify date/model of source REEL before posting",
+      "rule": "BEFORE cross-posting: Verify (1) date matches today's date (2) model handle matches the approved REEL. When in doubt, ask Lothar to confirm before posting.",
+      "validation": "Cross-post checklist: Is this REEL from TODAY? Does the model handle match the approved entry?"
     }
   ]
 }

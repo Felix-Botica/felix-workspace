@@ -125,19 +125,38 @@ async function uploadVideoToR2(filePath, key) {
 
 // Select reels for batch
 function selectReels(count) {
+  const RETENTION_DAYS = 90;
   const results = JSON.parse(fs.readFileSync(CLASSIFY_FILE, 'utf8'));
   const used = JSON.parse(fs.readFileSync(USED_FILE, 'utf8'));
   const queue = fs.existsSync(QUEUE_FILE) ? JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8')) : [];
   const queuedFiles = new Set(queue.map(e => e.file));
 
-  // Filter: reels with real handles, not used, not already queued, file exists
-  const candidates = results.filter(e =>
-    e.type === 'reel' &&
-    isRealHandle(e.handle) &&
-    !used[e.file] &&
-    !queuedFiles.has(e.file) &&
-    fs.existsSync(path.join(INBOX, e.file))
-  );
+  // For reels: block if already used on the same account within 90 days.
+  // Same logic as nylongerie-select-v3.js (90-day retention, same-account blocking).
+  const now = new Date();
+  const blockedReels = {}; // file -> Set of accounts it's already been posted to (within 90 days)
+  for (const [file, entry] of Object.entries(used)) {
+    if (file.startsWith('_')) continue;
+    if (!entry.used_date || entry.type !== 'reel') continue;
+    const expiry = new Date(entry.used_date);
+    expiry.setDate(expiry.getDate() + RETENTION_DAYS);
+    if (now >= expiry) continue; // not blocked, past 90 days
+    if (!blockedReels[file]) blockedReels[file] = new Set();
+    for (const acct of (entry.accounts || [])) {
+      blockedReels[file].add(acct);
+    }
+  }
+
+  // Filter: reels with real handles, not blocked for the account they'd be routed to, not queued, file exists
+  const candidates = results.filter(e => {
+    if (e.type !== 'reel') return false;
+    if (!isRealHandle(e.handle)) return false;
+    if (!fs.existsSync(path.join(INBOX, e.file))) return false;
+    if (queuedFiles.has(e.file)) return false;
+    const targetAccount = routeToAccount(e.style || '').replace('@', '');
+    if (blockedReels[e.file] && blockedReels[e.file].has(targetAccount)) return false;
+    return true;
+  });
 
   console.log(`   Reel candidates: ${candidates.length}`);
 
