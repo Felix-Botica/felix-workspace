@@ -347,26 +347,28 @@ Shiny Nylon Star™ legal notice: All copyrights belong to the model, brand or p
 
 ---
 
-## Pipeline Steps
+## Pipeline Steps — ALL AUTOMATED
 
-### 1. Pick an Image
-Check `classify-results.json` for categorized content with real handle. Prioritize images WITH credit.
+**DO NOT** select images manually, crop manually, or build captions manually.
+Every pipeline has ONE script that does everything end-to-end.
 
-### 2. Prepare Image
-Auto-crop white bars → crop to 4:5 → resize to 1080x1350 via Sharp.
+### POST Pipeline
+```bash
+cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-select-v3.js
+```
+→ Selects, crops, uploads to R2, generates captions, creates queue entries. Done.
 
-### 3. Upload to R2
-Upload preview to Cloudflare R2 for Lothar to review.
+### REEL Pipeline
+```bash
+cd /Users/lothareckstein/.openclaw && node workspace/nylongerie-create-reel-batch.js --count 1
+```
+→ Selects reel, uploads video to R2, generates caption, creates queue entry. Done.
 
-### 4. Send Preview to Lothar
-Send to **Topic 3** with: account name, model handle, proposed headline, 👍/✏️/❌ options.
-
-### 5. Publish to Instagram
-After approval: update queue.json → `node ~/.openclaw/workspace/nylongerie-publish.js {post_id}`
-**⚠️ Use graph.facebook.com** (NOT graph.instagram.com) — system user tokens require Facebook Graph endpoint.
-
-### 6. Mark as Used
-Update `used-images.json` with date, accounts, type.
+### Publish (after Lothar approves)
+```bash
+cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-publish.js
+```
+→ Publishes all approved entries. Auto-detects posts vs reels. Updates used-images.json.
 
 ---
 
@@ -374,7 +376,7 @@ Update `used-images.json` with date, accounts, type.
 
 ### C) 1-3 Reels/Tag (12:00 CET)
 
-- Videos from `classify-results.json` with `type: "reel"`
+- Videos from `classify-results-clean.json` with `type: "reel"`
 - Same credit rule as posts: **handle required, no post without credit**
 - Same caption templates as posts (with `#reels` hashtag added)
 - Published via Instagram Graph API with `media_type: REELS`
@@ -409,19 +411,22 @@ Update `used-images.json` with date, accounts, type.
 
 ---
 
-## Scripts
+## Active Scripts — ONE script per pipeline
 
-- **Classify:** `~/.openclaw/workspace/nylongerie-classify-local.js`
-- **Select Batch:** `~/.openclaw/nylongerie/nylongerie-select-v3.js` ← 90-day blocking (single source of truth)
-- **Publish:** `~/.openclaw/nylongerie/nylongerie-publish.js`
-- **Cleanup used-images:** `~/.openclaw/nylongerie/nylongerie-cleanup-used-images.js`
-- **Create Batch:** `~/.openclaw/workspace/nylongerie-create-batch.js`
-- **Crop Batch:** `~/.openclaw/workspace/nylongerie-crop-batch.js`
-- **Reel Handles:** `~/.openclaw/workspace/nylongerie-reel-handles.js`
-- **Reel Batch:** `~/.openclaw/workspace/nylongerie-create-reel-batch.js`
-- **Daily Script:** `~/.openclaw/scripts/nylongerie-daily.sh`
+| Pipeline | Script | Command |
+|---|---|---|
+| **POST** | `~/.openclaw/nylongerie/nylongerie-select-v3.js` | `node nylongerie-select-v3.js` |
+| **REEL** | `~/.openclaw/workspace/nylongerie-create-reel-batch.js` | `node nylongerie-create-reel-batch.js --count N` |
+| **STORY** | `~/.openclaw/nylongerie/promo-story.js` | `node promo-story.js --theme X --discount N --code X` |
+| **NEWSLETTER** | `~/.openclaw/nylongerie/newsletter-build.js` | `node newsletter-build.js propose\|approve\|send` |
+| **PUBLISH** | `~/.openclaw/nylongerie/nylongerie-publish.js` | `node nylongerie-publish.js [--id X]` |
 
-**⚠️ Daily POST batch (10:00) cron is DISABLED** — selection now requires manual trigger or new cron setup
+**Alle anderen Scripts sind archiviert in `~/.openclaw/nylongerie/archived/` — NICHT verwenden.**
+
+**Utility Scripts (bei Bedarf):**
+- `~/.openclaw/workspace/nylongerie-classify-local.js` — Neue Bilder klassifizieren
+- `~/.openclaw/workspace/nylongerie-reel-handles.js` — Handle-Propagation nach neuen Reels
+- `~/.openclaw/nylongerie/nylongerie-cleanup-used-images.js` — used-images.json bereinigen
 
 ## Rules Summary
 

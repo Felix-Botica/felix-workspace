@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-20T08:04:33.694Z",
+  "entries": {
+    "memory:memory/2026-04-17.md:1:27": {
+      "key": "memory:memory/2026-04-17.md:1:27",
+      "path": "memory/2026-04-17.md",
+      "startLine": 1,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "# 2026-04-17 Daily Notes ## Pipeline Status ### Morning Batch (07:00) - Selected 4 posts for today - Previews sent to Telegram (Topic 66 / Inbox & Drafts) - Awaiting approval **Selected posts:** 1. @legfashion → @_._s_lie | IMG_1957.jpg | fishnet 2. @nextdoornylon → @arinaeagle | IMG_1625.jpg | black tights 3. @nylongerie → @cantarina_bice | IMG_3158.jpg | patterned stockings 4. @planetnylon → @libaniasilva12 | IMG_2568.jpg | patterned knee-highs ### Promo Story (ran separately) - Theme: Exclusive Insider Access - Product: Glossy Transparent Thigh-High Stockings - 11 Colors - Discount: 15% (SignUp15) - DRY RUN mode → posted to Telegram Topic 3 (Nylongerie) - Story image: promo-story-prev",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.8450216982890533,
+      "maxScore": 0.4356650746940925,
+      "firstRecalledAt": "2026-04-20T08:03:44.873Z",
+      "lastRecalledAt": "2026-04-20T08:04:33.694Z",
+      "queryHashes": [
+        "df9c932ba875",
+        "8fcd6a82d73c"
+      ],
+      "recallDays": [
+        "2026-04-20"
+      ],
+      "conceptTags": [
+        "s-lie",
+        "img-1957.jpg",
+        "img-1625.jpg",
+        "cantarina-bice",
+        "img-3158.jpg",
+        "img-2568.jpg",
+        "knee-highs",
+        "thigh-high"
+      ]
+    },
+    "memory:memory/2026-04-19.md:27:55": {
+      "key": "memory:memory/2026-04-19.md:27:55",
+      "path": "memory/2026-04-19.md",
+      "startLine": 27,
+      "endLine": 55,
+      "source": "memory",
+      "snippet": "- After successful publish: updates status to \"published\", records ig_post_id - Ensures no double-selection if cron runs again before approval ### Current State - `used-images.json`: 91 images tracked, 91 actively blocked (all within 90-day window) - Cross-account usage: 6 images used on multiple accounts (allowed, working correctly) - `classify-results-clean.json`: 438 images (only active classify file now) - Old classify files → archived/ ### Archive Cleanup Done - `classify-results.json` (2.4K entries) → archived/ - `classify-results-NEW.json`, `classify-results-v2.json` → archived/ - `queue.json.bak-bad-drafts` → archived/ - Daily logs Apr 5-14 → compressed (.gz) - Classify/reclassify/",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4295640658757699,
+      "maxScore": 0.4295640658757699,
+      "firstRecalledAt": "2026-04-20T08:04:33.694Z",
+      "lastRecalledAt": "2026-04-20T08:04:33.694Z",
+      "queryHashes": [
+        "8fcd6a82d73c"
+      ],
+      "recallDays": [
+        "2026-04-20"
+      ],
+      "conceptTags": [
+        "ig-post-id",
+        "double-selection",
+        "used-images.json",
+        "90-day",
+        "cross-account",
+        "classify-results-clean.json",
+        "classify-results.json",
+        "2.4k"
+      ]
+    },
+    "memory:memory/2026-04-18.md:1:27": {
+      "key": "memory:memory/2026-04-18.md:1:27",
+      "path": "memory/2026-04-18.md",
+      "startLine": 1,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "# 2026-04-18 Daily Notes ## Pipeline Status ### Morning Batch (09:00) - Selected 4 posts for today - Previews sent to Telegram (Topic 66) - Awaiting approval **Selected posts:** 1. @legfashion → @_._s_lie | IMG_1958.jpg | fishnet 2. @nextdoornylon → @arinaeagle | IMG_1626.jpg | black tights 3. @nylongerie → @karolinamalisova | IMG_3527.jpg | patterned stockings 4. @planetnylon → @libaniasilva12 | IMG_2569.jpg | patterned knee-highs ### Promo Story (ran separately via promo-story.js) - Theme: Spring Collection - Product: Glossy Transparent Thigh-High Stockings - 11 Colors - Discount: 25% (SPRING25) - DRY RUN → sent to Telegram Topic 3 (Nylongerie) - Template: sale ## Queue Status - 181 i",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4192700026154205,
+      "maxScore": 0.4192700026154205,
+      "firstRecalledAt": "2026-04-20T08:04:33.694Z",
+      "lastRecalledAt": "2026-04-20T08:04:33.694Z",
+      "queryHashes": [
+        "8fcd6a82d73c"
+      ],
+      "recallDays": [
+        "2026-04-20"
+      ],
+      "conceptTags": [
+        "s-lie",
+        "img-1958.jpg",
+        "img-1626.jpg",
+        "img-3527.jpg",
+        "img-2569.jpg",
+        "knee-highs",
+        "promo-story.js",
+        "thigh-high"
+      ]
+    },
+    "memory:memory/2026-04-19.md:52:60": {
+      "key": "memory:memory/2026-04-19.md:52:60",
+      "path": "memory/2026-04-19.md",
+      "startLine": 52,
+      "endLine": 60,
+      "source": "memory",
+      "snippet": "## Watchdog Alert Context Lothar received \"Felix Watchdog: Gateway is DOWN\" message — NOT from Felix. Source unclear (external monitoring?). Gateway was UP when checked. No action needed. ### REEL 90-Day Blocking Fix (13:29) - `nylongerie-create-reel-batch.js`: Added same 90-day same-account blocking logic that posts have - Previously: `!used[e.file]` blocked reel forever if in used-images.json (no expiry) - Now: checks `entry.type === 'reel'` + `entry.used_date` + 90-day expiry, routes to account - `blockedReels[file]` built at selection time, applied in filter - Syntax verified ✅",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.42526536665165515,
+      "maxScore": 0.42526536665165515,
+      "firstRecalledAt": "2026-04-20T08:04:33.694Z",
+      "lastRecalledAt": "2026-04-20T08:04:33.694Z",
+      "queryHashes": [
+        "8fcd6a82d73c"
+      ],
+      "recallDays": [
+        "2026-04-20"
+      ],
+      "conceptTags": [
+        "gateway",
+        "90-day",
+        "nylongerie-create-reel-batch.js",
+        "same-account",
+        "e.file",
+        "used-images.json",
+        "entry.type",
+        "entry.used-date"
+      ]
+    }
+  }
+}

@@ -32,7 +32,7 @@
 - [ ] B2: Headlines & Captions for Conversion (needs E2 data first)
 - [ ] A2: KPI Tracking & Learning Loop (needs E2)
 - [ ] B3: AI-Ready SEO — Classic Shopify first, GEO second
-- [ ] A8: Reels Pipeline — highest reach format. 253 videos in inbox (843MB, all H.264 9:16, Instagram-native). Zero handle-mapped. **Step 1:** Lothar manual review for patterns. **Step 2:** Inventory script (ffprobe scan → reels-inventory.json). **Step 3:** Handle mapping (series-link or manual). **Step 4:** publish_reel tool (same container→poll→publish as POSTs, R2 upload, Topic 3 approval). Graph API part is trivial. Blocked on handle mapping. Prereq: POST+STORY stable for 1 week.
+- [x] A8: Reels Pipeline — DONE. 243/253 reels with handles. Script: `nylongerie-create-reel-batch.js`. Cron: Daily 12:00. First reel published 2026-04-14.
 - [ ] A4: Content Pool Auto-Ingestion — R2 inbox → classify-v2 → merge
 - [ ] B4: Model CRM — approved models → managed roster → follow-up cadence
 - [ ] B1: Content Newsletter — nylons in movies, history, culture
