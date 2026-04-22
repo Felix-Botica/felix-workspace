@@ -1,23 +1,18 @@
 # NYLONGERIE_PIPELINE.md — Instagram Posting Pipeline & Protocol
 
-_Single source of truth for all Nylongerie content operations._
+> Canonical file for Nylongerie posting workflow.
+> For **which accounts are active vs paused**, the single source of truth is [ACCOUNT_RULES.md](./ACCOUNT_RULES.md). This file describes the pipeline; it does not re-declare posting authority.
 
 ---
 
-## Accounts (8 total, 7 active + 1 paused)
+## Accounts — see ACCOUNT_RULES.md
 
-| Account | IG ID | Style | Followers |
-|---------|-------|-------|-----------|
-| @nylondarling | 17841429713561331 | Lifestyle/editorial, flagship | 254K |
-| @nyloncherie | 17841402906657029 | Classic/elegant (**PAUSED**) | 58K |
-| @nylongerie | 17841402986367027 | Brand hub, product links | 46K |
-| @legfashion | 17841402884847036 | Legs-focused | 46K |
-| @shinynylonstar | 17841464191117228 | Shiny/glossy niche | 33K |
-| @blackshinynylon | 17841471823236920 | Dark/black nylon aesthetic | 7.5K |
-| @planetnylon | 17841472009081615 | Edgy: leather, vinyl, boots | 2K |
-| @nextdoornylon | 17841472299535162 | Girl-next-door, casual, natural | 4.5K |
+The authoritative list lives in [ACCOUNT_RULES.md](./ACCOUNT_RULES.md). Short reference (DO NOT use this as the source of truth — it is a convenience summary and may drift):
 
-**Post to 7 active accounts daily.** @nyloncherie is paused indefinitely since 09.03.2026.
+- Active (7): @nylondarling · @nylongerie · @legfashion · @shinynylonstar · @blackshinynylon · @nextdoornylon · @planetnylon
+- Paused (1): **@nyloncherie** — copyright + political sensitivity, never post. Paused since 2026-03-09.
+
+If this summary disagrees with ACCOUNT_RULES.md, ACCOUNT_RULES.md wins and this one gets updated.
 
 ## Style → Account Mapping
 
@@ -283,23 +278,9 @@ Nylon Darling™ legal notice: All copyrights belong to the model, brand or phot
 □ Follow @legfashion @shinynylonstar @nylondarling
 ```
 
-### @nyloncherie (PAUSED)
-```
-nyloncherie ■ Shop @nylongerie ♡ Nylongerie.com
-{HEADLINE} ★ @{MODEL_HANDLE}
-🌹
-Featured by Nylon Chérie™ @nyloncherie
-•
-Copyright © {MODEL_NAME}, {YEAR}
-Nylon Chérie™ legal notice: All copyrights belong to the model, brand or photographer and have been published with their permission. Reposting only allowed with consent of the copyright holder.
-•
-♥ Always tag @nyloncherie and #nyloncherie
+### @nyloncherie (PAUSED — do not use)
 
-#nyloncherie #nylondarling #legfashion #nylongerie #classynylons #elegance #fashiontights #tightsfashion #pantyhosefashion #hosierylover #beautifullegs #shinynylons #nylons #nylonlegs #instanylon #tightsblogger #tights #pantyhose #collant #calze #pantyhosemodel #stockings #instaheels
-
-· Nylon Chérie™ is a brand and network member of Nylongerie® Fashion & Friends by Alex S.
-□ Follow @nylondarling @legfashion @shinynylonstar
-```
+❌ **No caption template lives here on purpose.** @nyloncherie is permanently paused. See [ACCOUNT_RULES.md](./ACCOUNT_RULES.md) for the reason and enforcement chain. Do not re-add a template — if one appears here, it will tempt an agent to post and the runtime guards in select-v3.js / publish.js will refuse (but the right fix is never writing the template in the first place).
 
 ### @legfashion
 ```

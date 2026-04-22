@@ -1,7 +1,7 @@
 {
   "meta": {
     "description": "Hard-learned rules from production failures. Loaded in Execute mode. Also read by nylongerie subagent via workspace-nylongerie/memory/lessons reference.",
-    "last_updated": "2026-04-19"
+    "last_updated": "2026-04-21"
   },
   "lessons": [
     {
@@ -104,6 +104,17 @@
       "root_cause": "Hardcoded source entry in cross-posting workflow — did not verify date/model of source REEL before posting",
       "rule": "BEFORE cross-posting: Verify (1) date matches today's date (2) model handle matches the approved REEL. When in doubt, ask Lothar to confirm before posting.",
       "validation": "Cross-post checklist: Is this REEL from TODAY? Does the model handle match the approved entry?"
+    },
+    {
+      "id": "nyloncherie-paused-copyright",
+      "date": "2026-04-21",
+      "severity": "critical",
+      "context": "Nylongerie account selection",
+      "problem": "Nyloncherie was being selected for posts despite being permanently paused due to copyright + political-sensitivity concerns",
+      "root_cause": "PAUSED_ACCOUNTS constant existed in nylongerie-select-v3.js but was NEVER READ — dead code. The only actual protection was commenting nyloncherie out of the ACCOUNTS array, which is brittle (one uncomment = breach). The 10:04 CEST cron on 2026-04-21 proposed @nyloncherie as draft #2; Lothar caught it at the human approval step. Nothing was published.",
+      "rule": "NYLONCHERIE is permanently PAUSED — NEVER select or publish to this account. Canonical source of truth: workspace/ACCOUNT_RULES.md. Runtime enforcement: (a) select-v3.js assertPausedGuard() at startup + mid-loop filter; (b) reel-batch.js routeToAccount() + round-robin fallback exclusion; (c) publish.js refuses any entry whose account is in PAUSED_ACCOUNTS, marking it status=refused_paused_account.",
+      "validation": "Before running any selection script, ensure PAUSED_ACCOUNTS constant is actually referenced (not just declared). Before publishing, the publish script itself re-checks — so an approval mistake by a human cannot publish to a paused account.",
+      "reference": "workspace/ACCOUNT_RULES.md (canonical) — enforcement in nylongerie-select-v3.js, nylongerie-create-reel-batch.js, nylongerie-publish.js"
     }
   ]
 }

@@ -46,6 +46,10 @@ function isRealHandle(h) {
   return h && !PLACEHOLDERS.has(h) && h !== 'null' && /^@[\w.]+/.test(h);
 }
 
+// PAUSED ACCOUNTS — keep in sync with nylongerie-select-v3.js and publish.js.
+// Any reel routing attempt to a paused account is blocked. See ACCOUNT_RULES.md.
+const PAUSED_ACCOUNTS = Object.freeze(['nyloncherie']);
+
 // Account routing for reels — same as posts
 const ACCOUNT_STYLES = {
   '@nylondarling': ['editorial', 'lifestyle', 'elegant'],
@@ -57,15 +61,39 @@ const ACCOUNT_STYLES = {
   '@nylongerie': ['product'],
 };
 
-// Default account for reels without style classification
-const DEFAULT_ACCOUNT = '@nylondarling';
+// Rotation order: reels without a matching style rotate through these accounts
+// round-robin, rather than piling up on @nylondarling. Excludes paused accounts.
+// Previously: all style-unmatched reels defaulted to @nylondarling, which caused
+// over-posting on the flagship account. Fixed 2026-04-21.
+const ROTATION_ACCOUNTS = Object.freeze(
+  Object.keys(ACCOUNT_STYLES).filter(a => !PAUSED_ACCOUNTS.includes(a.replace('@','').toLowerCase()))
+);
+const ROTATION_STATE_FILE = path.join(BASE, 'reel-rotation-state.json');
+
+function nextRotationAccount() {
+  let state = { index: 0 };
+  try { state = JSON.parse(fs.readFileSync(ROTATION_STATE_FILE, 'utf8')); } catch {}
+  const idx = (Number.isFinite(state.index) ? state.index : 0) % ROTATION_ACCOUNTS.length;
+  const acct = ROTATION_ACCOUNTS[idx];
+  // Persist the next index atomically (best-effort).
+  try {
+    fs.writeFileSync(ROTATION_STATE_FILE, JSON.stringify({ index: (idx + 1) % ROTATION_ACCOUNTS.length, last_account: acct, last_rotated_at: new Date().toISOString() }, null, 2));
+  } catch(e) { /* non-fatal */ }
+  return acct;
+}
 
 function routeToAccount(style) {
-  if (!style) return DEFAULT_ACCOUNT;
-  for (const [account, styles] of Object.entries(ACCOUNT_STYLES)) {
-    if (styles.includes(style)) return account;
+  // Style-match first (preserves per-niche routing when classification is confident).
+  if (style) {
+    for (const [account, styles] of Object.entries(ACCOUNT_STYLES)) {
+      if (styles.includes(style)) {
+        if (PAUSED_ACCOUNTS.includes(account.replace('@','').toLowerCase())) continue; // skip paused
+        return account;
+      }
+    }
   }
-  return DEFAULT_ACCOUNT;
+  // Fallback: round-robin across non-paused accounts instead of always @nylondarling.
+  return nextRotationAccount();
 }
 
 // Caption templates (reels get same captions as posts)

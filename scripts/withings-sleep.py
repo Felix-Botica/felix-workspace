@@ -10,6 +10,29 @@ import json
 import requests
 from datetime import datetime, timedelta
 
+# Load .env directly — don't rely on the shell having exported variables.
+# Previously this script assumed `source .env && python3 ...` was enough, but
+# plain `source` sets shell-local (non-exported) variables, which python3 can't
+# see via os.getenv(). That mis-fired as "Token-Fehler 401" in the 07:30
+# morning briefing on 2026-04-20 and 2026-04-21 — cause was actually just
+# "env var not exported", not an auth failure.
+def _load_dotenv(path=None):
+    path = path or os.path.expanduser('~/.openclaw/.env')
+    if not os.path.exists(path):
+        return
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#') or '=' not in line:
+                continue
+            key, _, val = line.partition('=')
+            key = key.strip()
+            val = val.strip().strip('"').strip("'")
+            # Don't overwrite existing env — caller-set wins over file.
+            os.environ.setdefault(key, val)
+
+_load_dotenv()
+
 # Load environment variables
 WITHINGS_ACCESS_TOKEN = os.getenv('WITHINGS_ACCESS_TOKEN')
 WITHINGS_USER_ID = os.getenv('WITHINGS_USER_ID')
