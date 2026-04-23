@@ -3,7 +3,7 @@
 > **This file is canonical. If a rule here contradicts any other file or any agent's memory, THIS FILE WINS.**
 > Scripts enforce these rules at runtime. See "Enforcement" at bottom.
 
-Last updated: 2026-04-21
+Last updated: 2026-04-22 (Refactor C — config-driven)
 
 ---
 
@@ -37,13 +37,15 @@ Last updated: 2026-04-21
 
 ## Enforcement (where the rules actually live in code)
 
-The canonical `PAUSED_ACCOUNTS` list (JS/Python form: `['nyloncherie']`) is replicated in three places, each with its own guard. All three must be updated together — the startup assertions in (1) and the refusal in (3) will catch drift.
+**As of Refactor C (2026-04-22), the PAUSED_ACCOUNTS list has a single source of truth:** `config/nylongerie.json` → `accounts.paused[]`. All scripts import it via `lib/paused_accounts.js`. No more drift risk across scripts.
 
 | Layer | File | Enforcement |
 |---|---|---|
-| 1. Selection (posts) | `nylongerie/nylongerie-select-v3.js` | `assertPausedGuard()` throws at startup if ACCOUNTS contains a paused handle; mid-loop filter skips paused handles. |
-| 2. Selection (reels) | `workspace/nylongerie-create-reel-batch.js` | `routeToAccount()` skips paused matches; round-robin fallback excludes paused accounts. |
-| 3. Publish (final gate) | `nylongerie/nylongerie-publish.js` | Every queue entry checked; paused targets marked `status=refused_paused_account` and never hit Instagram API. |
+| 1. Selection (POST) | `pipelines/post/select.js` | `assertNoPausedIn()` on active accounts at startup; mid-loop filter skips paused handles. |
+| 2. Selection (REEL) | `workspace/nylongerie-create-reel-batch.js` | Still uses local `PAUSED_ACCOUNTS = ['nyloncherie']` constant — working but not yet config-driven (scheduled for future refactor). `routeToAccount()` skips paused matches; round-robin fallback excludes paused accounts. |
+| 3. Selection (STORY) | `pipelines/story/promo.js` | Reads config; `assertNoPausedIn()` on `story.rules.rotation_order` at startup. |
+| 4. Publish (final gate, POST + REEL) | `pipelines/post/publish.js` | Every queue entry checked via `PAUSED_ACCOUNTS` from config; paused targets marked `status=refused_paused_account` and never hit Instagram API. |
+| 5. Preflight | `scripts/preflight.sh` | Runs before every cron; refuses if any invariant is broken (including paused-in-active). |
 
 ### When Felix (or any agent) needs to reason about accounts
 
@@ -68,3 +70,4 @@ If any doc / caption template / script config disagrees with the tables above:
 ### Changelog
 
 - **2026-04-21** — Created. Hard-wired `PAUSED_ACCOUNTS = ['nyloncherie']` with runtime enforcement in select-v3.js, reel-batch.js, and publish.js after a POST cron at 10:04 CEST proposed @nyloncherie as draft #2 (caught at approval; never published). Added round-robin rotation fallback in reel-batch.js so unclassified reels no longer pile on @nylondarling. Removed @nyloncherie caption template from NYLONGERIE_PIPELINE.md.
+- **2026-04-22** — Refactor C. PAUSED_ACCOUNTS now lives in `config/nylongerie.json` (single source of truth) and is read by all scripts via `lib/paused_accounts.js`. POST + STORY scripts migrated to `pipelines/post/` and `pipelines/story/`. Old nylongerie/* scripts replaced with deprecated stubs that exit 2. STORY pipeline also gained product cooldown (14d) + rotation bug fix (was stuck on @nylondarling every new day). POST pipeline gained cross-account cooldown (7d) + max-accounts-per-image cap (3/90d) + rejected-draft lock (30d) + same-day idempotency guard.

@@ -46,20 +46,18 @@ function isRealHandle(h) {
   return h && !PLACEHOLDERS.has(h) && h !== 'null' && /^@[\w.]+/.test(h);
 }
 
-// PAUSED ACCOUNTS — keep in sync with nylongerie-select-v3.js and publish.js.
-// Any reel routing attempt to a paused account is blocked. See ACCOUNT_RULES.md.
-const PAUSED_ACCOUNTS = Object.freeze(['nyloncherie']);
+// Refactor C (2026-04-22): PAUSED_ACCOUNTS + active account list + style routing
+// all come from config/nylongerie.json (SSOT). No hardcoded lists.
+const { loadConfig, activeAccounts } = require(require('path').join(process.env.HOME, '.openclaw/lib/config'));
+const { PAUSED_ACCOUNTS, assertNoPausedIn } = require(require('path').join(process.env.HOME, '.openclaw/lib/paused_accounts'));
 
-// Account routing for reels — same as posts
-const ACCOUNT_STYLES = {
-  '@nylondarling': ['editorial', 'lifestyle', 'elegant'],
-  '@legfashion': ['legs-focus'],
-  '@shinynylonstar': ['shiny-glossy'],
-  '@blackshinynylon': ['black', 'black-nylon'],
-  '@nextdoornylon': ['casual', 'girl-next-door'],
-  '@planetnylon': ['edgy'],
-  '@nylongerie': ['product'],
-};
+const CONFIG = loadConfig();
+// Build ACCOUNT_STYLES dict from config.accounts.active, mapping "@handle" →
+// style_tags array. This keeps reel routing in lockstep with the SSOT.
+const ACCOUNT_STYLES = Object.fromEntries(
+  activeAccounts().map(a => [`@${a.handle}`, a.style_tags || []])
+);
+assertNoPausedIn(Object.keys(ACCOUNT_STYLES).map(k => k.replace('@','')), 'reel ACCOUNT_STYLES');
 
 // Rotation order: reels without a matching style rotate through these accounts
 // round-robin, rather than piling up on @nylondarling. Excludes paused accounts.
