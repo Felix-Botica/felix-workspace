@@ -42,13 +42,27 @@ If this summary disagrees with ACCOUNT_RULES.md, ACCOUNT_RULES.md wins and this 
 
 When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check these files before responding:
 
-### 1. Post/Reel Queue
-Check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"`. Display pending drafts with preview URLs so Lothar can approve/reject immediately.
+### 1. Post/Reel/Recycle Queue (unified — SSOT: `queue.json`)
+
+Check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"`. The queue contains entries from **all** pipelines — POST, REEL, and RECYCLE — distinguished by the `type` field:
+
+  - `type: "post"` — daily POST pipeline (id prefix `draft-YYYYMMDD-N`)
+  - `type: "reel"` — daily REEL pipeline (id prefix `draft-YYYYMMDD-N` with `video_url`)
+  - `type: "recycle-post"` — daily RECYCLE archive pipeline (id prefix `recycle-YYYYMMDD-N`)
+
+Display **all** pending drafts (any type) with: `id`, target `account`, `file` (or R2 preview URL), `model` / source credit, caption snippet. Format rows uniformly so Lothar's "1", "2", "3" references are unambiguous — and ALWAYS show the id explicitly in the list header so the mapping is clear.
+
+If Lothar's approval wording is ambiguous (e.g. "publish 1 and 2" when pending entries span both POST and RECYCLE), ask for clarification before acting. Do NOT assume "1" means the POST draft.
 
 **On approval (👍, "approve", "ja", "publish"):**
 1. Set entry status to `"approved"` in queue.json
-2. Run: `cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-publish.js --id <ENTRY_ID>`
+2. Run: `cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js --id <ENTRY_ID>`
+   — The same `publish.js` handles POST, REEL, and RECYCLE entries; it dispatches on `entry.type`.
 3. Report result to Topic 3
+
+**On rejection (👎, "reject", "nein", or specific ID):**
+1. Set entry status to `"rejected"` in queue.json. For POST entries, select.js will auto-seed `rejected-drafts.json` on the next run.
+2. Report rejection to Topic 3 with reason if provided.
 
 ### 2. Newsletter State
 Check `~/.openclaw/nylongerie/newsletter-state.json` for current status:
@@ -125,12 +139,12 @@ Series linking propagates handles from screenshots to adjacent content images.
 **File:** `~/.openclaw/nylongerie/used-images.json`
 **Rule:** Do NOT reuse an image for the same account for 90 days. Cross-account usage is allowed.
 
-**Single Source of Truth:** `nylongerie-select-v3.js` + `nylongerie-publish.js` manage this automatically.
-- Selection (v3): marks image as `selected` in used-images.json immediately when picked
-- Publish: updates status to `published` and records `ig_post_id`
+**Single Source of Truth:** `pipelines/post/select.js` + `pipelines/post/publish.js` manage this automatically.
+- Selection (Refactor C): marks image as `selected` in used-images.json immediately when picked
+- Publish: updates status to `published` and records `ig_post_id` (skipped for `type: "recycle-post"` which is tracked in `pipelines/_state/recycle-history.json` instead)
 - Blocking: image blocked for account X if `used_date + 90 days > today` AND `accounts[]` includes X
 
-**Manual cleanup:** `nylongerie-cleanup-used-images.js` — run if inconsistencies appear
+**Manual cleanup:** `nylongerie/nylongerie-cleanup-used-images.js` — run if inconsistencies appear
 
 ```json
 {
@@ -328,14 +342,14 @@ Shiny Nylon Star™ legal notice: All copyrights belong to the model, brand or p
 
 ---
 
-## Pipeline Steps — ALL AUTOMATED
+## Pipeline Steps — ALL AUTOMATED (Refactor C)
 
 **DO NOT** select images manually, crop manually, or build captions manually.
-Every pipeline has ONE script that does everything end-to-end.
+Every pipeline has ONE script that does everything end-to-end. Run from `~/.openclaw` (repo root).
 
 ### POST Pipeline
 ```bash
-cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-select-v3.js
+cd /Users/lothareckstein/.openclaw && node pipelines/post/select.js
 ```
 → Selects, crops, uploads to R2, generates captions, creates queue entries. Done.
 
@@ -345,11 +359,17 @@ cd /Users/lothareckstein/.openclaw && node workspace/nylongerie-create-reel-batc
 ```
 → Selects reel, uploads video to R2, generates caption, creates queue entry. Done.
 
-### Publish (after Lothar approves)
+### RECYCLE Pipeline
 ```bash
-cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-publish.js
+cd /Users/lothareckstein/.openclaw && node pipelines/recycle/select.js
 ```
-→ Publishes all approved entries. Auto-detects posts vs reels. Updates used-images.json.
+→ Pulls eligible ≥365d-old archive posts, stealth-transforms, cross-posts as draft. Queue entries use id prefix `recycle-YYYYMMDD-N` with `type: "recycle-post"`.
+
+### Publish (after Lothar approves — all types)
+```bash
+cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
+```
+→ Publishes all entries with `status: "approved"`, regardless of `type`. Auto-detects POST/REEL/recycle-post. Updates used-images.json for POST/REEL (recycle tracked separately in `pipelines/_state/recycle-history.json`).
 
 ---
 
@@ -392,22 +412,34 @@ cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-publish.js
 
 ---
 
-## Active Scripts — ONE script per pipeline
+## Active Scripts — ONE script per pipeline (Refactor C, 2026-04-22)
+
+All pipeline scripts live under `~/.openclaw/pipelines/` and read rules from `~/.openclaw/config/nylongerie.json` (SSOT). Run from the repo root (`cd ~/.openclaw`), not the pipeline directory.
 
 | Pipeline | Script | Command |
 |---|---|---|
-| **POST** | `~/.openclaw/nylongerie/nylongerie-select-v3.js` | `node nylongerie-select-v3.js` |
-| **REEL** | `~/.openclaw/workspace/nylongerie-create-reel-batch.js` | `node nylongerie-create-reel-batch.js --count N` |
-| **STORY** | `~/.openclaw/nylongerie/promo-story.js` | `node promo-story.js --theme X --discount N --code X` |
-| **NEWSLETTER** | `~/.openclaw/nylongerie/newsletter-build.js` | `node newsletter-build.js propose\|approve\|send` |
-| **PUBLISH** | `~/.openclaw/nylongerie/nylongerie-publish.js` | `node nylongerie-publish.js [--id X]` |
+| **POST** | `pipelines/post/select.js` | `cd ~/.openclaw && node pipelines/post/select.js` |
+| **REEL** | `workspace/nylongerie-create-reel-batch.js` | `cd ~/.openclaw && node workspace/nylongerie-create-reel-batch.js --count N` |
+| **STORY** | `pipelines/story/promo.js` | `cd ~/.openclaw && node pipelines/story/promo.js --theme X --discount N --code X` |
+| **RECYCLE** | `pipelines/recycle/select.js` | `cd ~/.openclaw && node pipelines/recycle/select.js` |
+| **NEWSLETTER** | `nylongerie/newsletter-build.js` | `cd ~/.openclaw/nylongerie && node newsletter-build.js propose\|approve\|send` |
+| **PUBLISH (all types)** | `pipelines/post/publish.js` | `cd ~/.openclaw && node pipelines/post/publish.js [--id X]` |
+| **SUBMISSIONS — INGEST** | `pipelines/submissions/ingest.js` | `cd ~/.openclaw && node pipelines/submissions/ingest.js` |
+| **SUBMISSIONS — TRIAGE** | `pipelines/submissions/triage.js` | `cd ~/.openclaw && node pipelines/submissions/triage.js` |
+| **SUBMISSIONS — PROCESS** | `pipelines/submissions/process.js` | `cd ~/.openclaw && node pipelines/submissions/process.js approve\|decline\|status` |
 
-**Alle anderen Scripts sind archiviert in `~/.openclaw/nylongerie/archived/` — NICHT verwenden.**
+**Deprecated (stubs exit 2 with pointer; do NOT invoke):**
+- `nylongerie/nylongerie-select-v3.js` → use `pipelines/post/select.js`
+- `nylongerie/nylongerie-publish.js` → use `pipelines/post/publish.js`
+- `nylongerie/promo-story.js` → use `pipelines/story/promo.js`
+
+**Preflight invariants (run automatically before every cron):**
+`cd ~/.openclaw && bash scripts/preflight.sh` — 14 green checks. If any fails, pipeline aborts.
 
 **Utility Scripts (bei Bedarf):**
-- `~/.openclaw/workspace/nylongerie-classify-local.js` — Neue Bilder klassifizieren
-- `~/.openclaw/workspace/nylongerie-reel-handles.js` — Handle-Propagation nach neuen Reels
-- `~/.openclaw/nylongerie/nylongerie-cleanup-used-images.js` — used-images.json bereinigen
+- `workspace/nylongerie-classify-local.js` — Neue Bilder klassifizieren
+- `workspace/nylongerie-reel-handles.js` — Handle-Propagation nach neuen Reels
+- `nylongerie/nylongerie-cleanup-used-images.js` — used-images.json bereinigen
 
 ## Rules Summary
 
@@ -420,4 +452,4 @@ cd /Users/lothareckstein/.openclaw/nylongerie && node nylongerie-publish.js
 
 ---
 
-**Last updated:** 2026-04-10 by Claude Code consolidation
+**Last updated:** 2026-04-23 — Topic 3 Context Rule clarifies unified queue.json (POST + REEL + RECYCLE), script paths aligned to Refactor C (pipelines/*), deprecated v3/promo-story paths removed.
