@@ -32,7 +32,7 @@ If this summary disagrees with ACCOUNT_RULES.md, ACCOUNT_RULES.md wins and this 
 - **Queue:** `~/.openclaw/nylongerie/queue.json`
 - **Classifications:** `~/.openclaw/nylongerie/classify-results-clean.json` (active — 438 images)
 - **Series Map:** `~/.openclaw/nylongerie/series-map-final.json` (🔴 NEVER overwrite — 12hr Ollama run)
-- **Used Images:** `~/.openclaw/nylongerie/used-images.json` (single source of truth, managed by v3 + publish)
+- **Used Images:** `~/.openclaw/nylongerie/used-images.json` (single source of truth, managed by `pipelines/post/select.js` + `pipelines/post/publish.js`)
 - **Banned Images:** `~/.openclaw/nylongerie/banned-images.json`
 - **Story Templates:** `~/.openclaw/nylongerie/story-templates.js`
 
@@ -294,7 +294,7 @@ Nylon Darling™ legal notice: All copyrights belong to the model, brand or phot
 
 ### @nyloncherie (PAUSED — do not use)
 
-❌ **No caption template lives here on purpose.** @nyloncherie is permanently paused. See [ACCOUNT_RULES.md](./ACCOUNT_RULES.md) for the reason and enforcement chain. Do not re-add a template — if one appears here, it will tempt an agent to post and the runtime guards in select-v3.js / publish.js will refuse (but the right fix is never writing the template in the first place).
+❌ **No caption template lives here on purpose.** @nyloncherie is permanently paused. See [ACCOUNT_RULES.md](./ACCOUNT_RULES.md) for the reason and enforcement chain. Do not re-add a template — if one appears here, it will tempt an agent to post and the runtime guards in `pipelines/post/select.js` / `pipelines/post/publish.js` (via `lib/paused_accounts.js`, backed by `config/nylongerie.json`) will refuse (but the right fix is never writing the template in the first place).
 
 ### @legfashion
 ```
@@ -396,7 +396,7 @@ cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
    - Creates queue entries with `type: "reel"` + `video_url`
    - Updates `used-images.json`
 2. **Send preview to Topic 3** with R2 video URL + caption for Lothar approval
-3. **After approval:** Approve in queue.json → run `node ~/.openclaw/nylongerie/nylongerie-publish.js`
+3. **After approval:** Approve in queue.json → run `cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js`
    - Publish script detects `type: "reel"` automatically
    - Uses `video_url` + `media_type: REELS` via Graph API
    - Polls container status until video processing is FINISHED (up to 2 min)
@@ -404,7 +404,7 @@ cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
 ### Reel Scripts
 - **Handle propagation:** `~/.openclaw/workspace/nylongerie-reel-handles.js` (run once after new reels added)
 - **Create batch:** `~/.openclaw/workspace/nylongerie-create-reel-batch.js --count N [--dry-run]`
-- **Publish:** `~/.openclaw/nylongerie/nylongerie-publish.js` (same script as posts, auto-detects reels)
+- **Publish:** `pipelines/post/publish.js` (same script as posts, auto-detects reels)
 
 ### Account Routing (same as posts)
 - Reels without style classification default to @nylondarling (flagship)
@@ -452,4 +452,4 @@ All pipeline scripts live under `~/.openclaw/pipelines/` and read rules from `~/
 
 ---
 
-**Last updated:** 2026-04-23 — Topic 3 Context Rule clarifies unified queue.json (POST + REEL + RECYCLE), script paths aligned to Refactor C (pipelines/*), deprecated v3/promo-story paths removed.
+**Last updated:** 2026-04-24 — Topic 3 Context Rule clarifies unified queue.json (POST + REEL + RECYCLE), script paths aligned to Refactor C (pipelines/*), all remaining references to deprecated `v3 / nylongerie-publish.js` stubs replaced with canonical `pipelines/post/*` paths.
