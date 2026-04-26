@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-04-25T08:04:27.796787",
+  "mode": "live",
+  "shopify_subscribed": 744,
+  "brevo_total": 877,
+  "brevo_active": 742,
+  "brevo_list_total": 0,
+  "brevo_deliverable": 0,
+  "match": false,
+  "actions_taken": {
+    "created": 2,
+    "unblacklisted": 0,
+    "added_to_list": 0,
+    "blacklisted": 0,
+    "removed_from_list": 0,
+    "errors": [
+      "add_to_list: {'error': 400, 'message': '{\"code\":\"out_of_range\",\"message\":\"Contact email/IDs/EXT_ID attributes exceeds max value of 150\"}\\n'}"
+    ]
+  },
+  "delta": 744,
+  "shopify_subscribed_but_bounced": 2
+}

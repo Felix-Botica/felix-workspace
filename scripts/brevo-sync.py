@@ -209,15 +209,22 @@ def main():
             results['unblacklisted'] += 1
         time.sleep(0.2)
 
-    # 4c: Add to list
+    # 4c: Add to list (chunked, max 150 per call)
     if to_add_to_list:
-        r = brevo_api(brevo_key, 'POST', f'/contacts/lists/{LIST_ID}/contacts/add', {
-            'emails': list(to_add_to_list)
-        })
-        if 'error' in r:
-            results['errors'].append(f"add_to_list: {r}")
-        else:
-            results['added_to_list'] = len(to_add_to_list)
+        all_emails = list(to_add_to_list)
+        chunk_size = 150
+        total_added = 0
+        for i in range(0, len(all_emails), chunk_size):
+            chunk = all_emails[i:i+chunk_size]
+            r = brevo_api(brevo_key, 'POST', f'/contacts/lists/{LIST_ID}/contacts/add', {
+                'emails': chunk
+            })
+            if 'error' in r:
+                results['errors'].append(f"add_to_list chunk {i//chunk_size + 1}: {r}")
+            else:
+                total_added += len(chunk)
+                time.sleep(0.2)
+        results['added_to_list'] = total_added
 
     # 4d: Blacklist non-subscribers
     for email in to_blacklist:
