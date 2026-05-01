@@ -157,16 +157,17 @@ function selectReels(count) {
   const queue = fs.existsSync(QUEUE_FILE) ? JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8')) : [];
   const queuedFiles = new Set(queue.map(e => e.file));
 
-  // For reels: block if already used on the same account within 90 days.
-  // Same logic as nylongerie-select-v3.js (90-day retention, same-account blocking).
+  // For reels: block if already used on the same account within 14 days (Refactor: 2026-04-29).
+  // Changed from 90 days to 14 days to allow more reels into rotation and prevent empty batches.
+  const REEL_COOLDOWN_DAYS = 14; // was: const RETENTION_DAYS = 90
   const now = new Date();
-  const blockedReels = {}; // file -> Set of accounts it's already been posted to (within 90 days)
+  const blockedReels = {}; // file -> Set of accounts it's already been posted to (within 14 days)
   for (const [file, entry] of Object.entries(used)) {
     if (file.startsWith('_')) continue;
     if (!entry.used_date || entry.type !== 'reel') continue;
     const expiry = new Date(entry.used_date);
-    expiry.setDate(expiry.getDate() + RETENTION_DAYS);
-    if (now >= expiry) continue; // not blocked, past 90 days
+    expiry.setDate(expiry.getDate() + REEL_COOLDOWN_DAYS);
+    if (now >= expiry) continue; // not blocked, past 14 days
     if (!blockedReels[file]) blockedReels[file] = new Set();
     for (const acct of (entry.accounts || [])) {
       blockedReels[file].add(acct);
@@ -186,8 +187,10 @@ function selectReels(count) {
 
   console.log(`   Reel candidates: ${candidates.length}`);
 
-  // Deduplicate by handle — max 1 reel per model per batch
-  const usedHandles = new Set();
+  // Simplified selection (Refactor: 2026-04-29):
+  // - Removed deduplification by handle (allow multiple reels per model)
+  // - Removed duration check (allow any video length)
+  // Result: more reels available, lower chance of empty batch
   const selected = [];
 
   // Shuffle for variety
@@ -195,12 +198,6 @@ function selectReels(count) {
 
   for (const reel of shuffled) {
     if (selected.length >= count) break;
-    if (usedHandles.has(reel.handle)) continue;
-
-    // Skip very short (<3s) or very long (>90s) reels
-    if (reel.duration_seconds && (reel.duration_seconds < 3 || reel.duration_seconds > 90)) continue;
-
-    usedHandles.add(reel.handle);
     selected.push(reel);
   }
 

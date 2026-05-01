@@ -28,8 +28,8 @@ def _load_dotenv(path=None):
             key, _, val = line.partition('=')
             key = key.strip()
             val = val.strip().strip('"').strip("'")
-            # Don't overwrite existing env — caller-set wins over file.
-            os.environ.setdefault(key, val)
+            # Always overwrite — .env file is source of truth for tokens.
+            os.environ[key] = val
 
 _load_dotenv()
 
@@ -51,7 +51,8 @@ headers = {"Authorization": f"Bearer {WITHINGS_ACCESS_TOKEN}"}
 params = {
     "action": "getsummary",
     "startdateymd": yesterday,
-    "enddateymd": today
+    "enddateymd": today,
+    "user_id": WITHINGS_USER_ID
 }
 
 try:
