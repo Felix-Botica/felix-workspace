@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: path.join(process.env.HOME, '.openclaw', '.env'), override: true });
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { spawnSync } = require('child_process');
 
 // Config
 const BASE = path.join(process.env.HOME, '.openclaw', 'nylongerie');
@@ -23,6 +24,7 @@ const CLASSIFY_FILE = path.join(BASE, 'classify-results.json');
 const QUEUE_FILE = path.join(BASE, 'queue.json');
 const USED_FILE = path.join(BASE, 'used-images.json');
 const INBOX = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
+const FALLBACK_VIDEO_FILE = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'archive', 'videos-unassigned.json');
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -44,6 +46,35 @@ const PLACEHOLDERS = new Set([
 
 function isRealHandle(h) {
   return h && !PLACEHOLDERS.has(h) && h !== 'null' && /^@[\w.]+/.test(h);
+}
+
+function inferHandleFromFile(file) {
+  const explicit = file.match(/@([a-zA-Z0-9_.]+)/);
+  if (explicit) return `@${explicit[1].toLowerCase()}`;
+  return '@nylongerie';
+}
+
+function durationSeconds(file) {
+  const full = path.join(INBOX, file);
+  const res = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', full], { encoding: 'utf8' });
+  const n = parseFloat((res.stdout || '').trim());
+  return Number.isFinite(n) ? Math.round(n * 10) / 10 : null;
+}
+
+function videoFallbackPool() {
+  let files = [];
+  try { files = JSON.parse(fs.readFileSync(FALLBACK_VIDEO_FILE, 'utf8')); } catch {}
+  if (!Array.isArray(files) || files.length === 0) {
+    files = fs.readdirSync(INBOX).filter(f => /\.(mp4|mov)$/i.test(f));
+  }
+  return files.map(file => ({
+    type: 'reel',
+    file,
+    handle: inferHandleFromFile(file),
+    style: '',
+    duration_seconds: durationSeconds(file),
+    _fallback: true,
+  }));
 }
 
 // Refactor C (2026-04-22): PAUSED_ACCOUNTS + active account list + style routing
@@ -152,10 +183,14 @@ async function uploadVideoToR2(filePath, key) {
 // Select reels for batch
 function selectReels(count) {
   const RETENTION_DAYS = 90;
-  const results = JSON.parse(fs.readFileSync(CLASSIFY_FILE, 'utf8'));
+  let results = JSON.parse(fs.readFileSync(CLASSIFY_FILE, 'utf8'));
   const used = JSON.parse(fs.readFileSync(USED_FILE, 'utf8'));
   const queue = fs.existsSync(QUEUE_FILE) ? JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8')) : [];
-  const queuedFiles = new Set(queue.map(e => e.file));
+  const queuedFiles = new Set(queue.filter(e => e.status !== 'published' && e.status !== 'rejected').map(e => e.file));
+  if (!results.some(e => e.type === 'reel')) {
+    results = videoFallbackPool();
+    console.log(`   Fallback video pool: ${results.length} local videos`);
+  }
 
   // For reels: block if already used on the same account within 14 days (Refactor: 2026-04-29).
   // Changed from 90 days to 14 days to allow more reels into rotation and prevent empty batches.
@@ -180,6 +215,7 @@ function selectReels(count) {
     if (!isRealHandle(e.handle)) return false;
     if (!fs.existsSync(path.join(INBOX, e.file))) return false;
     if (queuedFiles.has(e.file)) return false;
+    if (e.duration_seconds && (e.duration_seconds < 3 || e.duration_seconds > 90)) return false;
     const targetAccount = routeToAccount(e.style || '').replace('@', '');
     if (blockedReels[e.file] && blockedReels[e.file].has(targetAccount)) return false;
     return true;

@@ -377,21 +377,23 @@ cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
 
 ### C) 1-3 Reels/Tag (12:00 CET)
 
-- Videos from `classify-results-clean.json` with `type: "reel"`
-- Same credit rule as posts: **handle required, no post without credit**
+- Primary videos from `classify-results-clean.json` with `type: "reel"`; fallback to local video inventory when classify has no reel entries.
+- Local fallback inventory: `~/Desktop/nylongerie-content/archive/videos-unassigned.json` and `.mp4` / `.mov` files in `~/Desktop/nylongerie-content/inbox`.
+- Credit rule: explicit `@handle` in filename is used; otherwise neutral `@nylongerie`. Do not infer handles from CDN-hash filenames.
 - Same caption templates as posts (with `#reels` hashtag added)
 - Published via Instagram Graph API with `media_type: REELS`
 - Reels also appear in feed (`share_to_feed: true`)
 - **Always send preview to Topic 3 for Lothar approval before publishing**
 
 ### Reel Stats
-- Total reels in inbox: 253 videos
-- Reels with verified handles: 243
-- Duration range: 3-90 seconds (enforced by selection script)
+- Verified 2026-05-08: fallback pool has 253 local videos.
+- Eligible after duration + queue filters in dry-run: 248.
+- Duration range: 3-90 seconds, enforced via `ffprobe`.
 
 ### Reel Workflow
 1. **Select reels:** `node ~/.openclaw/workspace/nylongerie-create-reel-batch.js --count 3`
-   - Picks reels with real handles, not yet used, 1 per model
+   - Picks classified reels when available; otherwise uses the local fallback video pool
+   - Skips videos already queued with active statuses; published/rejected queue history does not permanently block a video
    - Uploads video to R2 under `reels/` prefix
    - Creates queue entries with `type: "reel"` + `video_url`
    - Updates `used-images.json`
@@ -406,9 +408,13 @@ cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
 - **Create batch:** `~/.openclaw/workspace/nylongerie-create-reel-batch.js --count N [--dry-run]`
 - **Publish:** `pipelines/post/publish.js` (same script as posts, auto-detects reels)
 
-### Account Routing (same as posts)
-- Reels without style classification default to @nylondarling (flagship)
-- Style-based routing applies if style is set
+### Account Routing
+- Style-based routing applies if style is set.
+- Reels without style classification rotate deterministically across active non-paused accounts.
+
+### Cron Status
+- Active via LaunchAgent `ai.openclaw.cron.nylongerie-reel` at 12:00 Europe/Berlin.
+- OpenClaw `cron/jobs.json` Nylongerie REEL entry is intentionally disabled to avoid duplicate agent-driven runs.
 
 ---
 

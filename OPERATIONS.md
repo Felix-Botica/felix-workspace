@@ -1,7 +1,7 @@
 # OPERATIONS.md — Felix Operational Knowledge
 
 _Single source of truth for models, infrastructure, tools, crons, tokens, and rules._
-_Updated: 2026-04-12 17:00 CET_
+_Updated: 2026-05-08 14:00 CET_
 
 ---
 
@@ -39,21 +39,22 @@ _Updated: 2026-04-12 17:00 CET_
 
 | Role | Model | Purpose |
 |------|-------|---------|
-| **Primary** | minimax/MiniMax-M2.7 | 205k ctx, for EVERYTHING |
-| **Fallback 1** | google/gemini-2.5-flash | 1M ctx |
-| **Fallback 2** | anthropic/claude-haiku-4-5 | |
+| **Default** | google/gemini-2.5-flash | Routine execution and concise synthesis |
+| **Fast** | google/gemini-2.5-flash-lite | Cheap/simple extraction and short classification |
+| **Premium reasoning** | google/gemini-2.5-pro | Newsletter topics/content, X/Reddit/content intelligence, system review synthesis |
 | **Vision** | google/gemini-2.5-flash | Image classification, handle extraction |
 
-- **MiniMax API:** ✅ WORKING — baseUrl: `https://api.minimax.io/anthropic/v1`, Bearer auth
-- **🔴 ABSOLUTES VERBOT:** NIEMALS `anthropic/claude-opus-*` oder `gemini-2.5-pro` verwenden
+- **Anthropic:** do not use as default or fallback.
+- **MiniMax:** legacy provider; do not route new cron/agent work there unless explicitly requested.
+- **Premium model guardrail:** use `gemini-2.5-pro` only where real reasoning is needed, not for deterministic plumbing.
 
 ## Agent Architecture
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| main (Felix) | minimax/MiniMax-M2.7 | Lothar's personal agent |
-| observer | anthropic/claude-haiku-4-5 | Silent logger for non-Lothar WhatsApp/Telegram |
-| nylongerie | minimax/MiniMax-M2.7 | Instagram content management (isolated workflow) |
+| main (Felix) | google/gemini-2.5-flash default; gemini-2.5-pro for reasoning slices | Lothar's personal agent |
+| observer | google/gemini-2.5-flash-lite | Silent logger for non-Lothar WhatsApp/Telegram |
+| nylongerie | google/gemini-2.5-flash default; gemini-2.5-pro for newsletter/content reasoning | Instagram content management (isolated workflow) |
 
 ---
 
@@ -139,12 +140,19 @@ gog auth status
 
 ---
 
-## Cron Jobs (10 Active)
+## Cron Jobs (LaunchAgent Source of Truth)
 
-Morning Briefing, Evening Digest, Wind-Down, Felix Inbox Check, Weekly Newsletter, Integration Healthcheck, Nightly Backup, Brevo-Shopify Sync, Weekly System Review, Token Refresh (every 2h, timeout 120s), Nylongerie Daily STORY (11:00)
+Deterministic jobs run via `~/Library/LaunchAgents/ai.openclaw.cron.*.plist` and `~/.openclaw/scripts/cron-runner.sh`. OpenClaw `cron/jobs.json` entries are intentionally disabled to avoid duplicate agent-session drift.
+
+Active Nylongerie LaunchAgents:
+- `nylongerie-recycle` daily 09:00 — current daily POST source
+- `nylongerie-story` daily 11:00
+- `nylongerie-reel` daily 12:00
+
+No `nylongerie-post` LaunchAgent is loaded. The pre-approved-pool POST pipeline remains off unless deliberately re-enabled.
 
 **External Monitors (crontab):** gateway-health (5min), briefing-monitor (07:45), digest-monitor (20:45 + retries)
-**Disabled:** WA Inbox Digest (heartbeat-run mid-April while token refresh was broken — now fixed), Nylongerie Daily POST (disabled, was running via nylongerie subagent heartbeat Apr 12-18 — crons repaired Apr 19, main agent handles now), Weekly Classification
+**Disabled:** WA Inbox Digest (heartbeat-run mid-April while token refresh was broken — now fixed), Nylongerie Daily POST / pre-approved pool, Weekly Classification, all OpenClaw `cron/jobs.json` agent crons.
 
 ### Cron Mandatory Config
 
@@ -156,7 +164,7 @@ Every cron job MUST have:
     "message": "...",
     "lightContext": true,
     "timeoutSeconds": 120,
-    "model": "minimax/MiniMax-M2.7"
+    "model": "google/gemini-2.5-flash"
   },
   "delivery": {
     "mode": "announce",
@@ -202,7 +210,7 @@ openclaw cron runs <job-id> --json | jq '.entries[0] | {status, deliveryStatus, 
 | **Shopify** | ✅ Permanent | ∞ | N/A |
 | **Brevo** | ✅ Permanent | ∞ | N/A |
 | **X/Twitter** | ❌ Broken | ∞ | 401 auth — deferred |
-| **MiniMax** | ✅ Valid | Balance-based | N/A |
+| **MiniMax** | Legacy / not routed | Balance-based | N/A |
 
 ### Token Automation
 
@@ -346,7 +354,7 @@ When receiving a heartbeat poll, use it productively — don't just reply `HEART
 - `openclaw doctor --fix`
 - Overwrite `series-map-final.json`
 - `classify-results.json` without `--output` flag
-- Use Opus or gemini-2.5-pro
+- Use Anthropic/Opus. Use `gemini-2.5-pro` only for explicit premium reasoning slices, never deterministic plumbing.
 - `openclaw config` (destructive)
 - `sed` on openclaw.json
 - Trust Felix self-reported status without `pgrep`

@@ -32,7 +32,7 @@
 - [ ] B2: Headlines & Captions for Conversion (needs E2 data first)
 - [ ] A2: KPI Tracking & Learning Loop (needs E2)
 - [ ] B3: AI-Ready SEO — Classic Shopify first, GEO second
-- [x] A8: Reels Pipeline — DONE. 243/253 reels with handles. Script: `nylongerie-create-reel-batch.js`. Cron: Daily 12:00. First reel published 2026-04-14.
+- [x] A8: Reels Pipeline — DONE. Script: `nylongerie-create-reel-batch.js`. LaunchAgent: Daily 12:00. Current behavior: classified reels when present, otherwise local fallback pool (253 videos, 248 eligible verified 2026-05-08); neutral `@nylongerie` when no explicit handle exists. First reel published 2026-04-14.
 - [ ] A4: Content Pool Auto-Ingestion — R2 inbox → classify-v2 → merge
 - [ ] B4: Model CRM — approved models → managed roster → follow-up cadence
 - [ ] B1: Content Newsletter — nylons in movies, history, culture
@@ -57,7 +57,7 @@
 - openclaw doctor --fix
 - Overwrite series-map-final.json
 - classify-results.json without --output flag
-- Opus or gemini-2.5-pro
+- Opus/Anthropic. Use gemini-2.5-pro only for explicit premium reasoning slices, never deterministic plumbing.
 - openclaw config (destructive)
 - sed on openclaw.json
 - Trust Felix self-reported status without pgrep
