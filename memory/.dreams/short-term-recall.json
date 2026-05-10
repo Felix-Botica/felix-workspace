@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-27T08:02:48.768Z",
+  "updatedAt": "2026-05-09T14:52:03.171Z",
   "entries": {
     "memory:memory/2026-04-17.md:1:27": {
       "key": "memory:memory/2026-04-17.md:1:27",
@@ -206,19 +206,21 @@
       "endLine": 27,
       "source": "memory",
       "snippet": "# 2026-04-26 Daily Notes ## Pipeline Status ✅ ### Morning Batch (09:00) - **5 posts selected** — consistent with yesterday - Previews sent to Telegram (Topic 3) **Selected posts:** 1. @legfashion → @jonna_wester | IMG_0235.jpg | fishnet (reused from Mar 9 — check if allowed) 2. @blackshinynylon → @olgavvvvvvvv | IMG_1011.jpg | black stockings (new) 3. @nextdoornylon → @nita_kuzmina | IMG_1272.jpg | black tights (new) 4. @nylongerie → @karolinamalisova | IMG_3521.jpg | patterned stockings (repeating) 5. @planetnylon → @blondbond007 | IMG_2086.jpg | fishnet leggings (new) **Exhausted:** @nylondarling, @shinynylonstar (still) **Queue:** 24 items ### Promo Story - Product: **Glossy Dress an",
-      "recallCount": 2,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.8822082735450016,
+      "totalScore": 1.2578562967804927,
       "maxScore": 0.44746505156936783,
       "firstRecalledAt": "2026-04-27T08:02:48.747Z",
-      "lastRecalledAt": "2026-04-27T08:02:48.768Z",
+      "lastRecalledAt": "2026-05-09T14:52:03.171Z",
       "queryHashes": [
         "2ebe3c351415",
-        "debda3a3efd2"
+        "debda3a3efd2",
+        "389095ed3f26"
       ],
       "recallDays": [
-        "2026-04-27"
+        "2026-04-27",
+        "2026-05-09"
       ],
       "conceptTags": [
         "jonna-wester",
@@ -269,18 +271,20 @@
       "endLine": 28,
       "source": "memory",
       "snippet": "# 2026-04-24 Daily Notes ## Pipeline Fix Applied ### Morning Batch (09:00) ❌ BROKEN → ✅ FIXED After 4 days of failures (MODULE_NOT_FOUND), I restored both missing scripts: - ✅ Restored `nylongerie-select-batch-v2.js` from `archived/` → back to `~/.openclaw/workspace/` - ✅ Restored `nylongerie-create-batch.js` from `archived/` → back to `~/.openclaw/workspace/` - Pipeline should work again tomorrow (Apr 25) ### Promo Story (Apr 24) - Theme: Spring Collection - Product: 20D Ultra-Sheer Jacquard Core-spun Silk Tights - DRY RUN → sent to Telegram Topic 3 ## ⚠️ Still Needs Fix: Promo Story Cron **File:** `~/.openclaw/scripts/nylongerie-daily.sh` (line with promo-story.js) **Issue:** Hardc",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.4154413844042195,
+      "totalScore": 0.7794239642385479,
       "maxScore": 0.4154413844042195,
       "firstRecalledAt": "2026-04-27T08:02:48.747Z",
-      "lastRecalledAt": "2026-04-27T08:02:48.747Z",
+      "lastRecalledAt": "2026-05-09T14:52:03.171Z",
       "queryHashes": [
-        "2ebe3c351415"
+        "2ebe3c351415",
+        "389095ed3f26"
       ],
       "recallDays": [
-        "2026-04-27"
+        "2026-04-27",
+        "2026-05-09"
       ],
       "conceptTags": [
         "module-not-found",
@@ -332,18 +336,20 @@
       "endLine": 29,
       "source": "memory",
       "snippet": "# 2026-04-25 Daily Notes ## Pipeline Status ✅ RESTORED ### Morning Batch (09:00) ✅ - **5 posts selected** (up from 2 on Apr 20) - Previews sent to Telegram (Topic 3) - Pipeline fully functional again **Selected posts:** 1. @legfashion → @excinderella | IMG_0994.jpg | fishnet (new model!) 2. @blackshinynylon → @hey_letmeplay | IMG_1001.jpg | black stockings (account back!) 3. @nextdoornylon → @arinaeagle | IMG_1616.jpg | black tights 4. @nylongerie → @cantarina_bice | IMG_3156.jpg | patterned stockings 5. @planetnylon → @adina.tatiana | IMG_2279.jpg | white knee-highs (new model!) **Accounts still exhausted:** @nylondarling, @shinynylonstar **Queue stats:** Only 16 items in queue (was 17",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.4264520797072305,
+      "totalScore": 0.7950719266299814,
       "maxScore": 0.4264520797072305,
       "firstRecalledAt": "2026-04-27T08:02:48.768Z",
-      "lastRecalledAt": "2026-04-27T08:02:48.768Z",
+      "lastRecalledAt": "2026-05-09T14:52:03.171Z",
       "queryHashes": [
-        "debda3a3efd2"
+        "debda3a3efd2",
+        "389095ed3f26"
       ],
       "recallDays": [
-        "2026-04-27"
+        "2026-04-27",
+        "2026-05-09"
       ],
       "conceptTags": [
         "img-0994.jpg",

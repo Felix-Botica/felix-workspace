@@ -1,7 +1,7 @@
 # OPERATIONS.md — Felix Operational Knowledge
 
 _Single source of truth for models, infrastructure, tools, crons, tokens, and rules._
-_Updated: 2026-05-08 14:00 CET_
+_Updated: 2026-05-09 12:45 CET_
 
 ---
 
@@ -18,7 +18,7 @@ _Updated: 2026-05-08 14:00 CET_
 - **Botica.tech** — AI Agents (Seger/Voxa, Festo, ScienceNow)
 - **Nylongerie** — E-Commerce + Instagram (490K+ Follower, 7 active + 1 paused account)
   - **Alle 8 Accounts:** @nylondarling (254K), @nylongerie (46K), @legfashion (46K), @shinynylonstar (33K), @blackshinynylon (7.5K), @nextdoornylon (4.5K), @planetnylon (2K) — @nyloncherie (58K) PAUSED
-  - **Posting-Ziel:** 5 Posts/Tag, 1 Story/Tag mit Promocode
+  - **Posting-Ziel:** Feed-Post-Drafts via RECYCLE only, 1 Story/Tag mit Promocode, 1 Reel/Tag
 - **Manheimer Berlin** — E-Commerce
 
 ## Key Relationships
@@ -145,11 +145,11 @@ gog auth status
 Deterministic jobs run via `~/Library/LaunchAgents/ai.openclaw.cron.*.plist` and `~/.openclaw/scripts/cron-runner.sh`. OpenClaw `cron/jobs.json` entries are intentionally disabled to avoid duplicate agent-session drift.
 
 Active Nylongerie LaunchAgents:
-- `nylongerie-recycle` daily 09:00 — current daily POST source
+- `nylongerie-recycle` daily 09:00 — only active feed-post draft source
 - `nylongerie-story` daily 11:00
 - `nylongerie-reel` daily 12:00
 
-No `nylongerie-post` LaunchAgent is loaded. The pre-approved-pool POST pipeline remains off unless deliberately re-enabled.
+No `nylongerie-post` LaunchAgent is loaded. The pre-approved-pool/direct POST pipeline is disabled and must not be re-enabled without Lothar's explicit written approval.
 
 **External Monitors (crontab):** gateway-health (5min), briefing-monitor (07:45), digest-monitor (20:45 + retries)
 **Disabled:** WA Inbox Digest (heartbeat-run mid-April while token refresh was broken — now fixed), Nylongerie Daily POST / pre-approved pool, Weekly Classification, all OpenClaw `cron/jobs.json` agent crons.

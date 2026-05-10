@@ -96,7 +96,7 @@ Neue Lessons werden nach Fehlern hinzugefügt. Nicht prophylaktisch — nur aus 
     "social_media_post": [
       "Bild-Review (Nischen-Fit)",
       "Caption-Check (Hashtags, Mentions)",
-      "Account-Cooldown (nicht >5 Posts/Tag)"
+      "Account-Cooldown (RECYCLE feed-post drafts only)"
     ],
     "shopify_discount": [
       "Bestehende aktive Codes prüfen",

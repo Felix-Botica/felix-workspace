@@ -26,6 +26,9 @@ const USED_FILE = path.join(BASE, 'used-images.json');
 const INBOX = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'inbox');
 const FALLBACK_VIDEO_FILE = path.join(process.env.HOME, 'Desktop', 'nylongerie-content', 'archive', 'videos-unassigned.json');
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
+const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
+const TG_CHAT_ID = process.env.TG_CHAT_ID || '-1003775282698';
+const TG_TOPIC_ID = process.env.TOPIC_NYLONGERIE || '3';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const SPECIFIC_FILE = (() => {
@@ -36,6 +39,7 @@ const COUNT = (() => {
   const idx = process.argv.indexOf('--count');
   return idx >= 0 ? parseInt(process.argv[idx + 1], 10) : 7;
 })();
+const RESEND_EXISTING = process.argv.includes('--resend-existing');
 
 const PLACEHOLDERS = new Set([
   '@username', '@handle if visible else null', '@username or null',
@@ -156,6 +160,62 @@ function generateHeadline(style) {
   return headlines[style] || 'Style in motion';
 }
 
+function telegramSendMessage(text) {
+  if (!TG_BOT_TOKEN) return false;
+  const args = [
+    '-sS', '--max-time', '20', '-X', 'POST',
+    `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`,
+    '-d', `chat_id=${TG_CHAT_ID}`,
+    '-d', `message_thread_id=${TG_TOPIC_ID}`,
+    '--data-urlencode', `text=${text}`,
+    '-d', 'parse_mode=Markdown',
+  ];
+  return spawnSync('curl', args, { encoding: 'utf8', timeout: 30000 }).status === 0;
+}
+
+function telegramSendVideo(draft) {
+  if (!TG_BOT_TOKEN || !draft.video_url) return false;
+  const caption = `🎬 *Reel Draft ${draft.id}*
+
+*Account:* ${draft.account}
+*Model:* ${draft.model}
+*Duration:* ${draft.duration_seconds || '?'}s
+
+${draft.caption_headline}
+
+👍 Senden | ✏️ Ändern | ❌ Ignorieren`;
+  const args = [
+    '-sS', '--max-time', '90', '-X', 'POST',
+    `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendVideo`,
+    '-F', `chat_id=${TG_CHAT_ID}`,
+    '-F', `message_thread_id=${TG_TOPIC_ID}`,
+    '-F', `video=${draft.video_url}`,
+    '-F', `caption=${caption}`,
+    '-F', 'parse_mode=Markdown',
+  ];
+  return spawnSync('curl', args, { encoding: 'utf8', timeout: 100000 }).status === 0;
+}
+
+function deliverDraftsToTelegram(drafts) {
+  if (!drafts.length) return true;
+  if (!TG_BOT_TOKEN) {
+    console.log('⚠️ Telegram delivery skipped: TG_BOT_TOKEN not configured');
+    return false;
+  }
+  let ok = true;
+  for (const draft of drafts) {
+    const sent = telegramSendVideo(draft);
+    console.log(`   Telegram ${sent ? '✅ sent' : '❌ failed'}: ${draft.id}`);
+    ok = ok && sent;
+  }
+  const summary = `📋 *Reel Batch ${new Date().toISOString().slice(0, 10)} — ${drafts.length} Draft${drafts.length === 1 ? '' : 's'} zur Freigabe*
+
+Antworte mit 👍 für alle oder nenne die Nummern.
+⚠️ Nichts wird gepostet ohne dein OK.`;
+  telegramSendMessage(summary);
+  return ok;
+}
+
 // R2 Upload
 const s3 = new S3Client({
   region: 'auto',
@@ -244,6 +304,15 @@ async function createReelBatch() {
   console.log(`\n🎬 Reel Batch Creator`);
   console.log(`   Mode: ${DRY_RUN ? '🧪 DRY RUN' : '🔴 LIVE'}\n`);
 
+  if (RESEND_EXISTING) {
+    const queue = fs.existsSync(QUEUE_FILE) ? JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8')) : [];
+    const today = new Date().toISOString().slice(0, 10);
+    const drafts = queue.filter(d => d.type === 'reel' && d.status === 'draft_sent' && String(d.created || '').startsWith(today));
+    console.log(`   Resending ${drafts.length} existing reel draft(s) from today`);
+    if (!deliverDraftsToTelegram(drafts)) process.exit(1);
+    return;
+  }
+
   let reels;
 
   if (SPECIFIC_FILE) {
@@ -268,6 +337,19 @@ async function createReelBatch() {
   const queue = fs.existsSync(QUEUE_FILE) ? JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8')) : [];
   const used = JSON.parse(fs.readFileSync(USED_FILE, 'utf8'));
   const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
+  const existingTodayNumbers = new Set(
+    queue
+      .filter(d => d.type === 'reel' && typeof d.id === 'string')
+      .map(d => d.id.match(new RegExp(`^reel-${today}-(\\d+)$`)))
+      .filter(Boolean)
+      .map(match => Number(match[1]))
+  );
+  let nextTodayNumber = 1;
+  function nextDraftId() {
+    while (existingTodayNumbers.has(nextTodayNumber)) nextTodayNumber += 1;
+    existingTodayNumbers.add(nextTodayNumber);
+    return `reel-${today}-${nextTodayNumber}`;
+  }
   const drafts = [];
 
   for (let i = 0; i < reels.length; i++) {
@@ -295,7 +377,7 @@ async function createReelBatch() {
     }
 
     const draft = {
-      id: `reel-${today}-${i + 1}`,
+      id: nextDraftId(),
       type: 'reel',
       file: reel.file,
       model: reel.handle,
@@ -334,6 +416,11 @@ async function createReelBatch() {
   console.log(`\n📊 BATCH SUMMARY`);
   console.log(`   Reels created: ${drafts.length}`);
   drafts.forEach(d => console.log(`   ${d.id}: ${d.file} → ${d.account} (${d.model})`));
+
+  if (!DRY_RUN) {
+    console.log(`\n📨 Telegram delivery`);
+    if (!deliverDraftsToTelegram(drafts)) process.exit(1);
+  }
 
   // Output JSON for downstream use
   console.log('\n' + JSON.stringify(drafts, null, 2));

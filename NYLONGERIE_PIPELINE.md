@@ -32,7 +32,7 @@ If this summary disagrees with ACCOUNT_RULES.md, ACCOUNT_RULES.md wins and this 
 - **Queue:** `~/.openclaw/nylongerie/queue.json`
 - **Classifications:** `~/.openclaw/nylongerie/classify-results-clean.json` (active — 438 images)
 - **Series Map:** `~/.openclaw/nylongerie/series-map-final.json` (🔴 NEVER overwrite — 12hr Ollama run)
-- **Used Images:** `~/.openclaw/nylongerie/used-images.json` (single source of truth, managed by `pipelines/post/select.js` + `pipelines/post/publish.js`)
+- **Used Images:** `~/.openclaw/nylongerie/used-images.json` (single source of truth for published feed/reel media; updated by `pipelines/post/publish.js` and reel creation. Direct POST selection is disabled.)
 - **Banned Images:** `~/.openclaw/nylongerie/banned-images.json`
 - **Story Templates:** `~/.openclaw/nylongerie/story-templates.js`
 
@@ -44,15 +44,15 @@ When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check these fi
 
 ### 1. Post/Reel/Recycle Queue (unified — SSOT: `queue.json`)
 
-Check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"`. The queue contains entries from **all** pipelines — POST, REEL, and RECYCLE — distinguished by the `type` field:
+Check `~/.openclaw/nylongerie/queue.json` for entries with `status: "draft_sent"`. The queue contains entries from **active** pipelines — REEL and RECYCLE — distinguished by the `type` field:
 
-  - `type: "post"` — daily POST pipeline (id prefix `draft-YYYYMMDD-N`)
   - `type: "reel"` — daily REEL pipeline (id prefix `draft-YYYYMMDD-N` with `video_url`)
   - `type: "recycle-post"` — daily RECYCLE archive pipeline (id prefix `recycle-YYYYMMDD-N`)
+  - missing/`type: "post"` with id prefix `draft-YYYYMMDD-N` — legacy direct POST draft; should not be created. Treat as an error unless it is old history.
 
 Display **all** pending drafts (any type) with: `id`, target `account`, `file` (or R2 preview URL), `model` / source credit, caption snippet. Format rows uniformly so Lothar's "1", "2", "3" references are unambiguous — and ALWAYS show the id explicitly in the list header so the mapping is clear.
 
-If Lothar's approval wording is ambiguous (e.g. "publish 1 and 2" when pending entries span both POST and RECYCLE), ask for clarification before acting. Do NOT assume "1" means the POST draft.
+If Lothar's approval wording is ambiguous (e.g. "publish 1 and 2" when pending entries span REEL and RECYCLE), ask for clarification before acting.
 
 **On approval (👍, "approve", "ja", "publish"):**
 1. Set entry status to `"approved"` in queue.json
@@ -61,7 +61,7 @@ If Lothar's approval wording is ambiguous (e.g. "publish 1 and 2" when pending e
 3. Report result to Topic 3
 
 **On rejection (👎, "reject", "nein", or specific ID):**
-1. Set entry status to `"rejected"` in queue.json. For POST entries, select.js will auto-seed `rejected-drafts.json` on the next run.
+1. Set entry status to `"rejected"` in queue.json.
 2. Report rejection to Topic 3 with reason if provided.
 
 ### 2. Newsletter State
@@ -83,12 +83,12 @@ Check `~/.openclaw/nylongerie/newsletter-state.json` for current status:
 
 ## Daily Batch (3 parts + weekly newsletter)
 
-### A) 5 Posts/Tag (10:00 CET)
+### A) Feed Posts via RECYCLE Only (09:00 CET)
 
-- Across 7 active accounts (rotation ensures regular content)
-- Priority: @nylondarling (daily), @legfashion (4x/week), rest (2-3x/week)
-- Morning batch proposal in Topic 3 for approval
-- **🔴 KEIN POST OHNE CREDIT** — Model must be credited: handle tagged in caption. Images without known handle are NOT posted.
+- The only active feed-post draft creator is `pipelines/recycle/select.js`.
+- Direct daily POST generation from the pre-approved/image pool is disabled.
+- RECYCLE creates archive-based feed-post drafts for approval in Topic 3.
+- **🔴 KEIN POST OHNE CREDIT** — Model/source credit must be present where applicable.
 
 ### B) 1 Story/Tag (11:00 CET)
 
@@ -139,8 +139,8 @@ Series linking propagates handles from screenshots to adjacent content images.
 **File:** `~/.openclaw/nylongerie/used-images.json`
 **Rule:** Do NOT reuse an image for the same account for 90 days. Cross-account usage is allowed.
 
-**Single Source of Truth:** `pipelines/post/select.js` + `pipelines/post/publish.js` manage this automatically.
-- Selection (Refactor C): marks image as `selected` in used-images.json immediately when picked
+**Single Source of Truth:** `pipelines/post/publish.js` records published feed/reel media. RECYCLE usage is tracked separately in `pipelines/_state/recycle-history.json`.
+- Direct POST selection is disabled and must not mark images as selected.
 - Publish: updates status to `published` and records `ig_post_id` (skipped for `type: "recycle-post"` which is tracked in `pipelines/_state/recycle-history.json` instead)
 - Blocking: image blocked for account X if `used_date + 90 days > today` AND `accounts[]` includes X
 
@@ -347,11 +347,11 @@ Shiny Nylon Star™ legal notice: All copyrights belong to the model, brand or p
 **DO NOT** select images manually, crop manually, or build captions manually.
 Every pipeline has ONE script that does everything end-to-end. Run from `~/.openclaw` (repo root).
 
-### POST Pipeline
+### Direct POST Pipeline
 ```bash
 cd /Users/lothareckstein/.openclaw && node pipelines/post/select.js
 ```
-→ Selects, crops, uploads to R2, generates captions, creates queue entries. Done.
+→ Disabled. This command exits non-zero by design. Do not run it to create drafts.
 
 ### REEL Pipeline
 ```bash
@@ -369,7 +369,7 @@ cd /Users/lothareckstein/.openclaw && node pipelines/recycle/select.js
 ```bash
 cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
 ```
-→ Publishes all entries with `status: "approved"`, regardless of `type`. Auto-detects POST/REEL/recycle-post. Updates used-images.json for POST/REEL (recycle tracked separately in `pipelines/_state/recycle-history.json`).
+→ Publishes all entries with `status: "approved"`, regardless of `type`. Auto-detects REEL/recycle-post and legacy approved POST entries. Updates used-images.json for published feed/reel media (recycle tracked separately in `pipelines/_state/recycle-history.json`).
 
 ---
 
@@ -424,7 +424,7 @@ All pipeline scripts live under `~/.openclaw/pipelines/` and read rules from `~/
 
 | Pipeline | Script | Command |
 |---|---|---|
-| **POST** | `pipelines/post/select.js` | `cd ~/.openclaw && node pipelines/post/select.js` |
+| **POST selection** | disabled guard | Direct daily POST selection is disabled; use RECYCLE for feed-post drafts |
 | **REEL** | `workspace/nylongerie-create-reel-batch.js` | `cd ~/.openclaw && node workspace/nylongerie-create-reel-batch.js --count N` |
 | **STORY** | `pipelines/story/promo.js` | `cd ~/.openclaw && node pipelines/story/promo.js --theme X --discount N --code X` |
 | **RECYCLE** | `pipelines/recycle/select.js` | `cd ~/.openclaw && node pipelines/recycle/select.js` |
@@ -434,13 +434,17 @@ All pipeline scripts live under `~/.openclaw/pipelines/` and read rules from `~/
 | **SUBMISSIONS — TRIAGE** | `pipelines/submissions/triage.js` | `cd ~/.openclaw && node pipelines/submissions/triage.js` |
 | **SUBMISSIONS — PROCESS** | `pipelines/submissions/process.js` | `cd ~/.openclaw && node pipelines/submissions/process.js approve\|decline\|status` |
 
-**Deprecated (stubs exit 2 with pointer; do NOT invoke):**
-- `nylongerie/nylongerie-select-v3.js` → use `pipelines/post/select.js`
+**Deprecated / disabled (do NOT invoke):**
+- `scripts/nylongerie-daily.sh` → disabled no-op guard; if invoked, it must create no drafts.
+- `workspace/nylongerie-select-batch-v2.js` → deleted.
+- `workspace/nylongerie-create-batch.js` → deleted.
+- `pipelines/post/select.js` → disabled guard; feed-post drafts come from RECYCLE only.
+- `nylongerie/nylongerie-select-v3.js` → disabled legacy; do not resurrect direct POST selection.
 - `nylongerie/nylongerie-publish.js` → use `pipelines/post/publish.js`
 - `nylongerie/promo-story.js` → use `pipelines/story/promo.js`
 
 **Preflight invariants (run automatically before every cron):**
-`cd ~/.openclaw && bash scripts/preflight.sh` — 14 green checks. If any fails, pipeline aborts.
+`cd ~/.openclaw && bash scripts/preflight.sh` — includes `scripts/nylongerie-post-disabled-audit.js`. If any check fails, pipeline aborts.
 
 **Utility Scripts (bei Bedarf):**
 - `workspace/nylongerie-classify-local.js` — Neue Bilder klassifizieren
