@@ -183,9 +183,9 @@ Every cron job MUST have:
 | Symptom | Fix |
 |---------|-----|
 | "Outbound not configured for channel: telegram" | Add `lightContext: true` to payload |
-| Cron runs but doesn't deliver | Check delivery target format: `telegram:-1003775282698:<topic_id>` |
-| Cron times out | Increase `timeoutSeconds` (default 120, max 300) |
-| Wrong model or old instructions | `openclaw cron update <job-id> --patch '{...}'` |
+| Deterministic cron runs but doesn't deliver | Check `~/.openclaw/logs/cron-runner/<job>.latest.log` and Telegram send output |
+| Deterministic cron times out | Run through `~/.openclaw/scripts/cron-runner.sh <job>` with a larger `FELIX_CRON_TIMEOUT_SECONDS` only for that trial |
+| Wrong model or old instructions | Update `~/.openclaw/config/deterministic-schedule.json`, `~/.openclaw/scripts/cron-runner.sh`, or the relevant pipeline README; OpenClaw `cron/jobs.json` is disabled |
 
 ### Testing Protocol
 
@@ -193,8 +193,9 @@ Every cron job MUST have:
 **Require approval:** Content generation, email campaigns, external writes
 
 ```bash
-openclaw cron run <job-id>
-openclaw cron runs <job-id> --json | jq '.entries[0] | {status, deliveryStatus, error}'
+cd ~/.openclaw
+FELIX_CRON_TIMEOUT_SECONDS=300 scripts/cron-runner.sh <job-name>
+tail -80 ~/.openclaw/logs/cron-runner/<job-name>.latest.log
 ```
 
 ---

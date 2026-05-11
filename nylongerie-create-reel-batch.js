@@ -170,7 +170,24 @@ function telegramSendMessage(text) {
     '--data-urlencode', `text=${text}`,
     '-d', 'parse_mode=Markdown',
   ];
-  return spawnSync('curl', args, { encoding: 'utf8', timeout: 30000 }).status === 0;
+  return telegramCurlOk(args, 30000);
+}
+
+function telegramCurlOk(args, timeout) {
+  const result = spawnSync('curl', args, { encoding: 'utf8', timeout });
+  if (result.status !== 0) {
+    if (result.stderr) console.error(result.stderr.trim());
+    return false;
+  }
+  try {
+    const data = JSON.parse(result.stdout || '{}');
+    if (data.ok) return true;
+    console.error(`Telegram API rejected request: ${data.description || result.stdout.slice(0, 300)}`);
+    return false;
+  } catch (e) {
+    console.error(`Telegram response was not JSON: ${(result.stdout || result.stderr || '').slice(0, 300)}`);
+    return false;
+  }
 }
 
 function telegramSendVideo(draft) {
@@ -193,7 +210,7 @@ ${draft.caption_headline}
     '-F', `caption=${caption}`,
     '-F', 'parse_mode=Markdown',
   ];
-  return spawnSync('curl', args, { encoding: 'utf8', timeout: 100000 }).status === 0;
+  return telegramCurlOk(args, 100000);
 }
 
 function deliverDraftsToTelegram(drafts) {
@@ -212,7 +229,7 @@ function deliverDraftsToTelegram(drafts) {
 
 Antworte mit 👍 für alle oder nenne die Nummern.
 ⚠️ Nichts wird gepostet ohne dein OK.`;
-  telegramSendMessage(summary);
+  ok = telegramSendMessage(summary) && ok;
   return ok;
 }
 

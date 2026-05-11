@@ -1,6 +1,6 @@
-# NYLONGERIE_PIPELINE.md — Instagram Posting Pipeline & Protocol
+# NYLONGERIE_PIPELINE.md — Nylongerie Pipeline Summary
 
-> Canonical file for Nylongerie posting workflow.
+> Operational summary only. Canonical pipeline rules live in `~/.openclaw/PIPELINES.md` and the linked `~/.openclaw/pipelines/*/README.md` files.
 > For **which accounts are active vs paused**, the single source of truth is [ACCOUNT_RULES.md](./ACCOUNT_RULES.md). This file describes the pipeline; it does not re-declare posting authority.
 
 ---
@@ -38,9 +38,17 @@ If this summary disagrees with ACCOUNT_RULES.md, ACCOUNT_RULES.md wins and this 
 
 ---
 
-## ⚡ Topic 3 Context Rule
+## Topic 3 Approval Rule
 
-When Felix receives a message in **Topic 3 (NylonGerie)**, ALWAYS check these files before responding:
+The standard Topic 3 path is deterministic middleware, not an LLM reply:
+
+```bash
+cd /Users/lothareckstein/.openclaw && node scripts/nylongerie-approval-middleware.js
+```
+
+It runs every minute via `ai.openclaw.cron.nylongerie-approval-middleware`, reads Topic 3 replies, and dispatches newsletter / REEL / RECYCLE / submission approvals. Felix should not answer from stale session context.
+
+Manual fallback only, if the middleware is down:
 
 ### 1. Post/Reel/Recycle Queue (unified — SSOT: `queue.json`)
 
@@ -54,7 +62,7 @@ Display **all** pending drafts (any type) with: `id`, target `account`, `file` (
 
 If Lothar's approval wording is ambiguous (e.g. "publish 1 and 2" when pending entries span REEL and RECYCLE), ask for clarification before acting.
 
-**On approval (👍, "approve", "ja", "publish"):**
+**On approval (thumbs-up, "approve", "ja", "publish"):**
 1. Set entry status to `"approved"` in queue.json
 2. Run: `cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js --id <ENTRY_ID>`
    — The same `publish.js` handles POST, REEL, and RECYCLE entries; it dispatches on `entry.type`.
@@ -78,6 +86,8 @@ Check `~/.openclaw/nylongerie/newsletter-state.json` for current status:
 **If Lothar replies "abbrechen" / "cancel" / "nein":**
 → Run: `cd /Users/lothareckstein/.openclaw/nylongerie && node newsletter-build.js reset`
 → Confirm cancellation in Topic 3
+
+Do not mention the newsletter while handling REEL/RECYCLE unless `newsletter-state.json` is actually pending.
 
 ---
 
@@ -349,9 +359,9 @@ Every pipeline has ONE script that does everything end-to-end. Run from `~/.open
 
 ### Direct POST Pipeline
 ```bash
-cd /Users/lothareckstein/.openclaw && node pipelines/post/select.js
+cd /Users/lothareckstein/.openclaw && node pipelines/recycle/select.js
 ```
-→ Disabled. This command exits non-zero by design. Do not run it to create drafts.
+→ Direct POST selection is disabled. Feed-post drafts are created by RECYCLE only.
 
 ### REEL Pipeline
 ```bash
@@ -367,9 +377,9 @@ cd /Users/lothareckstein/.openclaw && node pipelines/recycle/select.js
 
 ### Publish (after Lothar approves — all types)
 ```bash
-cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
+cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js --id <ENTRY_ID>
 ```
-→ Publishes all entries with `status: "approved"`, regardless of `type`. Auto-detects REEL/recycle-post and legacy approved POST entries. Updates used-images.json for published feed/reel media (recycle tracked separately in `pipelines/_state/recycle-history.json`).
+→ Publishes the approved entry by id. Auto-detects REEL/recycle-post and legacy approved POST entries. Updates used-images.json for published feed/reel media (recycle tracked separately in `pipelines/_state/recycle-history.json`).
 
 ---
 
@@ -398,7 +408,7 @@ cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js
    - Creates queue entries with `type: "reel"` + `video_url`
    - Updates `used-images.json`
 2. **Send preview to Topic 3** with R2 video URL + caption for Lothar approval
-3. **After approval:** Approve in queue.json → run `cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js`
+3. **After approval:** approval middleware maps Lothar's reply and runs `cd /Users/lothareckstein/.openclaw && node pipelines/post/publish.js --id <ENTRY_ID>`
    - Publish script detects `type: "reel"` automatically
    - Uses `video_url` + `media_type: REELS` via Graph API
    - Polls container status until video processing is FINISHED (up to 2 min)
@@ -462,4 +472,4 @@ All pipeline scripts live under `~/.openclaw/pipelines/` and read rules from `~/
 
 ---
 
-**Last updated:** 2026-04-24 — Topic 3 Context Rule clarifies unified queue.json (POST + REEL + RECYCLE), script paths aligned to Refactor C (pipelines/*), all remaining references to deprecated `v3 / nylongerie-publish.js` stubs replaced with canonical `pipelines/post/*` paths.
+**Last updated:** 2026-05-10 — downgraded to operational summary, moved canonical authority to `PIPELINES.md` and pipeline READMEs, and replaced LLM-led Topic 3 instructions with deterministic approval middleware.

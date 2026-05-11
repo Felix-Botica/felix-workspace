@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-09T14:52:03.171Z",
+  "updatedAt": "2026-05-10T07:35:26.524Z",
   "entries": {
     "memory:memory/2026-04-17.md:1:27": {
       "key": "memory:memory/2026-04-17.md:1:27",
@@ -391,6 +391,192 @@
         "status",
         "morning",
         "batch"
+      ]
+    },
+    "memory:memory/2026-05-09.md:18:31": {
+      "key": "memory:memory/2026-05-09.md:18:31",
+      "path": "memory/2026-05-09.md",
+      "startLine": 18,
+      "endLine": 31,
+      "source": "memory",
+      "snippet": "- Active legacy daily POST queue entries from 2026-05-08 and 2026-05-09 were removed; backup is `nylongerie/queue.json.bak-post-disabled-20260509`. ## Operator Rule If any future memory, session summary, or cron payload says to run the direct POST selector, treat it as stale and wrong. Do not re-enable direct POST selection without Lothar's explicit written approval. ## Cron Failure Investigation Follow-Up - RECYCLE did run on 2026-05-09 at 09:00 via LaunchAgent and created `recycle-20260509-1..3`. It was obscured by the legacy crontab POST run at the same minute. - REEL did run on 2026-05-09 at 12:00 and created `reel-20260509-1`. It is scheduled noon, not morning. - STORY ran at 11:00,",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5206012816780291,
+      "maxScore": 0.5206012816780291,
+      "firstRecalledAt": "2026-05-10T07:35:26.524Z",
+      "lastRecalledAt": "2026-05-10T07:35:26.524Z",
+      "queryHashes": [
+        "b82bb4130ed3"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "backup",
+        "re-enable",
+        "follow-up",
+        "recycle-20260509-1",
+        "reel-20260509-1",
+        "active",
+        "legacy",
+        "post"
+      ]
+    },
+    "memory:memory/2026-05-09.md:30:43": {
+      "key": "memory:memory/2026-05-09.md:30:43",
+      "path": "memory/2026-05-09.md",
+      "startLine": 30,
+      "endLine": 43,
+      "source": "memory",
+      "snippet": "- Weekly newsletter ran at 10:00 but failed because Gemini returned empty/non-JSON proposal output. `newsletter-build.js` now uses JSON response mode, retries once, then falls back to deterministic Shopify collection/bestseller proposals. - Brevo-Shopify sync failed because bash nounset + empty array expansion hit `args[0]: unbound variable`. `cron-runner.sh` now branches when the args array is empty. - Felix Inbox Check failed once because LLM output was invalid/empty JSON. The job now validates the decision JSON before taking email actions; invalid output skips safely and alerts Dev instead of crashing after partial work. - Added `scripts/nylongerie-schedule-audit.js` and wired it into pre",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.49773836932717824,
+      "maxScore": 0.49773836932717824,
+      "firstRecalledAt": "2026-05-10T07:35:26.524Z",
+      "lastRecalledAt": "2026-05-10T07:35:26.524Z",
+      "queryHashes": [
+        "b82bb4130ed3"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "empty/non-json",
+        "newsletter-build.js",
+        "collection/bestseller",
+        "brevo-shopify",
+        "cron-runner.sh",
+        "invalid/empty",
+        "weekly",
+        "newsletter"
+      ]
+    },
+    "memory:memory/2026-05-08.md:20:33": {
+      "key": "memory:memory/2026-05-08.md:20:33",
+      "path": "memory/2026-05-08.md",
+      "startLine": 20,
+      "endLine": 33,
+      "source": "memory",
+      "snippet": "- REEL duration is enforced with `ffprobe` at 3-90 seconds. Last verification found 253 fallback videos and 248 eligible candidates. - REEL credit no longer guesses model handles from CDN-hash filenames. Use explicit `@handle` if present, otherwise neutral `@nylongerie`. - STORY selector now tracks both Shopify product and Shopify image usage in `pipelines/_state/story-product-history.json`; `same_image_cooldown_days=90`. - STORY dry-run still uploads/sends preview to Telegram Topic 3 but does not write cooldown state. ## False Cron Failure Alerts - Screenshots at 10:43/11:05 showed `Felix deterministic cron failed` even though logs ended with `status=0`. - Root cause: `scripts/cron-runner",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.49895615171563695,
+      "maxScore": 0.49895615171563695,
+      "firstRecalledAt": "2026-05-10T07:35:26.524Z",
+      "lastRecalledAt": "2026-05-10T07:35:26.524Z",
+      "queryHashes": [
+        "b82bb4130ed3"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "3-90",
+        "cdn-hash",
+        "state/story-product-history.json",
+        "same-image-cooldown-days",
+        "dry-run",
+        "uploads/sends",
+        "43/11",
+        "scripts/cron-runner"
+      ]
+    },
+    "memory:memory/2026-05-09.md:1:23": {
+      "key": "memory:memory/2026-05-09.md:1:23",
+      "path": "memory/2026-05-09.md",
+      "startLine": 1,
+      "endLine": 23,
+      "source": "memory",
+      "snippet": "# Memory - 2026-05-09 ## Nylongerie POST Lockdown - Direct daily POST generation is disabled permanently. - The only feed-post draft cron is RECYCLE via `pipelines/recycle/select.js` at 09:00 Europe/Berlin. - Legacy direct POST entrypoints were deleted or tombstoned: - `scripts/nylongerie-daily.sh` is a no-op guard. - `workspace/nylongerie-select-batch-v2.js` was deleted. - `workspace/nylongerie-create-batch.js` was deleted. - `pipelines/post/select.js` exits non-zero by design. - OpenClaw POST cron record and state for `52a651bb-2ff7-4f18-8c11-909297b35b5d` were removed. - Root cause of the surprise 09:00 POST run was the user crontab line `0 9 * * * ~/.openclaw/scripts/nylongerie",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.51100795226648,
+      "maxScore": 0.51100795226648,
+      "firstRecalledAt": "2026-05-10T07:35:26.524Z",
+      "lastRecalledAt": "2026-05-10T07:35:26.524Z",
+      "queryHashes": [
+        "b82bb4130ed3"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "feed-post",
+        "pipelines/recycle/select.js",
+        "europe/berlin",
+        "scripts/nylongerie-daily.sh",
+        "no-op",
+        "pipelines/post/select.js",
+        "non-zero",
+        "openclaw/scripts/nylongerie"
+      ]
+    },
+    "memory:memory/2026-05-08.md:1:22": {
+      "key": "memory:memory/2026-05-08.md:1:22",
+      "path": "memory/2026-05-08.md",
+      "startLine": 1,
+      "endLine": 22,
+      "source": "memory",
+      "snippet": "# Memory - 2026-05-08 ## Deterministic Cron Handoff - Source of truth is LaunchAgent + `~/.openclaw/scripts/cron-runner.sh`. - OpenClaw `cron/jobs.json` agent crons are intentionally disabled to avoid duplicate runs and session drift. - Active Nylongerie jobs confirmed loaded: RECYCLE 09:00, STORY 11:00, REEL 12:00. - No `nylongerie-post` LaunchAgent is loaded. The pre-approved-pool/direct POST pipeline is disabled; daily feed-post drafts come through RECYCLE only. ## Model Routing - Default execution model: `google/gemini-2.5-flash`. - Premium reasoning model: `google/gemini-2.5-pro`, only for real synthesis/analysis slices such as newsletter topic selection/content writing, X/Reddit/co",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5005756350352847,
+      "maxScore": 0.5005756350352847,
+      "firstRecalledAt": "2026-05-10T07:35:26.524Z",
+      "lastRecalledAt": "2026-05-10T07:35:26.524Z",
+      "queryHashes": [
+        "b82bb4130ed3"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "openclaw/scripts/cron-runner.sh",
+        "cron/jobs.json",
+        "nylongerie-post",
+        "pre-approved-pool/direct",
+        "feed-post",
+        "google/gemini-2.5-flash",
+        "google/gemini-2.5-pro",
+        "synthesis/analysis"
+      ]
+    },
+    "memory:memory/2026-04-30.md:1:20": {
+      "key": "memory:memory/2026-04-30.md:1:20",
+      "path": "memory/2026-04-30.md",
+      "startLine": 1,
+      "endLine": 20,
+      "source": "memory",
+      "snippet": "# 2026-04-30 Daily Notes ## Pipeline ✅ (3 posts — status quo) **3 posts selected:** 1. @legfashion → @amandinebru__ | IMG_1381.jpg | fishnet 2. @nextdoornylon → @arinaeagle | IMG_1618.jpg | black tights 3. @nylongerie → @karolinamalisova | IMG_3527.jpg | patterned stockings **Queue:** 45 items (was 38 yesterday — 7 new items added, 7 from yesterday approved?) ### Promo Story - Product: Glossy Dress and Stockings Set (4th day same product — getting stale) - DRY RUN → sent to Telegram Topic 3 ## Observations - Same 3 accounts for 4th day running - Only 3 of 7 accounts active - Promo story product hasn't changed since Apr 26 — rotating seems stuck - Pipeline stable but needs new accounts u",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3771876817290888,
+      "maxScore": 0.3771876817290888,
+      "firstRecalledAt": "2026-05-10T07:35:26.524Z",
+      "lastRecalledAt": "2026-05-10T07:35:26.524Z",
+      "queryHashes": [
+        "b82bb4130ed3"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "img-1381.jpg",
+        "img-1618.jpg",
+        "img-3527.jpg",
+        "pipeline",
+        "posts",
+        "status",
+        "quo",
+        "selected"
       ]
     }
   }
