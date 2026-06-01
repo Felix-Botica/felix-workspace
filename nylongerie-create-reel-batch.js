@@ -173,25 +173,33 @@ function telegramSendMessage(text) {
   return telegramCurlOk(args, 30000);
 }
 
-function telegramCurlOk(args, timeout) {
+// Core curl runner. Returns { ok, messageId } so callers that need the Telegram
+// message_id (for reply→draft linkage) can capture it; boolean-only callers use
+// telegramCurlOk below.
+function telegramCurlSend(args, timeout) {
   const result = spawnSync('curl', args, { encoding: 'utf8', timeout });
   if (result.status !== 0) {
     if (result.stderr) console.error(result.stderr.trim());
-    return false;
+    return { ok: false, messageId: null };
   }
   try {
     const data = JSON.parse(result.stdout || '{}');
-    if (data.ok) return true;
+    if (data.ok) return { ok: true, messageId: (data.result && data.result.message_id) ?? null };
     console.error(`Telegram API rejected request: ${data.description || result.stdout.slice(0, 300)}`);
-    return false;
+    return { ok: false, messageId: null };
   } catch (e) {
     console.error(`Telegram response was not JSON: ${(result.stdout || result.stderr || '').slice(0, 300)}`);
-    return false;
+    return { ok: false, messageId: null };
   }
 }
 
+function telegramCurlOk(args, timeout) {
+  return telegramCurlSend(args, timeout).ok;
+}
+
+// Returns the Telegram message_id on success (truthy), or null on failure.
 function telegramSendVideo(draft) {
-  if (!TG_BOT_TOKEN || !draft.video_url) return false;
+  if (!TG_BOT_TOKEN || !draft.video_url) return null;
   const caption = `🎬 *Reel Draft ${draft.id}*
 
 *Account:* ${draft.account}
@@ -210,7 +218,7 @@ ${draft.caption_headline}
     '-F', `caption=${caption}`,
     '-F', 'parse_mode=Markdown',
   ];
-  return telegramCurlOk(args, 100000);
+  return telegramCurlSend(args, 100000).messageId;
 }
 
 function deliverDraftsToTelegram(drafts) {
@@ -221,7 +229,12 @@ function deliverDraftsToTelegram(drafts) {
   }
   let ok = true;
   for (const draft of drafts) {
-    const sent = telegramSendVideo(draft);
+    const messageId = telegramSendVideo(draft);
+    const sent = messageId != null;
+    // Persist the Telegram message_id so the approval middleware can link a
+    // reply (reply_to_id) deterministically back to this draft. Shared ref with
+    // the queue array, so it's saved when the caller re-writes the queue.
+    if (sent) draft.telegram_message_id = messageId;
     console.log(`   Telegram ${sent ? '✅ sent' : '❌ failed'}: ${draft.id}`);
     ok = ok && sent;
   }
@@ -405,7 +418,8 @@ async function createReelBatch() {
       video_url: videoUrl,
       caption_headline: headline,
       caption: caption,
-      duration_seconds: reel.duration_seconds || null
+      duration_seconds: reel.duration_seconds || null,
+      telegram_message_id: null
     };
 
     drafts.push(draft);
@@ -436,7 +450,11 @@ async function createReelBatch() {
 
   if (!DRY_RUN) {
     console.log(`\n📨 Telegram delivery`);
-    if (!deliverDraftsToTelegram(drafts)) process.exit(1);
+    const delivered = deliverDraftsToTelegram(drafts);
+    // Re-save: deliverDraftsToTelegram stamped each draft with its Telegram
+    // message_id (shared refs with `queue`), so persist that linkage to disk.
+    fs.writeFileSync(QUEUE_FILE, JSON.stringify(queue, null, 2));
+    if (!delivered) process.exit(1);
   }
 
   // Output JSON for downstream use
