@@ -68,9 +68,9 @@ def _try_apple_health():
     except (OSError, ValueError, KeyError, TypeError):
         pass
 
-    if age_days >= 7:
+    if age_days >= 2:
         print(f"   ⚠️ Letzte Messung {age_days} Tage her — heute wiegen "
-              f"(oder Apple-Health-Push prüfen).")
+              f"(oder Apple-Health-Push prüfen: Shortcut/SSH).")
     return True
 
 
@@ -175,5 +175,5 @@ fat_pct = next((m for m in latest["measures"] if m["type"] == 6), None)
 if fat_pct is not None:
     print(f"   Körperfett: {_val(fat_pct):.1f}%")
 
-if age_days >= 7:
+if age_days >= 2:
     print(f"   ⚠️ Letzte Messung {age_days} Tage her — Renpho→Withings-Sync vermutlich inaktiv.")
